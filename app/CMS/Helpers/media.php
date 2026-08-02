@@ -1,18 +1,23 @@
 <?php
 
-use Illuminate\Support\Facades\Storage;
+use App\Models\MediaItem;
 
 if (! function_exists('media_url')) {
     /**
-     * Resolve a public-disk stored path (e.g. a Setting's image value) to a URL.
+     * Resolve a stored Media Library reference (a MediaItem id, e.g. one of
+     * Settings' image-type values) to a usable URL.
      *
      * Centralizes this lookup so it isn't duplicated across every view that
-     * displays an uploaded image (logo, favicon, OG image, etc.). Once the
-     * Media Library module is built, this is the one place to redirect calls
-     * through it instead of the raw "public" disk.
+     * displays an uploaded image (logo, favicon, OG image, etc.), and gives
+     * the Media Library module the single place other modules resolve
+     * through instead of talking to storage/media models directly.
      */
-    function media_url(?string $path): ?string
+    function media_url(mixed $mediaItemId): ?string
     {
-        return $path ? Storage::disk('public')->url($path) : null;
+        if (empty($mediaItemId)) {
+            return null;
+        }
+
+        return MediaItem::find($mediaItemId)?->file_url;
     }
 }

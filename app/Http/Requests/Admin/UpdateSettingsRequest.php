@@ -4,6 +4,7 @@ namespace App\Http\Requests\Admin;
 
 use App\Models\Setting;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateSettingsRequest extends FormRequest
 {
@@ -35,7 +36,7 @@ class UpdateSettingsRequest extends FormRequest
                     'number' => ['nullable', 'numeric'],
                     'boolean' => ['nullable', 'boolean'],
                     'color' => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
-                    'image' => ['nullable', 'image', 'max:2048'],
+                    'image' => ['nullable', 'integer', Rule::exists('media_items', 'id')],
                     'textarea' => ['nullable', 'string'],
                     default => ['nullable', 'string', 'max:255'],
                 };

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingController;
@@ -24,4 +25,10 @@ Route::middleware(['auth', 'verified'])
 
         Route::get('settings', [SettingController::class, 'edit'])->name('settings.edit');
         Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
+
+        Route::get('media', [MediaController::class, 'index'])->name('media.index');
+        Route::post('media', [MediaController::class, 'store'])->name('media.store');
+        Route::put('media/{mediaItem}', [MediaController::class, 'update'])->name('media.update');
+        Route::post('media/{mediaItem}/replace', [MediaController::class, 'replace'])->name('media.replace');
+        Route::delete('media/{mediaItem}', [MediaController::class, 'destroy'])->name('media.destroy');
     });

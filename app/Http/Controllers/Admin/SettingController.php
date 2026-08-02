@@ -47,24 +47,7 @@ class SettingController extends Controller
      */
     public function update(UpdateSettingsRequest $request): RedirectResponse
     {
-        $data = $request->validated();
-        $files = [];
-
-        foreach (config('settings.groups', []) as $group) {
-            foreach ($group['fields'] as $key => $field) {
-                if ($field['type'] !== 'image') {
-                    continue;
-                }
-
-                unset($data[$key]);
-
-                if ($request->hasFile($key)) {
-                    $files[$key] = $request->file($key);
-                }
-            }
-        }
-
-        $this->settings->updateMany($data, $files);
+        $this->settings->updateMany($request->validated());
 
         return redirect()->route('admin.settings.edit')->with('success', __('Settings updated successfully.'));
     }

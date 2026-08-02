@@ -30,7 +30,7 @@
         </nav>
 
         <div class="mt-6 lg:col-span-3 lg:mt-0">
-            <form method="POST" action="{{ route('admin.settings.update') }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('admin.settings.update') }}">
                 @csrf
                 @method('PUT')
 

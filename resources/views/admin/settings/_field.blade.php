@@ -18,7 +18,7 @@
             @break
 
         @case('image')
-            <x-admin.image-upload :id="$id" name="{{ $key }}" :current="$value" :disabled="! $canEdit" />
+            <x-admin.media-picker name="{{ $key }}" :current="$currentValue" :disabled="! $canEdit" />
             @break
 
         @case('color')

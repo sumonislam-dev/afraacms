@@ -3,9 +3,7 @@
 namespace App\CMS\Services;
 
 use App\Models\Setting;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Storage;
 
 class SettingService
 {
@@ -33,12 +31,14 @@ class SettingService
     }
 
     /**
-     * Update a batch of settings and their uploaded images, then clear the cache.
+     * Update a batch of settings, then clear the cache.
+     *
+     * Image-type values are Media Library MediaItem ids (selected via the
+     * media picker), so they update exactly like any other value here.
      *
      * @param  array<string, mixed>  $values
-     * @param  array<string, UploadedFile>  $files
      */
-    public function updateMany(array $values, array $files = []): void
+    public function updateMany(array $values): void
     {
         foreach ($values as $key => $value) {
             $setting = Setting::where('key', $key)->first();
@@ -53,20 +53,6 @@ class SettingService
             }
 
             $setting->update(['value' => $value]);
-        }
-
-        foreach ($files as $key => $file) {
-            $setting = Setting::where('key', $key)->first();
-
-            if (! $setting) {
-                continue;
-            }
-
-            if ($setting->value) {
-                Storage::disk('public')->delete($setting->value);
-            }
-
-            $setting->update(['value' => $file->store('settings', 'public')]);
         }
 
         $this->forget();
