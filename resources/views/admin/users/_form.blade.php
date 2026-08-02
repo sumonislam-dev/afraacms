@@ -1,5 +1,6 @@
 @php
     $isEdit = isset($user);
+    $currentRole = $isEdit ? $user->roles->first()?->name : null;
 @endphp
 
 <x-admin.form-section
@@ -37,7 +38,7 @@
         <select id="role" name="role" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
             <option value="">{{ __('Select a role') }}</option>
             @foreach ($roles as $roleName)
-                <option value="{{ $roleName }}" @selected(old('role', $user->roles->first()->name ?? '') === $roleName)>{{ $roleName }}</option>
+                <option value="{{ $roleName }}" @selected(old('role', $currentRole) === $roleName)>{{ $roleName }}</option>
             @endforeach
         </select>
         <x-input-error class="mt-2" :messages="$errors->get('role')" />

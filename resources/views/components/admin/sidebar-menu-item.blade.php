@@ -2,9 +2,23 @@
 
 @php
     $routeMatches = function (?string $routeName) {
-        return $routeName
-            && \Illuminate\Support\Facades\Route::has($routeName)
-            && (request()->routeIs($routeName) || request()->routeIs($routeName.'.*'));
+        if (! $routeName || ! \Illuminate\Support\Facades\Route::has($routeName)) {
+            return false;
+        }
+
+        if (request()->routeIs($routeName)) {
+            return true;
+        }
+
+        // Sibling resource actions (e.g. "admin.users.create", "admin.users.edit")
+        // aren't children of "admin.users.index" - they share its prefix instead.
+        // Broaden to "admin.users.*" so any of them also count as active, but
+        // only when that prefix is itself namespaced (skip bare top-level
+        // routes like "admin.dashboard", where the prefix "admin" would
+        // otherwise match every admin.* route).
+        $prefix = \Illuminate\Support\Str::beforeLast($routeName, '.');
+
+        return str_contains($prefix, '.') && request()->routeIs($prefix.'.*');
     };
 
     $hasChildren = ! empty($item['children']);
