@@ -1,0 +1,82 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
+
+#[Fillable(['menu_id', 'parent_id', 'label', 'type', 'url', 'icon', 'is_active', 'sort_order'])]
+class MenuItem extends Model
+{
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+            'sort_order' => 'integer',
+        ];
+    }
+
+    public function menu(): BelongsTo
+    {
+        return $this->belongsTo(Menu::class);
+    }
+
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'parent_id');
+    }
+
+    public function children(): HasMany
+    {
+        return $this->hasMany(self::class, 'parent_id')->orderBy('sort_order');
+    }
+
+    /**
+     * The absolute URL to link to: the raw value for external links, or a
+     * site-relative path resolved through url() for internal ones.
+     */
+    public function getResolvedUrlAttribute(): string
+    {
+        if ($this->type === 'external') {
+            return $this->url;
+        }
+
+        return url($this->url === '/' ? '' : $this->url);
+    }
+
+    /**
+     * The anchor "target" to use: external links open in a new tab.
+     */
+    public function getTargetAttribute(): string
+    {
+        return $this->type === 'external' ? '_blank' : '_self';
+    }
+
+    /**
+     * Nest a flat collection of items (already belonging to one menu) into
+     * a parent/children tree, ordered by sort_order at every level.
+     *
+     * @param  Collection<int, self>  $items
+     * @return Collection<int, self>
+     */
+    public static function buildTree(Collection $items, ?int $parentId = null): Collection
+    {
+        return $items
+            ->where('parent_id', $parentId)
+            ->sortBy('sort_order')
+            ->values()
+            ->map(function (self $item) use ($items) {
+                $item->setRelation('children', static::buildTree($items, $item->id));
+
+                return $item;
+            });
+    }
+}

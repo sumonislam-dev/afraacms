@@ -16,7 +16,7 @@
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased text-gray-900">
+    <body class="font-sans antialiased text-gray-900" x-data="{ mobileMenuOpen: false }">
         <header class="border-b border-gray-100 bg-white">
             <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
                 <a href="{{ url('/') }}" class="flex items-center gap-2">
@@ -30,6 +30,20 @@
                         <span class="text-lg font-semibold">{{ setting('site_name', config('app.name', 'AfraaCMS')) }}</span>
                     @endif
                 </a>
+
+                <x-menu slug="header" class="hidden sm:flex" />
+
+                <button type="button" class="text-gray-500 sm:hidden" @click="mobileMenuOpen = ! mobileMenuOpen">
+                    <span class="sr-only">{{ __('Menu') }}</span>
+                    <x-icon name="bars-3" class="h-6 w-6" />
+                </button>
+            </div>
+
+            <div x-show="mobileMenuOpen" x-transition class="border-t border-gray-100 px-4 py-3 sm:hidden" style="display: none;">
+                @php($headerMenu = menu('header'))
+                @if ($headerMenu && ! empty($headerMenu['tree']))
+                    @include('components._menu-items', ['items' => $headerMenu['tree'], 'level' => 1])
+                @endif
             </div>
         </header>
 

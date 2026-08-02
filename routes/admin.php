@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\MenuController;
+use App\Http\Controllers\Admin\MenuItemController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingController;
@@ -31,4 +33,10 @@ Route::middleware(['auth', 'verified'])
         Route::put('media/{mediaItem}', [MediaController::class, 'update'])->name('media.update');
         Route::post('media/{mediaItem}/replace', [MediaController::class, 'replace'])->name('media.replace');
         Route::delete('media/{mediaItem}', [MediaController::class, 'destroy'])->name('media.destroy');
+
+        Route::resource('menus', MenuController::class)->except('show');
+        Route::post('menus/{menu}/items', [MenuItemController::class, 'store'])->name('menus.items.store');
+        Route::put('menus/{menu}/items/{menuItem}', [MenuItemController::class, 'update'])->name('menus.items.update');
+        Route::delete('menus/{menu}/items/{menuItem}', [MenuItemController::class, 'destroy'])->name('menus.items.destroy');
+        Route::post('menus/{menu}/items/reorder', [MenuItemController::class, 'reorder'])->name('menus.items.reorder');
     });
