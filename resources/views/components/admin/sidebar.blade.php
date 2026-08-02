@@ -1,5 +1,28 @@
 @php
-    $menu = config('admin-menu', []);
+    $filterMenu = function (array $items) use (&$filterMenu) {
+        $visible = [];
+
+        foreach ($items as $item) {
+            if (! empty($item['children'])) {
+                $children = $filterMenu($item['children']);
+
+                if (! empty($children)) {
+                    $item['children'] = $children;
+                    $visible[] = $item;
+                }
+
+                continue;
+            }
+
+            if (empty($item['permission']) || auth()->user()?->can($item['permission'])) {
+                $visible[] = $item;
+            }
+        }
+
+        return $visible;
+    };
+
+    $menu = $filterMenu(config('admin-menu', []));
 @endphp
 
 <aside

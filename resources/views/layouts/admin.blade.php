@@ -31,9 +31,9 @@
                 <x-admin.topnav :title="$title ?? null" />
 
                 <main class="flex-1 p-4 sm:p-6 lg:p-8">
-                    @isset($breadcrumbs)
+                    @if (! empty($breadcrumbs))
                         <x-admin.breadcrumb :items="$breadcrumbs" />
-                    @endisset
+                    @endif
 
                     <x-admin.flash />
 

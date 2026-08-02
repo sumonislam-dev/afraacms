@@ -8,6 +8,13 @@ use Illuminate\View\View;
 class AdminLayout extends Component
 {
     /**
+     * @param  array<int, array{label: string, url?: string}>  $breadcrumbs
+     */
+    public function __construct(public array $breadcrumbs = [])
+    {
+    }
+
+    /**
      * Get the view / contents that represents the component.
      */
     public function render(): View
