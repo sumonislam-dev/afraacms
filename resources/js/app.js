@@ -61,3 +61,42 @@ function initMenuBuilder() {
 }
 
 document.addEventListener('DOMContentLoaded', initMenuBuilder);
+
+/**
+ * Section builder drag-and-drop (admin.pages.sections.index).
+ *
+ * No-ops on every other page since it just checks for #section-list-root.
+ * A single flat list (sections don't nest), so this is simpler than the
+ * menu builder: just persist the new top-to-bottom id order.
+ */
+function initSectionBuilder() {
+    const root = document.getElementById('section-list-root');
+
+    if (! root) {
+        return;
+    }
+
+    const reorderUrl = root.dataset.reorderUrl;
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    const list = root.querySelector('[data-section-list]');
+
+    new Sortable(list, {
+        animation: 150,
+        handle: '[data-drag-handle]',
+        onEnd() {
+            const order = Array.from(list.children).map((item) => parseInt(item.dataset.id, 10));
+
+            fetch(reorderUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                },
+                body: JSON.stringify({ order }),
+            });
+        },
+    });
+}
+
+document.addEventListener('DOMContentLoaded', initSectionBuilder);

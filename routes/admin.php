@@ -4,8 +4,11 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\MenuItemController;
+use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SectionController;
+use App\Http\Controllers\Admin\SectionItemController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
@@ -39,4 +42,20 @@ Route::middleware(['auth', 'verified'])
         Route::put('menus/{menu}/items/{menuItem}', [MenuItemController::class, 'update'])->name('menus.items.update');
         Route::delete('menus/{menu}/items/{menuItem}', [MenuItemController::class, 'destroy'])->name('menus.items.destroy');
         Route::post('menus/{menu}/items/reorder', [MenuItemController::class, 'reorder'])->name('menus.items.reorder');
+
+        Route::resource('pages', PageController::class)->except('show');
+
+        Route::prefix('pages/{page}')->name('pages.')->group(function () {
+            Route::get('sections', [SectionController::class, 'index'])->name('sections.index');
+            Route::get('sections/create', [SectionController::class, 'create'])->name('sections.create');
+            Route::post('sections', [SectionController::class, 'store'])->name('sections.store');
+            Route::post('sections/reorder', [SectionController::class, 'reorder'])->name('sections.reorder');
+            Route::get('sections/{section}/edit', [SectionController::class, 'edit'])->name('sections.edit');
+            Route::put('sections/{section}', [SectionController::class, 'update'])->name('sections.update');
+            Route::delete('sections/{section}', [SectionController::class, 'destroy'])->name('sections.destroy');
+
+            Route::post('sections/{section}/items', [SectionItemController::class, 'store'])->name('sections.items.store');
+            Route::put('sections/{section}/items/{item}', [SectionItemController::class, 'update'])->name('sections.items.update');
+            Route::delete('sections/{section}/items/{item}', [SectionItemController::class, 'destroy'])->name('sections.items.destroy');
+        });
     });

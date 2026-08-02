@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,3 +20,9 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 require __DIR__.'/admin.php';
+
+// Catch-all for CMS-managed pages - registered last so every other route
+// above (admin, auth, profile, dashboard) always takes precedence.
+Route::get('/{slug}', [PageController::class, 'show'])
+    ->where('slug', '[a-z0-9-]+')
+    ->name('pages.show');

@@ -26,12 +26,10 @@ return [
         'permission' => 'dashboard.view',
     ],
     [
-        'label' => 'Content',
+        'label' => 'Pages',
         'icon' => 'document-text',
-        'children' => [
-            ['label' => 'Pages', 'route' => 'admin.pages.index', 'permission' => 'pages.view'],
-            ['label' => 'Sections', 'route' => 'admin.sections.index', 'permission' => 'sections.view'],
-        ],
+        'route' => 'admin.pages.index',
+        'permission' => 'pages.view',
     ],
     [
         'label' => 'Menu Builder',
