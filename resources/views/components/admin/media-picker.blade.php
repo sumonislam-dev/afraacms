@@ -72,7 +72,7 @@
                 :disabled="$disabled"
                 @click="loadItems(); $dispatch('open-modal', '{{ $modalName }}')"
             >
-                {{ __('Choose from Library') }}
+                {{ __('Select Image') }}
             </x-secondary-button>
 
             <button

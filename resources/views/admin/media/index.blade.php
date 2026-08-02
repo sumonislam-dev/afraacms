@@ -2,28 +2,15 @@
     <x-slot name="title">{{ __('Media Library') }}</x-slot>
 
     <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <div>
-                <h2 class="text-xl font-semibold text-gray-900">{{ __('Media Library') }}</h2>
-                <p class="mt-1 text-sm text-gray-500">{{ __('Upload, search, and manage every image used across the site.') }}</p>
-            </div>
-
-            @can('create', \App\Models\MediaItem::class)
-                <label class="cursor-pointer">
-                    <x-primary-button type="button" onclick="document.getElementById('media-upload-input').click()">
-                        {{ __('Upload') }}
-                    </x-primary-button>
-
-                    <form method="POST" action="{{ route('admin.media.store') }}" enctype="multipart/form-data" class="hidden">
-                        @csrf
-                        <input id="media-upload-input" type="file" name="file" accept="image/*" onchange="this.form.submit()">
-                    </form>
-                </label>
-            @endcan
-        </div>
+        <h2 class="text-xl font-semibold text-gray-900">{{ __('Media Library') }}</h2>
+        <p class="mt-1 text-sm text-gray-500">{{ __('Upload, search, and manage every image used across the site.') }}</p>
     </x-slot>
 
-    <form method="GET" action="{{ route('admin.media.index') }}" class="mb-6">
+    @can('create', \App\Models\MediaItem::class)
+        <x-admin.media-uploader :max-batch="20" />
+    @endcan
+
+    <form method="GET" action="{{ route('admin.media.index') }}" class="mt-6 mb-6">
         <x-text-input
             type="text"
             name="search"
