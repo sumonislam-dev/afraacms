@@ -50,4 +50,19 @@ return [
     'editor_modules' => [
         'dashboard', 'media', 'menus', 'pages', 'sections', 'projects', 'gallery', 'contact', 'seo',
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Additional Editor Permissions
+    |--------------------------------------------------------------------------
+    |
+    | Individual permission names to grant Editor beyond the full-module
+    | grants above, for modules where Editor should only get a subset of
+    | actions (e.g. Editor may view Settings but never modify them).
+    |
+    */
+
+    'editor_extra_permissions' => [
+        'settings.view',
+    ],
 ];

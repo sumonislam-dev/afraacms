@@ -28,11 +28,12 @@ class RolesAndPermissionsSeeder extends Seeder
         $superAdmin = Role::firstOrCreate(['name' => 'Super Admin', 'guard_name' => 'web']);
         $superAdmin->syncPermissions(Permission::all());
 
-        $editorPermissions = Permission::whereIn(
-            'name',
-            collect(config('permissions.editor_modules', []))
-                ->flatMap(fn (string $module) => collect($modules[$module] ?? [])->map(fn ($action) => "{$module}.{$action}"))
-        )->get();
+        $editorPermissionNames = collect(config('permissions.editor_modules', []))
+            ->flatMap(fn (string $module) => collect($modules[$module] ?? [])->map(fn ($action) => "{$module}.{$action}"))
+            ->merge(config('permissions.editor_extra_permissions', []))
+            ->unique();
+
+        $editorPermissions = Permission::whereIn('name', $editorPermissionNames)->get();
 
         $editor = Role::firstOrCreate(['name' => 'Editor', 'guard_name' => 'web']);
         $editor->syncPermissions($editorPermissions);

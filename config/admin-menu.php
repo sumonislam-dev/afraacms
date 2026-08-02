@@ -63,9 +63,7 @@ return [
     [
         'label' => 'Settings',
         'icon' => 'cog-6-tooth',
-        'children' => [
-            ['label' => 'General', 'route' => 'admin.settings.general', 'permission' => 'settings.view'],
-            ['label' => 'Social Links', 'route' => 'admin.settings.social', 'permission' => 'settings.view'],
-        ],
+        'route' => 'admin.settings.edit',
+        'permission' => 'settings.view',
     ],
 ];
