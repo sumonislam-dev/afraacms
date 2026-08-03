@@ -24,7 +24,7 @@
             <x-admin.card :title="__('Add Item')">
                 <form method="POST" action="{{ route('admin.menus.items.store', $menu) }}">
                     @csrf
-                    @include('admin.menus._item-form', ['pageOptions' => $pageOptions])
+                    @include('admin.menus._item-form', ['pageOptions' => $pageOptions, 'parentOptions' => $parentOptions])
 
                     <div class="mt-6 flex justify-end">
                         <x-primary-button>{{ __('Add Item') }}</x-primary-button>
@@ -38,7 +38,7 @@
                 <p class="text-center text-sm text-gray-500">{{ __('No items yet. Add one to get started.') }}</p>
             @else
                 <div id="menu-tree-root" data-reorder-url="{{ route('admin.menus.items.reorder', $menu) }}">
-                    @include('admin.menus._tree', ['items' => $tree, 'menu' => $menu, 'pageOptions' => $pageOptions])
+                    @include('admin.menus._tree', ['items' => $tree, 'menu' => $menu, 'pageOptions' => $pageOptions, 'parentOptions' => $parentOptions])
                 </div>
             @endif
         </x-admin.card>

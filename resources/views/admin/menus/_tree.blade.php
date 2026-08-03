@@ -36,7 +36,7 @@
             </div>
 
             <div class="min-h-[12px] border-t border-gray-100 py-2 pl-8 pr-2">
-                @include('admin.menus._tree', ['items' => $item->children, 'menu' => $menu, 'pageOptions' => $pageOptions])
+                @include('admin.menus._tree', ['items' => $item->children, 'menu' => $menu, 'pageOptions' => $pageOptions, 'parentOptions' => $parentOptions])
             </div>
         </li>
 
@@ -46,7 +46,7 @@
                     @csrf
                     @method('PUT')
                     <h2 class="text-lg font-medium text-gray-900">{{ __('Edit Menu Item') }}</h2>
-                    @include('admin.menus._item-form', ['item' => $item, 'pageOptions' => $pageOptions])
+                    @include('admin.menus._item-form', ['item' => $item, 'pageOptions' => $pageOptions, 'parentOptions' => $parentOptions])
                     <div class="mt-6 flex justify-end gap-3">
                         <x-secondary-button type="button" x-on:click="$dispatch('close')">{{ __('Cancel') }}</x-secondary-button>
                         <x-primary-button>{{ __('Save') }}</x-primary-button>

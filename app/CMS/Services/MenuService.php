@@ -102,13 +102,16 @@ class MenuService
     }
 
     /**
-     * Add a new top-level item to a menu.
+     * Add a new item to a menu, at the end of its parent's list (top-level
+     * if no parent_id is given).
      */
     public function createItem(Menu $menu, array $data): MenuItem
     {
+        $parentId = $data['parent_id'] ?? null;
+
         $item = $menu->items()->create([
             ...$data,
-            'sort_order' => $menu->items()->whereNull('parent_id')->count(),
+            'sort_order' => $menu->items()->where('parent_id', $parentId)->count(),
         ]);
 
         $this->forget();
@@ -117,10 +120,20 @@ class MenuService
     }
 
     /**
-     * Update an item's own fields (label, type, url, icon, visibility).
+     * Update an item's own fields (label, type, url, icon, visibility, parent).
+     *
+     * Moving an item under a different parent appends it to the end of that
+     * parent's list, rather than keeping its old sort_order (which could
+     * collide with existing siblings there).
      */
     public function updateItem(MenuItem $item, array $data): MenuItem
     {
+        $newParentId = $data['parent_id'] ?? null;
+
+        if (array_key_exists('parent_id', $data) && $newParentId != $item->parent_id) {
+            $data['sort_order'] = $item->menu->items()->where('parent_id', $newParentId)->count();
+        }
+
         $item->update($data);
 
         $this->forget();

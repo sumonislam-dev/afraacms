@@ -89,4 +89,41 @@ class MenuItem extends Model
                 return $item;
             });
     }
+
+    /**
+     * Flatten a nested tree (as built by buildTree()) into a depth-indented
+     * [id => label] map, for a "Parent Item" select field's option list.
+     *
+     * @param  Collection<int, self>  $items
+     * @return array<int, string>
+     */
+    public static function flattenTree(Collection $items, int $depth = 0): array
+    {
+        $options = [];
+
+        foreach ($items as $item) {
+            $options[$item->id] = str_repeat('— ', $depth).$item->label;
+            $options += static::flattenTree($item->children, $depth + 1);
+        }
+
+        return $options;
+    }
+
+    /**
+     * Get the ids of every descendant of this item, so a "Parent Item"
+     * selector can exclude them and prevent this item becoming its own ancestor.
+     *
+     * @return array<int, int>
+     */
+    public function descendantIds(): array
+    {
+        $ids = [];
+
+        foreach ($this->children as $child) {
+            $ids[] = $child->id;
+            $ids = [...$ids, ...$child->descendantIds()];
+        }
+
+        return $ids;
+    }
 }

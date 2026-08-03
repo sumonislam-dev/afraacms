@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreMenuRequest;
 use App\Http\Requests\Admin\UpdateMenuRequest;
 use App\Models\Menu;
+use App\Models\MenuItem;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -74,6 +75,7 @@ class MenuController extends Controller
             'menu' => $menu,
             'tree' => $menu->tree,
             'pageOptions' => $pageOptions,
+            'parentOptions' => MenuItem::flattenTree($menu->tree),
         ]);
     }
 

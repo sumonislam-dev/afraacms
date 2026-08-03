@@ -5,6 +5,9 @@
     $currentUrl = old('url', $item->url ?? '');
     $pageOptions = $pageOptions ?? [];
     $newTabDefault = old('open_in_new_tab', $item->open_in_new_tab ?? ($currentType === 'external'));
+
+    $currentParentId = old('parent_id', $item->parent_id ?? '');
+    $excludedParentIds = $isEdit ? [$item->id, ...$item->descendantIds()] : [];
 @endphp
 
 <div
@@ -16,8 +19,8 @@
     }"
     class="space-y-4"
 >
-    <div class="grid gap-4 sm:grid-cols-2">
-        <div>
+    <div class="grid gap-4 sm:grid-cols-3">
+        <div class="sm:col-span-2">
             <x-input-label for="{{ $prefix }}label" :value="__('Label')" />
             <x-text-input
                 id="{{ $prefix }}label"
@@ -44,19 +47,34 @@
         </div>
     </div>
 
-    <div>
-        <x-input-label :value="__('Link Type')" />
-        <div class="mt-1 inline-flex rounded-md border border-gray-300 bg-white p-0.5 text-sm">
-            <label class="cursor-pointer rounded px-3 py-1 font-medium transition-colors" :class="type === 'internal' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-50'">
-                <input type="radio" name="type" value="internal" x-model="type" class="sr-only">
-                {{ __('Internal') }}
-            </label>
-            <label class="cursor-pointer rounded px-3 py-1 font-medium transition-colors" :class="type === 'external' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-50'">
-                <input type="radio" name="type" value="external" x-model="type" class="sr-only">
-                {{ __('External') }}
-            </label>
+    <div class="grid gap-4 sm:grid-cols-2 rounded-md border border-gray-200 bg-gray-50 p-3">
+        <div>
+            <x-input-label :value="__('Link Type')" />
+            <div class="mt-1 inline-flex rounded-md border border-gray-300 bg-white p-0.5 text-sm">
+                <label class="cursor-pointer rounded px-3 py-1 font-medium transition-colors" :class="type === 'internal' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-50'">
+                    <input type="radio" name="type" value="internal" x-model="type" class="sr-only">
+                    {{ __('Internal') }}
+                </label>
+                <label class="cursor-pointer rounded px-3 py-1 font-medium transition-colors" :class="type === 'external' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-50'">
+                    <input type="radio" name="type" value="external" x-model="type" class="sr-only">
+                    {{ __('External') }}
+                </label>
+            </div>
+            <x-input-error class="mt-2" :messages="$errors->get('type')" />
         </div>
-        <x-input-error class="mt-2" :messages="$errors->get('type')" />
+
+        <div>
+            <x-input-label for="{{ $prefix }}parent_id" :value="__('Parent Item')" />
+            <select id="{{ $prefix }}parent_id" name="parent_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                <option value="">{{ __('— Top Level —') }}</option>
+                @foreach ($parentOptions ?? [] as $id => $label)
+                    @continue(in_array($id, $excludedParentIds, true))
+                    <option value="{{ $id }}" @selected((string) $currentParentId === (string) $id)>{{ $label }}</option>
+                @endforeach
+            </select>
+            <p class="mt-1 text-xs text-gray-500">{{ __('Nest under a top-level item to make it a dropdown.') }}</p>
+            <x-input-error class="mt-2" :messages="$errors->get('parent_id')" />
+        </div>
     </div>
 
     <div class="grid grid-cols-2 gap-4">

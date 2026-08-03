@@ -29,6 +29,10 @@ class StoreMenuItemRequest extends FormRequest
             'open_in_new_tab' => ['sometimes', 'boolean'],
             'icon' => ['nullable', 'string', Rule::in(array_keys(config('icons', [])))],
             'is_active' => ['sometimes', 'boolean'],
+            'parent_id' => [
+                'nullable', 'integer',
+                Rule::exists('menu_items', 'id')->where('menu_id', $this->route('menu')->id),
+            ],
         ];
     }
 }
