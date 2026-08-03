@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\MenuController;
@@ -44,6 +45,8 @@ Route::middleware(['auth', 'verified'])
         Route::post('menus/{menu}/items/reorder', [MenuItemController::class, 'reorder'])->name('menus.items.reorder');
 
         Route::resource('pages', PageController::class)->except('show');
+
+        Route::resource('banners', BannerController::class)->except('show');
 
         Route::prefix('pages/{page}')->name('pages.')->group(function () {
             Route::get('sections', [SectionController::class, 'index'])->name('sections.index');

@@ -1,4 +1,6 @@
 <x-frontend-layout>
+    <x-banner type="homepage" />
+
     <div class="mx-auto max-w-3xl px-4 py-16 text-center sm:px-6">
         <h1 class="text-3xl font-bold">
             {{ setting('tagline') ?: __('Welcome to :name', ['name' => setting('site_name', config('app.name', 'AfraaCMS'))]) }}

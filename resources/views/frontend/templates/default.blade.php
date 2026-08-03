@@ -1,4 +1,6 @@
 <x-frontend-layout :title="$page['title']">
+    <x-banner :type="($isHome ?? false) ? 'homepage' : 'page'" />
+
     @if (! empty($page['sections']))
         <x-sections :sections="$page['sections']" />
     @else

@@ -30,6 +30,7 @@ return [
         'menus' => ['view', 'create', 'edit', 'delete'],
         'pages' => ['view', 'create', 'edit', 'delete'],
         'sections' => ['view', 'create', 'edit', 'delete'],
+        'banners' => ['view', 'create', 'edit', 'delete'],
         'projects' => ['view', 'create', 'edit', 'delete'],
         'gallery' => ['view', 'create', 'edit', 'delete'],
         'contact' => ['view', 'edit', 'delete'],
@@ -48,7 +49,7 @@ return [
     */
 
     'editor_modules' => [
-        'dashboard', 'media', 'menus', 'pages', 'sections', 'projects', 'gallery', 'contact', 'seo',
+        'dashboard', 'media', 'menus', 'pages', 'sections', 'banners', 'projects', 'gallery', 'contact', 'seo',
     ],
 
     /*

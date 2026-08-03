@@ -23,6 +23,6 @@ class HomeController extends Controller
             return view('frontend.home');
         }
 
-        return view("frontend.templates.{$this->pages->templateFor($homepage)}", ['page' => $homepage]);
+        return view("frontend.templates.{$this->pages->templateFor($homepage)}", ['page' => $homepage, 'isHome' => true]);
     }
 }

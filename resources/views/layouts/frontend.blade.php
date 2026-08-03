@@ -51,6 +51,8 @@
             {{ $slot }}
         </main>
 
+        <x-banner type="cta" />
+
         <footer class="mt-12 border-t border-gray-100 bg-gray-50">
             <div class="mx-auto max-w-6xl px-4 py-8 sm:px-6">
                 <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
@@ -80,5 +82,7 @@
                 @endif
             </div>
         </footer>
+
+        <x-banner type="popup" />
     </body>
 </html>

@@ -38,6 +38,12 @@ return [
         'permission' => 'menus.view',
     ],
     [
+        'label' => 'Banners',
+        'icon' => 'bars-4',
+        'route' => 'admin.banners.index',
+        'permission' => 'banners.view',
+    ],
+    [
         'label' => 'Media Library',
         'icon' => 'photo',
         'route' => 'admin.media.index',
