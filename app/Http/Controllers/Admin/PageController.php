@@ -22,7 +22,13 @@ class PageController extends Controller
      */
     public function index(): View
     {
-        $pages = Page::query()->latest()->paginate(15);
+        $pages = Page::query()
+            ->when(request('search'), fn ($query, $search) => $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")->orWhere('slug', 'like', "%{$search}%");
+            }))
+            ->latest()
+            ->paginate(15)
+            ->withQueryString();
 
         return view('admin.pages.index', compact('pages'));
     }

@@ -22,7 +22,11 @@ class ProjectController extends Controller
      */
     public function index(): View
     {
-        $projects = Project::with('category')->latest()->paginate(15);
+        $projects = Project::with('category')
+            ->when(request('search'), fn ($query, $search) => $query->where('title', 'like', "%{$search}%"))
+            ->latest()
+            ->paginate(15)
+            ->withQueryString();
 
         return view('admin.projects.index', compact('projects'));
     }

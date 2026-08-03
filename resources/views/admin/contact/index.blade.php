@@ -8,6 +8,8 @@
         </div>
     </x-slot>
 
+    <x-admin.search-form :placeholder="__('Search messages...')" />
+
     <x-admin.table>
         <thead>
             <tr>

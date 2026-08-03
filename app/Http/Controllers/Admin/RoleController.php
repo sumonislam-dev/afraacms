@@ -24,7 +24,11 @@ class RoleController extends Controller
      */
     public function index(): View
     {
-        $roles = Role::withCount(['users', 'permissions'])->orderBy('name')->paginate(15);
+        $roles = Role::withCount(['users', 'permissions'])
+            ->when(request('search'), fn ($query, $search) => $query->where('name', 'like', "%{$search}%"))
+            ->orderBy('name')
+            ->paginate(15)
+            ->withQueryString();
 
         return view('admin.roles.index', compact('roles'));
     }

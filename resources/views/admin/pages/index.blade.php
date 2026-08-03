@@ -16,6 +16,8 @@
         </div>
     </x-slot>
 
+    <x-admin.search-form :placeholder="__('Search pages...')" />
+
     <x-admin.table>
         <thead>
             <tr>

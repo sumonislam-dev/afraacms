@@ -19,7 +19,15 @@ class ContactController extends Controller
      */
     public function index(): View
     {
-        $messages = ContactMessage::latest()->paginate(15);
+        $messages = ContactMessage::query()
+            ->when(request('search'), fn ($query, $search) => $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('subject', 'like', "%{$search}%");
+            }))
+            ->latest()
+            ->paginate(15)
+            ->withQueryString();
 
         return view('admin.contact.index', compact('messages'));
     }

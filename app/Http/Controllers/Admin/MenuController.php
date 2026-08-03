@@ -25,7 +25,13 @@ class MenuController extends Controller
      */
     public function index(): View
     {
-        $menus = Menu::withCount('items')->orderBy('name')->paginate(15);
+        $menus = Menu::withCount('items')
+            ->when(request('search'), fn ($query, $search) => $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")->orWhere('slug', 'like', "%{$search}%");
+            }))
+            ->orderBy('name')
+            ->paginate(15)
+            ->withQueryString();
 
         return view('admin.menus.index', compact('menus'));
     }
