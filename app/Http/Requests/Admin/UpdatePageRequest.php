@@ -2,11 +2,14 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Http\Requests\Admin\Concerns\HasSeoRules;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class UpdatePageRequest extends FormRequest
 {
+    use HasSeoRules;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -33,6 +36,7 @@ class UpdatePageRequest extends FormRequest
             'template' => ['required', Rule::in(array_keys(config('pages.templates', [])))],
             'published_at' => ['nullable', 'date'],
             'content' => ['nullable', 'string'],
+            ...$this->seoRules(),
         ];
     }
 }

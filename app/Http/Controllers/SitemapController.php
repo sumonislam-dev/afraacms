@@ -1,0 +1,61 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\CMS\Services\GalleryService;
+use App\CMS\Services\PageService;
+use App\CMS\Services\ProjectService;
+use Illuminate\Http\Response;
+
+class SitemapController extends Controller
+{
+    public function __construct(
+        private readonly PageService $pages,
+        private readonly ProjectService $projects,
+        private readonly GalleryService $galleries,
+    ) {
+    }
+
+    /**
+     * Generate the public sitemap.xml, listing the homepage, every
+     * published page (other than whichever one currently IS the homepage,
+     * to avoid listing its content at two URLs), and - unless disabled on
+     * the dedicated SEO screen - every published project and album.
+     */
+    public function index(): Response
+    {
+        $homepage = $this->pages->homepage();
+
+        $urls = collect([
+            ['loc' => url('/'), 'lastmod' => $homepage['updated_at'] ?? null],
+        ]);
+
+        foreach ($this->pages->all() as $page) {
+            if ($homepage && $page['slug'] === $homepage['slug']) {
+                continue;
+            }
+
+            $urls->push(['loc' => url($page['slug']), 'lastmod' => $page['updated_at']]);
+        }
+
+        if (setting('sitemap_include_projects', true)) {
+            $urls->push(['loc' => route('projects.index'), 'lastmod' => null]);
+
+            foreach ($this->projects->all() as $project) {
+                $urls->push(['loc' => route('projects.show', $project['slug']), 'lastmod' => $project['updated_at']]);
+            }
+        }
+
+        if (setting('sitemap_include_galleries', true)) {
+            $urls->push(['loc' => route('gallery.index'), 'lastmod' => null]);
+
+            foreach ($this->galleries->all() as $gallery) {
+                $urls->push(['loc' => route('gallery.show', $gallery['slug']), 'lastmod' => $gallery['updated_at']]);
+            }
+        }
+
+        return response()
+            ->view('sitemap', ['urls' => $urls])
+            ->header('Content-Type', 'text/xml');
+    }
+}

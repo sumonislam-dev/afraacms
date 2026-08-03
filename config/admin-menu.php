@@ -64,6 +64,12 @@ return [
         ],
     ],
     [
+        'label' => 'Inbox',
+        'icon' => 'phone',
+        'route' => 'admin.contact.index',
+        'permission' => 'contact.view',
+    ],
+    [
         'label' => 'Access Control',
         'icon' => 'users',
         'children' => [
@@ -75,7 +81,7 @@ return [
     [
         'label' => 'SEO',
         'icon' => 'globe-alt',
-        'route' => 'admin.seo.index',
+        'route' => 'admin.seo.edit',
         'permission' => 'seo.view',
     ],
     [

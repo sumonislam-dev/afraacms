@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 #[Fillable(['title', 'slug', 'status', 'template', 'content', 'published_at'])]
 class Page extends Model
@@ -25,6 +26,11 @@ class Page extends Model
     public function sections(): HasMany
     {
         return $this->hasMany(Section::class)->orderBy('sort_order');
+    }
+
+    public function seo(): MorphOne
+    {
+        return $this->morphOne(SeoMeta::class, 'seoable');
     }
 
     /**

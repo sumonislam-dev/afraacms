@@ -4,6 +4,7 @@ namespace App\CMS\Services;
 
 use App\Models\Gallery;
 use App\Models\GalleryItem;
+use App\Models\SeoMeta;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -22,7 +23,7 @@ class GalleryService
      * down to __PHP_Incomplete_Class on read, so only arrays/scalars may be
      * cached here (see PageService/MenuService for the same pattern).
      *
-     * @return array{title: string, slug: string, description: ?string, cover_image_url: ?string, items: array}|null
+     * @return array{title: string, slug: string, description: ?string, cover_image_url: ?string, updated_at: ?string, seo: array, items: array}|null
      */
     public function find(string $slug): ?array
     {
@@ -44,7 +45,7 @@ class GalleryService
     {
         return Cache::rememberForever(self::CACHE_KEY, fn () => Gallery::active()
             ->orderBy('sort_order')
-            ->with('items')
+            ->with(['items', 'seo'])
             ->get()
             ->mapWithKeys(fn (Gallery $gallery) => [
                 $gallery->slug => [
@@ -52,6 +53,8 @@ class GalleryService
                     'slug' => $gallery->slug,
                     'description' => $gallery->description,
                     'cover_image_url' => $gallery->cover_image_url,
+                    'updated_at' => $gallery->updated_at?->toIso8601String(),
+                    'seo' => SeoMeta::toCacheArray($gallery->seo),
                     'items' => $gallery->items->map(fn (GalleryItem $item) => [
                         'type' => $item->type,
                         'image_url' => $item->image_url,
@@ -73,6 +76,8 @@ class GalleryService
             'sort_order' => Gallery::count(),
         ]);
 
+        SeoMeta::syncFor($album, $data);
+
         $this->forget();
 
         return $album;
@@ -84,6 +89,8 @@ class GalleryService
     public function updateAlbum(Gallery $album, array $data): Gallery
     {
         $album->update($data);
+
+        SeoMeta::syncFor($album, $data);
 
         $this->forget();
 

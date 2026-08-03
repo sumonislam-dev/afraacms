@@ -1,4 +1,10 @@
-<x-frontend-layout :title="$page['title']">
+<x-frontend-layout
+    :title="$page['seo']['title'] ?: $page['title']"
+    :description="$page['seo']['description'] ?? null"
+    :image="$page['seo']['image_url'] ?? null"
+    :canonical="$page['seo']['canonical_url'] ?? null"
+    :robots="$page['seo']['robots'] ?? null"
+>
     <x-banner :type="($isHome ?? false) ? 'homepage' : 'page'" />
 
     @if (! empty($page['sections']))

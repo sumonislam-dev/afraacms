@@ -1,4 +1,10 @@
-<x-frontend-layout :title="$project['title']">
+<x-frontend-layout
+    :title="$project['seo']['title'] ?: $project['title']"
+    :description="$project['seo']['description'] ?: $project['excerpt']"
+    :image="$project['seo']['image_url'] ?: $project['cover_image_url']"
+    :canonical="$project['seo']['canonical_url'] ?? null"
+    :robots="$project['seo']['robots'] ?? null"
+>
     <x-banner type="page" />
 
     <div class="mx-auto max-w-4xl px-4 py-16 sm:px-6">

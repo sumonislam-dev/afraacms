@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\GalleryItemController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SectionController;
 use App\Http\Controllers\Admin\SectionItemController;
+use App\Http\Controllers\Admin\SeoController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
@@ -35,6 +37,9 @@ Route::middleware(['auth', 'verified'])
 
         Route::get('settings', [SettingController::class, 'edit'])->name('settings.edit');
         Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
+
+        Route::get('seo', [SeoController::class, 'edit'])->middleware('permission:seo.view')->name('seo.edit');
+        Route::put('seo', [SeoController::class, 'update'])->middleware('permission:seo.edit')->name('seo.update');
 
         Route::get('media', [MediaController::class, 'index'])->name('media.index');
         Route::post('media', [MediaController::class, 'store'])->name('media.store');
@@ -67,6 +72,10 @@ Route::middleware(['auth', 'verified'])
             ->parameters(['project-categories' => 'category']);
 
         Route::resource('projects', ProjectController::class)->except('show');
+
+        Route::resource('contact', ContactController::class)
+            ->only(['index', 'show', 'destroy'])
+            ->parameters(['contact' => 'contactMessage']);
 
         Route::prefix('pages/{page}')->name('pages.')->group(function () {
             Route::get('sections', [SectionController::class, 'index'])->name('sections.index');

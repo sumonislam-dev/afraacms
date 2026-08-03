@@ -5,7 +5,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <x-seo-meta :title="$title ?? null" />
+        <x-seo-meta
+            :title="$title ?? null"
+            :description="$description ?? null"
+            :image="$image ?? null"
+            :url="$canonical ?? null"
+            :robots="$robots ?? null"
+        />
 
         @if (setting('favicon'))
             <link rel="icon" href="{{ media_url(setting('favicon')) }}">
@@ -84,5 +90,7 @@
         </footer>
 
         <x-banner type="popup" />
+
+        @stack('scripts')
     </body>
 </html>

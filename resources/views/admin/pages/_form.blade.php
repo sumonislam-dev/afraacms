@@ -57,6 +57,8 @@
         <x-input-error class="mt-2" :messages="$errors->get('content')" />
     </div>
 
+    @include('admin._seo-fields', ['seoable' => $page ?? null])
+
     <x-slot name="actions">
         <x-secondary-button type="button" onclick="window.location='{{ route('admin.pages.index') }}'">{{ __('Cancel') }}</x-secondary-button>
         <x-primary-button>{{ $isEdit ? __('Update Page') : __('Create Page') }}</x-primary-button>

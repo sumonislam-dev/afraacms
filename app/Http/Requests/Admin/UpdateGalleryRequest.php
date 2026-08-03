@@ -2,11 +2,14 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Http\Requests\Admin\Concerns\HasSeoRules;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class UpdateGalleryRequest extends FormRequest
 {
+    use HasSeoRules;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -28,6 +31,7 @@ class UpdateGalleryRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'cover_image' => ['nullable', 'integer', Rule::exists('media_items', 'id')],
             'is_active' => ['sometimes', 'boolean'],
+            ...$this->seoRules(),
         ];
     }
 }

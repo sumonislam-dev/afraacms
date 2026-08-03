@@ -1,4 +1,10 @@
-<x-frontend-layout :title="$album['title']">
+<x-frontend-layout
+    :title="$album['seo']['title'] ?: $album['title']"
+    :description="$album['seo']['description'] ?: $album['description']"
+    :image="$album['seo']['image_url'] ?: $album['cover_image_url']"
+    :canonical="$album['seo']['canonical_url'] ?? null"
+    :robots="$album['seo']['robots'] ?? null"
+>
     <x-banner type="page" />
 
     <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6">

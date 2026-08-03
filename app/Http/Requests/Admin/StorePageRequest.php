@@ -2,12 +2,15 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Http\Requests\Admin\Concerns\HasSeoRules;
 use App\Models\Page;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class StorePageRequest extends FormRequest
 {
+    use HasSeoRules;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -34,6 +37,7 @@ class StorePageRequest extends FormRequest
             'template' => ['required', Rule::in(array_keys(config('pages.templates', [])))],
             'published_at' => ['nullable', 'date'],
             'content' => ['nullable', 'string'],
+            ...$this->seoRules(),
         ];
     }
 }

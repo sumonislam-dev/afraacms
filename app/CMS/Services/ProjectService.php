@@ -4,6 +4,7 @@ namespace App\CMS\Services;
 
 use App\Models\GalleryItem;
 use App\Models\Project;
+use App\Models\SeoMeta;
 use Illuminate\Support\Facades\Cache;
 
 class ProjectService
@@ -22,7 +23,7 @@ class ProjectService
      * down to __PHP_Incomplete_Class on read, so only arrays/scalars may be
      * cached here (see PageService/GalleryService for the same pattern).
      *
-     * @return array{title: string, slug: string, excerpt: ?string, content: ?string, cover_image_url: ?string, is_featured: bool, category: ?array, gallery_items: array}|null
+     * @return array{title: string, slug: string, excerpt: ?string, content: ?string, cover_image_url: ?string, is_featured: bool, updated_at: ?string, seo: array, category: ?array, gallery_items: array}|null
      */
     public function find(string $slug): ?array
     {
@@ -43,7 +44,7 @@ class ProjectService
     private function allCached(): array
     {
         return Cache::rememberForever(self::CACHE_KEY, fn () => Project::published()
-            ->with(['category', 'gallery.items'])
+            ->with(['category', 'gallery.items', 'seo'])
             ->orderByDesc('is_featured')
             ->latest()
             ->get()
@@ -55,6 +56,8 @@ class ProjectService
                     'content' => $project->content,
                     'cover_image_url' => $project->cover_image_url,
                     'is_featured' => $project->is_featured,
+                    'updated_at' => $project->updated_at?->toIso8601String(),
+                    'seo' => SeoMeta::toCacheArray($project->seo),
                     'category' => $project->category ? [
                         'name' => $project->category->name,
                         'slug' => $project->category->slug,
@@ -79,6 +82,8 @@ class ProjectService
     {
         $project = Project::create($data);
 
+        SeoMeta::syncFor($project, $data);
+
         $this->forget();
 
         return $project;
@@ -90,6 +95,8 @@ class ProjectService
     public function update(Project $project, array $data): Project
     {
         $project->update($data);
+
+        SeoMeta::syncFor($project, $data);
 
         $this->forget();
 

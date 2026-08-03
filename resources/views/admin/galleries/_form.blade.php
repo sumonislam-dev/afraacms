@@ -40,6 +40,8 @@
         </div>
     @endif
 
+    @include('admin._seo-fields', ['seoable' => $album ?? null])
+
     <x-slot name="actions">
         <x-secondary-button type="button" onclick="window.location='{{ route('admin.galleries.index') }}'">{{ __('Cancel') }}</x-secondary-button>
         <x-primary-button>{{ $isEdit ? __('Update Album') : __('Create Album') }}</x-primary-button>

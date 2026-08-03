@@ -4,6 +4,7 @@ namespace App\CMS\Services;
 
 use App\Models\Page;
 use App\Models\Section;
+use App\Models\SeoMeta;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
@@ -22,7 +23,7 @@ class PageService
      * down to __PHP_Incomplete_Class on read, so only arrays/scalars may be
      * cached here (see MenuService for the same pattern).
      *
-     * @return array{id: int, title: string, slug: string, template: string, content: ?string, sections: array}|null
+     * @return array{id: int, title: string, slug: string, template: string, content: ?string, updated_at: ?string, seo: array, sections: array}|null
      */
     public function findPublished(string $slug): ?array
     {
@@ -33,7 +34,7 @@ class PageService
      * Get the page currently configured as the homepage (settings.homepage_page_id),
      * or null if none is set or the selected page is no longer published.
      *
-     * @return array{id: int, title: string, slug: string, template: string, content: ?string, sections: array}|null
+     * @return array{id: int, title: string, slug: string, template: string, content: ?string, updated_at: ?string, seo: array, sections: array}|null
      */
     public function homepage(): ?array
     {
@@ -44,6 +45,14 @@ class PageService
         }
 
         return collect($this->allCached())->firstWhere('id', (int) $id);
+    }
+
+    /**
+     * @return array<int, array>
+     */
+    public function all(): array
+    {
+        return array_values($this->allCached());
     }
 
     /**
@@ -63,7 +72,10 @@ class PageService
     private function allCached(): array
     {
         return Cache::rememberForever(self::CACHE_KEY, fn () => Page::published()
-            ->with(['sections' => fn ($query) => $query->where('is_active', true)->with('items')])
+            ->with([
+                'sections' => fn ($query) => $query->where('is_active', true)->with('items'),
+                'seo',
+            ])
             ->get()
             ->mapWithKeys(fn (Page $page) => [
                 $page->slug => [
@@ -72,6 +84,8 @@ class PageService
                     'slug' => $page->slug,
                     'template' => $page->template,
                     'content' => $page->content,
+                    'updated_at' => $page->updated_at?->toIso8601String(),
+                    'seo' => SeoMeta::toCacheArray($page->seo),
                     'sections' => $page->sections->map(fn (Section $section) => [
                         'type' => $section->type,
                         'heading' => $section->heading,
@@ -103,6 +117,8 @@ class PageService
     {
         $page = Page::create($data);
 
+        SeoMeta::syncFor($page, $data);
+
         $this->forget();
 
         return $page;
@@ -114,6 +130,8 @@ class PageService
     public function update(Page $page, array $data): Page
     {
         $page->update($data);
+
+        SeoMeta::syncFor($page, $data);
 
         $this->forget();
 

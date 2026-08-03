@@ -7,34 +7,52 @@ use Illuminate\Database\Seeder;
 
 class SettingsSeeder extends Seeder
 {
+    private int $sortOrder = 0;
+
     /**
-     * Seed the default setting rows from config/settings.php.
+     * Computed defaults that can't be hardcoded in a config file.
+     *
+     * @var array<string, string>
+     */
+    private array $computedDefaults;
+
+    /**
+     * Seed the default setting rows from config/settings.php and
+     * config/seo.php (the dedicated SEO screen's fields - same underlying
+     * `settings` table, just edited on a separate, "seo.*"-gated screen).
      */
     public function run(): void
     {
-        $sortOrder = 0;
-
-        $computedDefaults = [
+        $this->computedDefaults = [
             'site_name' => config('app.name', 'AfraaCMS'),
             'copyright' => '© '.now()->year.' '.config('app.name', 'AfraaCMS').'. All rights reserved.',
         ];
 
         foreach (config('settings.groups', []) as $groupKey => $group) {
             foreach ($group['fields'] as $fieldKey => $field) {
-                $default = $computedDefaults[$fieldKey] ?? ($field['default'] ?? '');
-
-                Setting::firstOrCreate(
-                    ['key' => $fieldKey],
-                    [
-                        'group' => $groupKey,
-                        'value' => \is_bool($default) ? (string) (int) $default : (string) $default,
-                        'type' => $field['type'],
-                        'description' => $field['description'] ?? null,
-                        'autoload' => true,
-                        'sort_order' => $sortOrder++,
-                    ]
-                );
+                $this->seedField($groupKey, $fieldKey, $field);
             }
         }
+
+        foreach (config('seo.fields', []) as $fieldKey => $field) {
+            $this->seedField('sitemap', $fieldKey, $field);
+        }
+    }
+
+    private function seedField(string $group, string $key, array $field): void
+    {
+        $default = $this->computedDefaults[$key] ?? ($field['default'] ?? '');
+
+        Setting::firstOrCreate(
+            ['key' => $key],
+            [
+                'group' => $group,
+                'value' => \is_bool($default) ? (string) (int) $default : (string) $default,
+                'type' => $field['type'],
+                'description' => $field['description'] ?? null,
+                'autoload' => true,
+                'sort_order' => $this->sortOrder++,
+            ]
+        );
     }
 }

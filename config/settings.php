@@ -101,6 +101,7 @@ return [
                 'maintenance_mode' => ['label' => 'Maintenance Mode', 'type' => 'boolean', 'default' => false],
                 'registration_enabled' => ['label' => 'Registration Enabled', 'type' => 'boolean', 'default' => true],
                 'items_per_page' => ['label' => 'Items Per Page', 'type' => 'number', 'default' => 15],
+                'recaptcha_site_key' => ['label' => 'reCAPTCHA Site Key', 'type' => 'text', 'default' => '', 'description' => 'Set both this and the Secret Key below to enable reCAPTCHA on the contact form.'],
                 'recaptcha_secret' => ['label' => 'reCAPTCHA Secret Key', 'type' => 'password', 'default' => ''],
             ],
         ],

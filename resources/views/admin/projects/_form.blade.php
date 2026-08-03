@@ -83,6 +83,8 @@
         <x-input-error class="mt-2" :messages="$errors->get('is_featured')" />
     </div>
 
+    @include('admin._seo-fields', ['seoable' => $project ?? null])
+
     <x-slot name="actions">
         <x-secondary-button type="button" onclick="window.location='{{ route('admin.projects.index') }}'">{{ __('Cancel') }}</x-secondary-button>
         <x-primary-button>{{ $isEdit ? __('Update Project') : __('Create Project') }}</x-primary-button>

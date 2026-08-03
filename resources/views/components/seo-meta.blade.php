@@ -1,7 +1,7 @@
-@props(['title' => null, 'description' => null, 'image' => null, 'url' => null])
+@props(['title' => null, 'description' => null, 'image' => null, 'url' => null, 'robots' => null])
 
 @php
-    $meta = app(\App\CMS\SEO\SeoService::class)->resolve(compact('title', 'description', 'image', 'url'));
+    $meta = app(\App\CMS\SEO\SeoService::class)->resolve(compact('title', 'description', 'image', 'url', 'robots'));
 @endphp
 
 <title>{{ $meta['title'] }}</title>
@@ -9,6 +9,8 @@
 @if ($meta['description'])
     <meta name="description" content="{{ $meta['description'] }}">
 @endif
+
+<meta name="robots" content="{{ $meta['robots'] }}">
 
 <link rel="canonical" href="{{ $meta['url'] }}">
 

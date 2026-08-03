@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 #[Fillable(['title', 'slug', 'description', 'cover_image', 'is_active', 'sort_order'])]
 class Gallery extends Model
@@ -26,6 +27,11 @@ class Gallery extends Model
     public function items(): HasMany
     {
         return $this->hasMany(GalleryItem::class)->orderBy('sort_order');
+    }
+
+    public function seo(): MorphOne
+    {
+        return $this->morphOne(SeoMeta::class, 'seoable');
     }
 
     /**
