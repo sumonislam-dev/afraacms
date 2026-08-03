@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\CMS\Services\SettingService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UpdateSettingsRequest;
+use App\Models\Page;
 use App\Models\Setting;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -29,6 +30,16 @@ class SettingController extends Controller
                 if (($field['options'] ?? null) === 'timezones') {
                     $field['resolved_options'] = collect(timezone_identifiers_list())
                         ->mapWithKeys(fn (string $timezone) => [$timezone => $timezone])
+                        ->all();
+                }
+
+                if (($field['options'] ?? null) === 'pages') {
+                    // Note: numeric-looking string keys (page ids) are coerced back to
+                    // ints by PHP's array key normalization, so the option-selected
+                    // comparison in _field.blade.php casts both sides to string.
+                    $field['resolved_options'] = ['' => '— None —'] + Page::published()
+                        ->orderBy('title')
+                        ->pluck('title', 'id')
                         ->all();
                 }
             }

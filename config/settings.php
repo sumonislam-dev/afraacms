@@ -27,6 +27,7 @@ return [
                 'site_name' => ['label' => 'Site Name', 'type' => 'text', 'default' => 'AfraaCMS'],
                 'tagline' => ['label' => 'Tagline', 'type' => 'text', 'default' => ''],
                 'timezone' => ['label' => 'Timezone', 'type' => 'select', 'options' => 'timezones', 'default' => 'UTC'],
+                'homepage_page_id' => ['label' => 'Homepage', 'type' => 'select', 'options' => 'pages', 'default' => '', 'description' => 'The published page shown at the site root ("/").'],
             ],
         ],
 

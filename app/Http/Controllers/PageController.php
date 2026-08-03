@@ -20,10 +20,6 @@ class PageController extends Controller
 
         abort_unless($page, 404);
 
-        $template = array_key_exists($page['template'], config('pages.templates', []))
-            ? $page['template']
-            : 'default';
-
-        return view("frontend.templates.{$template}", ['page' => $page]);
+        return view("frontend.templates.{$this->pages->templateFor($page)}", ['page' => $page]);
     }
 }

@@ -30,6 +30,34 @@ class PageService
     }
 
     /**
+     * Get the page currently configured as the homepage (settings.homepage_page_id),
+     * or null if none is set or the selected page is no longer published.
+     *
+     * @return array{id: int, title: string, slug: string, template: string, content: ?string, sections: array}|null
+     */
+    public function homepage(): ?array
+    {
+        $id = setting('homepage_page_id');
+
+        if (! $id) {
+            return null;
+        }
+
+        return collect($this->allCached())->firstWhere('id', (int) $id);
+    }
+
+    /**
+     * Resolve the Blade template a cached page array should render with,
+     * falling back to "default" if its stored template is no longer valid.
+     */
+    public function templateFor(array $page): string
+    {
+        return array_key_exists($page['template'], config('pages.templates', []))
+            ? $page['template']
+            : 'default';
+    }
+
+    /**
      * @return array<string, array>
      */
     private function allCached(): array

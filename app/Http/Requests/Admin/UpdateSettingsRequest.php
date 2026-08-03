@@ -30,14 +30,15 @@ class UpdateSettingsRequest extends FormRequest
 
         foreach (config('settings.groups', []) as $group) {
             foreach ($group['fields'] as $key => $field) {
-                $rules[$key] = match ($field['type']) {
-                    'email' => ['nullable', 'email', 'max:255'],
-                    'url' => ['nullable', 'url', 'max:2048'],
-                    'number' => ['nullable', 'numeric'],
-                    'boolean' => ['nullable', 'boolean'],
-                    'color' => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
-                    'image' => ['nullable', 'integer', Rule::exists('media_items', 'id')],
-                    'textarea' => ['nullable', 'string'],
+                $rules[$key] = match (true) {
+                    ($field['options'] ?? null) === 'pages' => ['nullable', 'integer', Rule::exists('pages', 'id')],
+                    $field['type'] === 'email' => ['nullable', 'email', 'max:255'],
+                    $field['type'] === 'url' => ['nullable', 'url', 'max:2048'],
+                    $field['type'] === 'number' => ['nullable', 'numeric'],
+                    $field['type'] === 'boolean' => ['nullable', 'boolean'],
+                    $field['type'] === 'color' => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+                    $field['type'] === 'image' => ['nullable', 'integer', Rule::exists('media_items', 'id')],
+                    $field['type'] === 'textarea' => ['nullable', 'string'],
                     default => ['nullable', 'string', 'max:255'],
                 };
             }
