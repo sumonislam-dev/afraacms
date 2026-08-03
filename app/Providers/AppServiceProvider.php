@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\CMS\Cache\CmsCacheManager;
 use App\CMS\Services\BannerService;
+use App\CMS\Services\GalleryService;
 use App\CMS\Services\MenuService;
 use App\CMS\Services\PageService;
 use App\CMS\Services\SettingService;
@@ -29,5 +30,6 @@ class AppServiceProvider extends ServiceProvider
         $cache->register('menus', fn () => $this->app->make(MenuService::class)->forget());
         $cache->register('pages', fn () => $this->app->make(PageService::class)->forget());
         $cache->register('banners', fn () => $this->app->make(BannerService::class)->forget());
+        $cache->register('galleries', fn () => $this->app->make(GalleryService::class)->forget());
     }
 }

@@ -80,7 +80,7 @@
                     <h3 class="text-sm font-semibold text-gray-900">{{ __('Add Item') }}</h3>
                     <form method="POST" action="{{ route('admin.pages.sections.items.store', [$page, $section]) }}" class="mt-4">
                         @csrf
-                        @include('admin.pages.sections._item-form', ['itemFields' => $itemFields])
+                        @include('admin.pages.sections._item-form', ['item' => null, 'itemFields' => $itemFields])
                         <div class="mt-4 flex justify-end">
                             <x-primary-button>{{ __('Add Item') }}</x-primary-button>
                         </div>

@@ -50,6 +50,12 @@ return [
         'permission' => 'media.view',
     ],
     [
+        'label' => 'Galleries',
+        'icon' => 'photo',
+        'route' => 'admin.galleries.index',
+        'permission' => 'gallery.view',
+    ],
+    [
         'label' => 'Access Control',
         'icon' => 'users',
         'children' => [

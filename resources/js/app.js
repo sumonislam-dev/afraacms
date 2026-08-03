@@ -63,14 +63,14 @@ function initMenuBuilder() {
 document.addEventListener('DOMContentLoaded', initMenuBuilder);
 
 /**
- * Section builder drag-and-drop (admin.pages.sections.index).
+ * Generic flat-list drag-and-drop reorder, shared by every admin screen
+ * that just persists a single top-to-bottom id order (sections, galleries,
+ * gallery items) - unlike the menu builder above, none of these nest.
  *
- * No-ops on every other page since it just checks for #section-list-root.
- * A single flat list (sections don't nest), so this is simpler than the
- * menu builder: just persist the new top-to-bottom id order.
+ * No-ops if #<rootId> isn't present on the page.
  */
-function initSectionBuilder() {
-    const root = document.getElementById('section-list-root');
+function initFlatSortable(rootId, listSelector) {
+    const root = document.getElementById(rootId);
 
     if (! root) {
         return;
@@ -78,7 +78,7 @@ function initSectionBuilder() {
 
     const reorderUrl = root.dataset.reorderUrl;
     const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-    const list = root.querySelector('[data-section-list]');
+    const list = root.querySelector(listSelector);
 
     new Sortable(list, {
         animation: 150,
@@ -99,4 +99,8 @@ function initSectionBuilder() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', initSectionBuilder);
+document.addEventListener('DOMContentLoaded', () => {
+    initFlatSortable('section-list-root', '[data-section-list]');
+    initFlatSortable('gallery-list-root', '[data-sortable-list]');
+    initFlatSortable('gallery-items-root', '[data-sortable-list]');
+});

@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\GalleryController;
+use App\Http\Controllers\Admin\GalleryItemController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\MenuItemController;
@@ -47,6 +49,16 @@ Route::middleware(['auth', 'verified'])
         Route::resource('pages', PageController::class)->except('show');
 
         Route::resource('banners', BannerController::class)->except('show');
+
+        Route::resource('galleries', GalleryController::class)->except('show');
+        Route::post('galleries/reorder', [GalleryController::class, 'reorder'])->name('galleries.reorder');
+
+        Route::prefix('galleries/{gallery}')->name('galleries.')->group(function () {
+            Route::post('items', [GalleryItemController::class, 'store'])->name('items.store');
+            Route::put('items/{item}', [GalleryItemController::class, 'update'])->name('items.update');
+            Route::delete('items/{item}', [GalleryItemController::class, 'destroy'])->name('items.destroy');
+            Route::post('items/reorder', [GalleryItemController::class, 'reorder'])->name('items.reorder');
+        });
 
         Route::prefix('pages/{page}')->name('pages.')->group(function () {
             Route::get('sections', [SectionController::class, 'index'])->name('sections.index');
