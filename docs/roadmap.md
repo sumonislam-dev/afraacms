@@ -559,22 +559,33 @@ AfraaCMS v1.0
 
 # Future Roadmap (v2)
 
-- Theme System
-- Plugin System
-- Blog
-- Downloads
-- Team Members
-- Announcements
-- Form Builder
-- Newsletter
-- Multi-language
-- Multi-site
-- API
-- GraphQL
-- Mobile App
-- CLI Installer
-- Auto Update
-- Marketplace
+> **Direction confirmed 2026-08-03:** AfraaCMS is no longer just AfraaWorld's own site — it is being sold to other clients. First real client: an NGO whose reference site is https://demo1.rsufbd.com (a 6-page site: Home, About [with anchor sub-sections: History, Registration, Vision & Mission, Areas of Operation, What We Do, Success], Get Involved, News, Gallery, Contact Us — currently a placeholder/skeleton demo, no advanced features like search, multi-language, newsletter, or team profiles yet). This client's real needs now drive v2 prioritization below, instead of guessing.
+
+## Tier 1 — Next up (drives real client delivery)
+
+- **Team Members** — decided: build this now. Every NGO/org site (including this client's) eventually needs a Board of Directors / Founder / Staff page, even though it isn't on the reference demo yet. Small, well-scoped CRUD module — same shape as Projects/Gallery (name, designation, photo, bio, sort order). Low effort, immediate value for the first paying client.
+- **Blog / News** — promoted here because the reference site has a "News" nav item. Reuses the existing Page/Section engine almost directly (title, slug, status, template, SEO already built).
+- **Anchor sub-navigation for Pages** — a small gap found while reviewing the reference site: its About page jumps between sub-sections (History, Vision & Mission, etc.) via in-page anchors. AfraaCMS's Section engine doesn't yet support an anchor id + jump-nav pattern; needed to replicate that About-page structure.
+- **Announcements** — same CRUD shape as Team Members, reuses Banner/Section display patterns.
+- **Newsletter** — reuses the Contact module's pattern (spam protection, storage, admin inbox); only new piece is an outbound email/provider integration.
+- **Form Builder** — hold until the above are done. A true generic form builder is bigger than it looks; consider scoping it to "one custom form per page" rather than a full builder unless a client has a concrete need for many different forms.
+
+## Tier 2 — Decide deliberately per client, don't default into them
+
+- **Multi-language** — do this early in whichever client engagement first needs it, not late. Retrofitting translations onto every content model after the fact is far more expensive than designing for it up front.
+- **API** — build only once there's an actual consumer (mobile app, third-party integration). Laravel Sanctum + API Resources fits cleanly when that day comes.
+- **Downloads** — small module (file + description + category), low priority until a client asks for it specifically.
+
+## Tier 3 — Genuine multi-client/product infrastructure (deferred)
+
+- **Theme System** — decided: **defer**. With only one real client so far, a swappable/multi-tenant theme system would be designed from guesses, not real requirements — this project's own coding standard is "don't design for hypothetical future requirements." Each new client is, for now, its own AfraaCMS install customized via Settings/Pages/Sections/Menus (the existing per-site content model already covers this). Revisit once 2–3 real client sites reveal what actually needs to vary between them (colors and logo only? full layout? whole page structures?).
+- **Plugin System** — only valuable once third-party developers need to extend the CMS; needs a stable public API surface first.
+- **Multi-site** — running many client sites off one codebase/tenant-isolated instance; substantial infra and security implications. Only pursue once the one-install-per-client model becomes a real bottleneck.
+- **Marketplace** — depends on Plugin System and Theme System existing first; far downstream.
+- **Mobile App** — depends on the API existing first; only pursue with a concrete mobile use case.
+- **GraphQL** — an alternative/addition to the REST API; only worth it if a specific consumer needs it. Usually over-engineering for a CMS.
+- **CLI Installer** — valuable once you're distributing AfraaCMS to many independent installs; low priority for a handful of manually-deployed clients.
+- **Auto Update** — same; only matters once there are multiple independent installs to keep in sync.
 
 ---
 
