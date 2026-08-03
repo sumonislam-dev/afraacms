@@ -17,7 +17,7 @@
         @foreach ($items as $index => $item)
             <button type="button" @click="show({{ $index }})" class="group relative block aspect-square w-full overflow-hidden rounded-lg bg-gray-100">
                 @if ($item['type'] === 'image' && $item['image_url'])
-                    <img src="{{ $item['image_url'] }}" alt="{{ $item['caption'] ?? '' }}" class="h-full w-full object-cover transition group-hover:opacity-90">
+                    <img src="{{ $item['image_url'] }}" alt="{{ $item['caption'] ?? '' }}" class="h-full w-full object-cover transition group-hover:opacity-90" loading="lazy">
                 @else
                     <div class="flex h-full w-full items-center justify-center bg-gray-800">
                         <x-icon name="play" class="h-10 w-10 text-white" />

@@ -13,7 +13,7 @@
             @foreach ($items as $item)
                 @if ($item['image_url'] ?? null)
                     <figure>
-                        <img src="{{ $item['image_url'] }}" alt="{{ $item['title'] ?? '' }}" class="aspect-square w-full rounded-lg object-cover">
+                        <img src="{{ $item['image_url'] }}" alt="{{ $item['title'] ?? '' }}" class="aspect-square w-full rounded-lg object-cover" loading="lazy">
 
                         @if ($item['title'] ?? null)
                             <figcaption class="mt-2 text-center text-sm text-gray-500">{{ $item['title'] }}</figcaption>

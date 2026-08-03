@@ -71,6 +71,37 @@ storage/
 
 ---
 
+# Progress Status (as of 2026-08-03)
+
+| Phase | Status | Notes |
+|---|---|---|
+| 1 — Project Foundation | ✅ Done | |
+| 2 — Admin Framework | ✅ Done | Dashboard rebuilt with real stat cards, recent-activity feed, quick actions |
+| 3 — Authentication & Permissions | ✅ Done | Spatie Permission, Super Admin/Editor roles, policies throughout |
+| 4 — CMS Core | ✅ Done | `app/CMS/{Services,Rendering,Cache,Helpers,Menu,SEO}` |
+| 5 — Settings Module | ✅ Done | |
+| 6 — Media Library | ✅ Done | Spatie Media Library, Intervention Image, WebP |
+| 7 — Menu Builder | ✅ Done | Includes nested/dropdown menu items (Parent Item selector) |
+| 8 — Page Manager | ✅ Done | + Trash & Restore (soft deletes) |
+| 9 — Section Engine | ✅ Done | |
+| 10 — Blade Components | ✅ Done | |
+| 11 — Homepage | ✅ Done | |
+| 12 — Inner Pages | ✅ Done | |
+| 13 — Banner Management | ✅ Done | |
+| 14 — Gallery | ✅ Done | |
+| 15 — Projects | ✅ Done | + Trash & Restore (soft deletes) |
+| 16 — Contact | ✅ Done | |
+| 17 — SEO | ✅ Done | Canonical, Open Graph, Twitter Card, robots.txt, sitemap.xml |
+| 18 — Performance | ✅ Done | Frontend caching (pages/menus/settings/etc.), WebP conversion, lazy-loading on below-the-fold images |
+| 19 — Security | ✅ Done except 2FA | CSRF, hardened password policy, rate limiting, hardened session cookies, Activity Log/audit trail, secure uploads. **2FA explicitly deferred by product decision**, not started |
+| 20 — Shared Hosting Deployment | ⏭ Deferred | Explicitly skipped for now (no backup solution, cron, or deploy docs yet) — revisit when ready to deploy |
+| 21 — Testing | ✅ Done | 184 automated feature tests passing across every module |
+| 22 — Release v1.0 | ⏸ Blocked | Waiting on Phase 20 (`Shared hosting verified`, `Production deployed`) and a manual `Responsive verified` pass; all other checklist items are satisfied |
+
+**Built beyond this original plan:** Trash & Restore for Pages/Projects, an Activity Log/audit trail (spatie/laravel-activitylog across all content models), a cache-service refactor (`CachesForFrontend` trait, removing duplicated cache logic), pagination + search on admin index pages, compact create/edit forms, collapsible SEO fields, and a sitemap.xml fix for a false-positive IDE parsing error.
+
+---
+
 # Phase 1 — Project Foundation
 
 ## Objective

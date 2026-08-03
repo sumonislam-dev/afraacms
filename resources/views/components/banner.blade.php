@@ -31,7 +31,7 @@
                 </button>
 
                 @if ($data['image_url'])
-                    <img src="{{ $data['image_url'] }}" alt="" class="mb-4 w-full rounded-md object-cover">
+                    <img src="{{ $data['image_url'] }}" alt="" class="mb-4 w-full rounded-md object-cover" loading="lazy">
                 @endif
 
                 @if ($data['title'])

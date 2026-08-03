@@ -24,7 +24,12 @@
         @foreach ($items as $index => $item)
             <div x-show="active === {{ $index }}" x-transition.opacity.duration.500ms class="relative">
                 @if ($item['image_url'] ?? $item['imageUrl'] ?? null)
-                    <img src="{{ $item['image_url'] ?? $item['imageUrl'] }}" alt="{{ $item['title'] ?? '' }}" class="aspect-video w-full object-cover">
+                    <img
+                        src="{{ $item['image_url'] ?? $item['imageUrl'] }}"
+                        alt="{{ $item['title'] ?? '' }}"
+                        class="aspect-video w-full object-cover"
+                        @if ($index > 0) loading="lazy" @endif
+                    >
                 @endif
 
                 @if (($item['title'] ?? null) || ($item['body'] ?? null))

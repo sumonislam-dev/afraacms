@@ -18,7 +18,7 @@
             @foreach ($items as $item)
                 <div class="rounded-lg border border-gray-200 p-6">
                     @if ($item['image_url'] ?? null)
-                        <img src="{{ $item['image_url'] }}" alt="" class="mb-4 h-12 w-12 object-contain">
+                        <img src="{{ $item['image_url'] }}" alt="" class="mb-4 h-12 w-12 object-contain" loading="lazy">
                     @endif
 
                     @if ($item['title'] ?? null)

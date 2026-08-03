@@ -3,7 +3,7 @@
 <a href="{{ route('projects.show', $project['slug']) }}" class="group block overflow-hidden rounded-lg border border-gray-200">
     <div class="relative">
         @if ($project['cover_image_url'])
-            <img src="{{ $project['cover_image_url'] }}" alt="" class="aspect-video w-full object-cover transition group-hover:opacity-90">
+            <img src="{{ $project['cover_image_url'] }}" alt="" class="aspect-video w-full object-cover transition group-hover:opacity-90" loading="lazy">
         @else
             <div class="flex aspect-video w-full items-center justify-center bg-gray-100 text-gray-300">
                 <x-icon name="photo" class="h-10 w-10" />
