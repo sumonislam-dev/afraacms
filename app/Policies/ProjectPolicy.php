@@ -46,4 +46,20 @@ class ProjectPolicy
     {
         return $user->can('projects.delete');
     }
+
+    /**
+     * Determine whether the user can restore the given trashed project.
+     */
+    public function restore(User $user, Project $project): bool
+    {
+        return $user->can('projects.delete');
+    }
+
+    /**
+     * Determine whether the user can permanently delete the given trashed project.
+     */
+    public function forceDelete(User $user, Project $project): bool
+    {
+        return $user->can('projects.delete');
+    }
 }

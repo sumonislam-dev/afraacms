@@ -10,6 +10,7 @@ use App\CMS\Services\PageService;
 use App\CMS\Services\ProjectService;
 use App\CMS\Services\SettingService;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\Rules\Password;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -33,5 +34,11 @@ class AppServiceProvider extends ServiceProvider
         $cache->register('banners', fn () => $this->app->make(BannerService::class)->forget());
         $cache->register('galleries', fn () => $this->app->make(GalleryService::class)->forget());
         $cache->register('projects', fn () => $this->app->make(ProjectService::class)->forget());
+
+        Password::defaults(function () {
+            $rule = Password::min(10)->mixedCase()->numbers();
+
+            return $this->app->isProduction() ? $rule->uncompromised() : $rule;
+        });
     }
 }

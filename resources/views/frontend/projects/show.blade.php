@@ -9,7 +9,7 @@
 
     <div class="mx-auto max-w-4xl px-4 py-16 sm:px-6">
         @if ($project['cover_image_url'])
-            <img src="{{ $project['cover_image_url'] }}" alt="" class="aspect-video w-full rounded-lg object-cover">
+            <img src="{{ $project['cover_image_url'] }}" alt="{{ $project['title'] }}" class="aspect-video w-full rounded-lg object-cover">
         @endif
 
         <div class="mt-8 text-center">

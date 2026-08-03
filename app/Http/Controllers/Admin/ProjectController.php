@@ -76,4 +76,45 @@ class ProjectController extends Controller
 
         return redirect()->route('admin.projects.index')->with('success', __('Project deleted successfully.'));
     }
+
+    /**
+     * Display the trashed (soft-deleted) projects.
+     */
+    public function trash(): View
+    {
+        $this->authorize('viewAny', Project::class);
+
+        $projects = Project::onlyTrashed()
+            ->with('category')
+            ->when(request('search'), fn ($query, $search) => $query->where('title', 'like', "%{$search}%"))
+            ->orderByDesc('deleted_at')
+            ->paginate(15)
+            ->withQueryString();
+
+        return view('admin.projects.trash', compact('projects'));
+    }
+
+    /**
+     * Restore a trashed project.
+     */
+    public function restore(Project $project): RedirectResponse
+    {
+        $this->authorize('restore', $project);
+
+        $this->projects->restore($project);
+
+        return redirect()->route('admin.projects.trash')->with('success', __('Project restored successfully.'));
+    }
+
+    /**
+     * Permanently delete a trashed project.
+     */
+    public function forceDelete(Project $project): RedirectResponse
+    {
+        $this->authorize('forceDelete', $project);
+
+        $this->projects->forceDelete($project);
+
+        return redirect()->route('admin.projects.trash')->with('success', __('Project permanently deleted.'));
+    }
 }

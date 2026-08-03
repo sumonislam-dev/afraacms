@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -35,6 +36,8 @@ Route::middleware(['auth', 'verified'])
 
         Route::get('permissions', [PermissionController::class, 'index'])->name('permissions.index');
 
+        Route::get('activity', [ActivityController::class, 'index'])->middleware('permission:activity.view')->name('activity.index');
+
         Route::get('settings', [SettingController::class, 'edit'])->name('settings.edit');
         Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
 
@@ -54,6 +57,9 @@ Route::middleware(['auth', 'verified'])
         Route::post('menus/{menu}/items/reorder', [MenuItemController::class, 'reorder'])->name('menus.items.reorder');
 
         Route::resource('pages', PageController::class)->except('show');
+        Route::get('pages-trash', [PageController::class, 'trash'])->name('pages.trash');
+        Route::post('pages/{page}/restore', [PageController::class, 'restore'])->name('pages.restore')->withTrashed();
+        Route::delete('pages/{page}/force', [PageController::class, 'forceDelete'])->name('pages.force-delete')->withTrashed();
 
         Route::resource('banners', BannerController::class)->except('show');
 
@@ -73,6 +79,9 @@ Route::middleware(['auth', 'verified'])
             ->parameters(['project-categories' => 'category']);
 
         Route::resource('projects', ProjectController::class)->except('show');
+        Route::get('projects-trash', [ProjectController::class, 'trash'])->name('projects.trash');
+        Route::post('projects/{project}/restore', [ProjectController::class, 'restore'])->name('projects.restore')->withTrashed();
+        Route::delete('projects/{project}/force', [ProjectController::class, 'forceDelete'])->name('projects.force-delete')->withTrashed();
 
         Route::resource('contact', ContactController::class)
             ->only(['index', 'show', 'destroy'])

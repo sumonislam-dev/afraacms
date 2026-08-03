@@ -2,18 +2,20 @@
 
 namespace App\CMS\Services;
 
+use App\CMS\Services\Concerns\CachesForFrontend;
 use App\Models\Menu;
 use App\Models\MenuItem;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class MenuService
 {
-    /**
-     * Cache key holding every menu (with its active items) keyed by slug.
-     */
-    private const CACHE_KEY = 'menus.all';
+    use CachesForFrontend;
+
+    protected function cacheKey(): string
+    {
+        return 'menus.all';
+    }
 
     /**
      * Get a menu by slug, with only its active items nested into a tree, from
@@ -36,7 +38,7 @@ class MenuService
      */
     private function allCached(): array
     {
-        return Cache::rememberForever(self::CACHE_KEY, fn () => Menu::query()
+        return $this->rememberForever(fn () => Menu::query()
             ->with(['items' => fn ($query) => $query->where('is_active', true)])
             ->get()
             ->mapWithKeys(fn (Menu $menu) => [
@@ -161,13 +163,5 @@ class MenuService
 
             $this->persistTree($node['children'] ?? [], (int) $node['id']);
         }
-    }
-
-    /**
-     * Forget the cached menu map so the next read repopulates it.
-     */
-    public function forget(): void
-    {
-        Cache::forget(self::CACHE_KEY);
     }
 }

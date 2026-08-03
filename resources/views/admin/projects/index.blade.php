@@ -13,11 +13,19 @@
                 </p>
             </div>
 
-            @can('create', \App\Models\Project::class)
-                <x-primary-button type="button" onclick="window.location='{{ route('admin.projects.create') }}'">
-                    {{ __('New Project') }}
-                </x-primary-button>
-            @endcan
+            <div class="flex items-center gap-3">
+                @can('viewAny', \App\Models\Project::class)
+                    <x-secondary-button type="button" onclick="window.location='{{ route('admin.projects.trash') }}'">
+                        {{ __('Trash') }}
+                    </x-secondary-button>
+                @endcan
+
+                @can('create', \App\Models\Project::class)
+                    <x-primary-button type="button" onclick="window.location='{{ route('admin.projects.create') }}'">
+                        {{ __('New Project') }}
+                    </x-primary-button>
+                @endcan
+            </div>
         </div>
     </x-slot>
 
@@ -73,7 +81,7 @@
                                             {{ __('Delete :title?', ['title' => $project->title]) }}
                                         </h2>
                                         <p class="mt-1 text-sm text-gray-600">
-                                            {{ __('This will permanently remove this project. This action cannot be undone.') }}
+                                            {{ __('This project will be moved to Trash. You can restore it or delete it permanently from there.') }}
                                         </p>
 
                                         <form method="POST" action="{{ route('admin.projects.destroy', $project) }}" class="mt-6 flex justify-end gap-3">

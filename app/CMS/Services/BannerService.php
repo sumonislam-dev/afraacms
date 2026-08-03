@@ -2,15 +2,17 @@
 
 namespace App\CMS\Services;
 
+use App\CMS\Services\Concerns\CachesForFrontend;
 use App\Models\Banner;
-use Illuminate\Support\Facades\Cache;
 
 class BannerService
 {
-    /**
-     * Cache key holding the current active banner for each type.
-     */
-    private const CACHE_KEY = 'banners.active';
+    use CachesForFrontend;
+
+    protected function cacheKey(): string
+    {
+        return 'banners.active';
+    }
 
     /**
      * Get the current active banner for a placement, from cache where possible.
@@ -32,7 +34,7 @@ class BannerService
      */
     private function allCached(): array
     {
-        return Cache::rememberForever(self::CACHE_KEY, fn () => Banner::active()
+        return $this->rememberForever(fn () => Banner::active()
             ->orderBy('sort_order')
             ->get()
             ->groupBy('type')
@@ -80,13 +82,5 @@ class BannerService
         $banner->delete();
 
         $this->forget();
-    }
-
-    /**
-     * Forget the cached banner map so the next read repopulates it.
-     */
-    public function forget(): void
-    {
-        Cache::forget(self::CACHE_KEY);
     }
 }

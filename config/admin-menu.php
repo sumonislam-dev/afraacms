@@ -76,6 +76,7 @@ return [
             ['label' => 'Users', 'route' => 'admin.users.index', 'permission' => 'users.view'],
             ['label' => 'Roles', 'route' => 'admin.roles.index', 'permission' => 'roles.view'],
             ['label' => 'Permissions', 'route' => 'admin.permissions.index', 'permission' => 'permissions.view'],
+            ['label' => 'Activity Log', 'route' => 'admin.activity.index', 'permission' => 'activity.view'],
         ],
     ],
     [

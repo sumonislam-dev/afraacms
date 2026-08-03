@@ -25,6 +25,7 @@ return [
         'users' => ['view', 'create', 'edit', 'delete'],
         'roles' => ['view', 'create', 'edit', 'delete'],
         'permissions' => ['view'],
+        'activity' => ['view'],
         'settings' => ['view', 'edit'],
         'media' => ['view', 'create', 'edit', 'delete'],
         'menus' => ['view', 'create', 'edit', 'delete'],

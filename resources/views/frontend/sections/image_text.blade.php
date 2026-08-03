@@ -7,7 +7,7 @@
         <div class="grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
             <div class="{{ $imageRight ? 'lg:order-2' : '' }}">
                 @if ($section['image_url'])
-                    <img src="{{ $section['image_url'] }}" alt="" class="w-full rounded-lg object-cover">
+                    <img src="{{ $section['image_url'] }}" alt="{{ $section['heading'] ?? '' }}" class="w-full rounded-lg object-cover">
                 @endif
             </div>
 

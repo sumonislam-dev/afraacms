@@ -8,11 +8,19 @@
                 <p class="mt-1 text-sm text-gray-500">{{ __('Create and manage the site\'s standalone pages.') }}</p>
             </div>
 
-            @can('create', \App\Models\Page::class)
-                <x-primary-button type="button" onclick="window.location='{{ route('admin.pages.create') }}'">
-                    {{ __('New Page') }}
-                </x-primary-button>
-            @endcan
+            <div class="flex items-center gap-3">
+                @can('viewAny', \App\Models\Page::class)
+                    <x-secondary-button type="button" onclick="window.location='{{ route('admin.pages.trash') }}'">
+                        {{ __('Trash') }}
+                    </x-secondary-button>
+                @endcan
+
+                @can('create', \App\Models\Page::class)
+                    <x-primary-button type="button" onclick="window.location='{{ route('admin.pages.create') }}'">
+                        {{ __('New Page') }}
+                    </x-primary-button>
+                @endcan
+            </div>
         </div>
     </x-slot>
 
@@ -70,7 +78,7 @@
                                             {{ __('Delete :title?', ['title' => $page->title]) }}
                                         </h2>
                                         <p class="mt-1 text-sm text-gray-600">
-                                            {{ __('This will permanently remove this page. This action cannot be undone.') }}
+                                            {{ __('This page will be moved to Trash. You can restore it or delete it permanently from there.') }}
                                         </p>
 
                                         <form method="POST" action="{{ route('admin.pages.destroy', $page) }}" class="mt-6 flex justify-end gap-3">

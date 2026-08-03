@@ -2,18 +2,19 @@
 
 namespace App\CMS\Services;
 
+use App\CMS\Services\Concerns\CachesForFrontend;
 use App\Models\GalleryItem;
 use App\Models\Project;
 use App\Models\SeoMeta;
-use Illuminate\Support\Facades\Cache;
 
 class ProjectService
 {
-    /**
-     * Cache key holding every published project (with its category and
-     * attached gallery items, if any), keyed by slug.
-     */
-    private const CACHE_KEY = 'projects.published';
+    use CachesForFrontend;
+
+    protected function cacheKey(): string
+    {
+        return 'projects.published';
+    }
 
     /**
      * Find a published project by slug, from cache where possible.
@@ -43,7 +44,7 @@ class ProjectService
      */
     private function allCached(): array
     {
-        return Cache::rememberForever(self::CACHE_KEY, fn () => Project::published()
+        return $this->rememberForever(fn () => Project::published()
             ->with(['category', 'gallery.items', 'seo'])
             ->orderByDesc('is_featured')
             ->latest()
@@ -114,10 +115,24 @@ class ProjectService
     }
 
     /**
-     * Forget the cached project map so the next read repopulates it.
+     * Restore a soft-deleted project.
      */
-    public function forget(): void
+    public function restore(Project $project): Project
     {
-        Cache::forget(self::CACHE_KEY);
+        $project->restore();
+
+        $this->forget();
+
+        return $project;
+    }
+
+    /**
+     * Permanently delete a soft-deleted project.
+     */
+    public function forceDelete(Project $project): void
+    {
+        $project->forceDelete();
+
+        $this->forget();
     }
 }

@@ -46,4 +46,20 @@ class PagePolicy
     {
         return $user->can('pages.delete');
     }
+
+    /**
+     * Determine whether the user can restore the given trashed page.
+     */
+    public function restore(User $user, Page $page): bool
+    {
+        return $user->can('pages.delete');
+    }
+
+    /**
+     * Determine whether the user can permanently delete the given trashed page.
+     */
+    public function forceDelete(User $user, Page $page): bool
+    {
+        return $user->can('pages.delete');
+    }
 }

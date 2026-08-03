@@ -2,15 +2,17 @@
 
 namespace App\CMS\Services;
 
+use App\CMS\Services\Concerns\CachesForFrontend;
 use App\Models\Setting;
-use Illuminate\Support\Facades\Cache;
 
 class SettingService
 {
-    /**
-     * Cache key holding every setting's value as a flat ["key" => "value"] map.
-     */
-    private const CACHE_KEY = 'settings.all';
+    use CachesForFrontend;
+
+    protected function cacheKey(): string
+    {
+        return 'settings.all';
+    }
 
     /**
      * Get every setting's value, from cache where possible.
@@ -19,7 +21,7 @@ class SettingService
      */
     public function all(): array
     {
-        return Cache::rememberForever(self::CACHE_KEY, fn () => Setting::query()->pluck('value', 'key')->all());
+        return $this->rememberForever(fn () => Setting::query()->pluck('value', 'key')->all());
     }
 
     /**
@@ -56,13 +58,5 @@ class SettingService
         }
 
         $this->forget();
-    }
-
-    /**
-     * Forget the cached settings map so the next read repopulates it.
-     */
-    public function forget(): void
-    {
-        Cache::forget(self::CACHE_KEY);
     }
 }

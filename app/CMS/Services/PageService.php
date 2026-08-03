@@ -2,18 +2,20 @@
 
 namespace App\CMS\Services;
 
+use App\CMS\Services\Concerns\CachesForFrontend;
 use App\Models\Page;
 use App\Models\Section;
 use App\Models\SeoMeta;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Cache;
 
 class PageService
 {
-    /**
-     * Cache key holding every published page, keyed by slug.
-     */
-    private const CACHE_KEY = 'pages.published';
+    use CachesForFrontend;
+
+    protected function cacheKey(): string
+    {
+        return 'pages.published';
+    }
 
     /**
      * Find a published page by slug, from cache where possible.
@@ -71,7 +73,7 @@ class PageService
      */
     private function allCached(): array
     {
-        return Cache::rememberForever(self::CACHE_KEY, fn () => Page::published()
+        return $this->rememberForever(fn () => Page::published()
             ->with([
                 'sections' => fn ($query) => $query->where('is_active', true)->with(['items', 'galleries']),
                 'seo',
@@ -150,10 +152,24 @@ class PageService
     }
 
     /**
-     * Forget the cached page map so the next read repopulates it.
+     * Restore a soft-deleted page.
      */
-    public function forget(): void
+    public function restore(Page $page): Page
     {
-        Cache::forget(self::CACHE_KEY);
+        $page->restore();
+
+        $this->forget();
+
+        return $page;
+    }
+
+    /**
+     * Permanently delete a soft-deleted page.
+     */
+    public function forceDelete(Page $page): void
+    {
+        $page->forceDelete();
+
+        $this->forget();
     }
 }

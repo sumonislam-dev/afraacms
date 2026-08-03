@@ -78,4 +78,46 @@ class PageController extends Controller
 
         return redirect()->route('admin.pages.index')->with('success', __('Page deleted successfully.'));
     }
+
+    /**
+     * Display the trashed (soft-deleted) pages.
+     */
+    public function trash(): View
+    {
+        $this->authorize('viewAny', Page::class);
+
+        $pages = Page::onlyTrashed()
+            ->when(request('search'), fn ($query, $search) => $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")->orWhere('slug', 'like', "%{$search}%");
+            }))
+            ->orderByDesc('deleted_at')
+            ->paginate(15)
+            ->withQueryString();
+
+        return view('admin.pages.trash', compact('pages'));
+    }
+
+    /**
+     * Restore a trashed page.
+     */
+    public function restore(Page $page): RedirectResponse
+    {
+        $this->authorize('restore', $page);
+
+        $this->pages->restore($page);
+
+        return redirect()->route('admin.pages.trash')->with('success', __('Page restored successfully.'));
+    }
+
+    /**
+     * Permanently delete a trashed page.
+     */
+    public function forceDelete(Page $page): RedirectResponse
+    {
+        $this->authorize('forceDelete', $page);
+
+        $this->pages->forceDelete($page);
+
+        return redirect()->route('admin.pages.trash')->with('success', __('Page permanently deleted.'));
+    }
 }

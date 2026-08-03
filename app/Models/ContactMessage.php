@@ -4,11 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 #[Fillable(['name', 'email', 'subject', 'message', 'ip_address', 'is_read', 'read_at'])]
 class ContactMessage extends Model
 {
+    use HasFactory;
+
     /**
      * Get the attributes that should be cast.
      *

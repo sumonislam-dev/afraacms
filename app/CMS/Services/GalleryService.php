@@ -2,18 +2,24 @@
 
 namespace App\CMS\Services;
 
+use App\CMS\Services\Concerns\CachesForFrontend;
 use App\Models\Gallery;
 use App\Models\GalleryItem;
 use App\Models\SeoMeta;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class GalleryService
 {
-    /**
-     * Cache key holding every active album (with its items), keyed by slug.
-     */
-    private const CACHE_KEY = 'galleries.active';
+    use CachesForFrontend;
+
+    public function __construct(private readonly ProjectService $projects)
+    {
+    }
+
+    protected function cacheKey(): string
+    {
+        return 'galleries.active';
+    }
 
     /**
      * Find an active album by slug, from cache where possible.
@@ -43,7 +49,7 @@ class GalleryService
      */
     private function allCached(): array
     {
-        return Cache::rememberForever(self::CACHE_KEY, fn () => Gallery::active()
+        return $this->rememberForever(fn () => Gallery::active()
             ->orderBy('sort_order')
             ->with(['items', 'seo'])
             ->get()
@@ -106,6 +112,7 @@ class GalleryService
         $album->delete();
 
         $this->forget();
+        $this->projects->forget();
     }
 
     /**
@@ -135,6 +142,7 @@ class GalleryService
         ]);
 
         $this->forget();
+        $this->projects->forget();
 
         return $item;
     }
@@ -147,6 +155,7 @@ class GalleryService
         $item->update($data);
 
         $this->forget();
+        $this->projects->forget();
 
         return $item;
     }
@@ -159,6 +168,7 @@ class GalleryService
         $item->delete();
 
         $this->forget();
+        $this->projects->forget();
     }
 
     /**
@@ -175,13 +185,6 @@ class GalleryService
         });
 
         $this->forget();
-    }
-
-    /**
-     * Forget the cached album map so the next read repopulates it.
-     */
-    public function forget(): void
-    {
-        Cache::forget(self::CACHE_KEY);
+        $this->projects->forget();
     }
 }
