@@ -26,6 +26,7 @@ class StoreMenuItemRequest extends FormRequest
             'label' => ['required', 'string', 'max:255'],
             'type' => ['required', Rule::in(['internal', 'external'])],
             'url' => ['required', 'string', 'max:2048'],
+            'open_in_new_tab' => ['sometimes', 'boolean'],
             'icon' => ['nullable', 'string', Rule::in(array_keys(config('icons', [])))],
             'is_active' => ['sometimes', 'boolean'],
         ];

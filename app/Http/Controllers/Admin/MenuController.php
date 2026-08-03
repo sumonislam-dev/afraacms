@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\CMS\Services\MenuService;
+use App\CMS\Services\PageService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreMenuRequest;
 use App\Http\Requests\Admin\UpdateMenuRequest;
@@ -12,8 +13,10 @@ use Illuminate\View\View;
 
 class MenuController extends Controller
 {
-    public function __construct(private readonly MenuService $menus)
-    {
+    public function __construct(
+        private readonly MenuService $menus,
+        private readonly PageService $pages,
+    ) {
         $this->authorizeResource(Menu::class, 'menu');
     }
 
@@ -52,9 +55,19 @@ class MenuController extends Controller
     {
         $menu->load(['items' => fn ($query) => $query->orderBy('sort_order')]);
 
+        $homepageId = (int) setting('homepage_page_id');
+
+        $pageOptions = collect($this->pages->all())
+            ->map(fn (array $page) => [
+                'title' => $page['title'],
+                'url' => $page['id'] === $homepageId ? '/' : '/'.$page['slug'],
+            ])
+            ->all();
+
         return view('admin.menus.edit', [
             'menu' => $menu,
             'tree' => $menu->tree,
+            'pageOptions' => $pageOptions,
         ]);
     }
 

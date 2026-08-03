@@ -7,6 +7,14 @@
 
     <form method="POST" action="{{ route('admin.menus.store') }}">
         @csrf
-        @include('admin.menus._form')
+
+        <x-admin.form-section :title="__('New Menu')">
+            @include('admin.menus._form')
+
+            <x-slot name="actions">
+                <x-secondary-button type="button" onclick="window.location='{{ route('admin.menus.index') }}'">{{ __('Cancel') }}</x-secondary-button>
+                <x-primary-button>{{ __('Create Menu') }}</x-primary-button>
+            </x-slot>
+        </x-admin.form-section>
     </form>
 </x-admin-layout>

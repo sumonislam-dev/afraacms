@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 
-#[Fillable(['menu_id', 'parent_id', 'label', 'type', 'url', 'icon', 'is_active', 'sort_order'])]
+#[Fillable(['menu_id', 'parent_id', 'label', 'type', 'url', 'open_in_new_tab', 'icon', 'is_active', 'sort_order'])]
 class MenuItem extends Model
 {
     /**
@@ -19,6 +19,7 @@ class MenuItem extends Model
     protected function casts(): array
     {
         return [
+            'open_in_new_tab' => 'boolean',
             'is_active' => 'boolean',
             'sort_order' => 'integer',
         ];
@@ -53,11 +54,11 @@ class MenuItem extends Model
     }
 
     /**
-     * The anchor "target" to use: external links open in a new tab.
+     * The anchor "target" to use, per the item's own "open in new tab" flag.
      */
     public function getTargetAttribute(): string
     {
-        return $this->type === 'external' ? '_blank' : '_self';
+        return $this->open_in_new_tab ? '_blank' : '_self';
     }
 
     /**
