@@ -83,7 +83,11 @@
             @endif
 
             <div class="mt-6 border-t border-gray-100 pt-6">
-                <h3 class="text-sm font-semibold text-gray-900">{{ __('Add Photo/Video') }}</h3>
+                <div class="flex items-center justify-between">
+                    <h3 class="text-sm font-semibold text-gray-900">{{ __('Add Photo/Video') }}</h3>
+                    @include('admin.galleries._bulk-add', ['album' => $album])
+                </div>
+
                 <form method="POST" action="{{ route('admin.galleries.items.store', $album) }}" class="mt-4">
                     @csrf
                     @include('admin.galleries._item-form', ['item' => null])

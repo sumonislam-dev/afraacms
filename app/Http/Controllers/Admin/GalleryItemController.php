@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\CMS\Services\GalleryService;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\BulkStoreGalleryItemsRequest;
 use App\Http\Requests\Admin\ReorderGalleryItemsRequest;
 use App\Http\Requests\Admin\StoreGalleryItemRequest;
 use App\Http\Requests\Admin\UpdateGalleryItemRequest;
@@ -28,6 +29,28 @@ class GalleryItemController extends Controller
         return redirect()
             ->route('admin.galleries.edit', $gallery)
             ->with('success', __('Item added successfully.'));
+    }
+
+    /**
+     * Add several photos at once, each becoming its own item (with its own
+     * optional caption) at the end of the album's repeatable list, in the
+     * order they were picked.
+     */
+    public function bulkStore(BulkStoreGalleryItemsRequest $request, Gallery $gallery): RedirectResponse
+    {
+        $photos = $request->validated('photos');
+
+        foreach ($photos as $photo) {
+            $this->galleries->createItem($gallery, [
+                'type' => 'image',
+                'image' => $photo['id'],
+                'caption' => $photo['caption'] ?? null,
+            ]);
+        }
+
+        return redirect()
+            ->route('admin.galleries.edit', $gallery)
+            ->with('success', trans_choice(':count photo added successfully.|:count photos added successfully.', count($photos), ['count' => count($photos)]));
     }
 
     /**

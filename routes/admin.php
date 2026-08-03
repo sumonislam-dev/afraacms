@@ -62,6 +62,7 @@ Route::middleware(['auth', 'verified'])
 
         Route::prefix('galleries/{gallery}')->name('galleries.')->group(function () {
             Route::post('items', [GalleryItemController::class, 'store'])->name('items.store');
+            Route::post('items/bulk', [GalleryItemController::class, 'bulkStore'])->name('items.bulkStore');
             Route::put('items/{item}', [GalleryItemController::class, 'update'])->name('items.update');
             Route::delete('items/{item}', [GalleryItemController::class, 'destroy'])->name('items.destroy');
             Route::post('items/reorder', [GalleryItemController::class, 'reorder'])->name('items.reorder');
