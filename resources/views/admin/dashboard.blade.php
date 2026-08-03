@@ -8,36 +8,87 @@
         </p>
     </x-slot>
 
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <x-admin.card>
-            <p class="text-sm font-medium text-gray-500">{{ __('Logged in as') }}</p>
-            <p class="mt-2 truncate text-2xl font-semibold text-gray-900">{{ Auth::user()->name }}</p>
-            <p class="mt-1 truncate text-sm text-gray-500">{{ Auth::user()->email }}</p>
-        </x-admin.card>
+    @if ($cards->isNotEmpty())
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            @foreach ($cards as $card)
+                <a href="{{ Route::has($card['route']) ? route($card['route']) : '#' }}">
+                    <x-admin.card class="h-full transition-shadow hover:shadow-md">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">{{ $card['label'] }}</p>
+                                <p class="mt-2 text-3xl font-semibold text-gray-900">{{ $card['value'] }}</p>
+                                @if (! empty($card['sub']))
+                                    <p class="mt-1 text-sm {{ ! empty($card['alert']) ? 'font-medium text-amber-600' : 'text-gray-500' }}">
+                                        {{ $card['sub'] }}
+                                    </p>
+                                @endif
+                            </div>
+                            <span class="flex-shrink-0 rounded-lg p-2 {{ ! empty($card['alert']) ? 'bg-amber-50 text-amber-500' : 'bg-indigo-50 text-indigo-500' }}">
+                                <x-admin.icon :name="$card['icon']" class="h-6 w-6" />
+                            </span>
+                        </div>
+                    </x-admin.card>
+                </a>
+            @endforeach
+        </div>
+    @endif
 
-        <x-admin.card>
-            <p class="text-sm font-medium text-gray-500">{{ __('Assigned Role') }}</p>
-            <p class="mt-2 text-2xl font-semibold text-gray-900">
-                {{ Auth::user()->getRoleNames()->join(', ') ?: __('None') }}
-            </p>
-        </x-admin.card>
+    <div class="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
+        @can('activity.view')
+            <div class="lg:col-span-2">
+                <x-admin.card :title="__('Recent Activity')">
+                    <x-slot name="header">
+                        <a href="{{ route('admin.activity.index') }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                            {{ __('View all') }} &rarr;
+                        </a>
+                    </x-slot>
 
-        <x-admin.card>
-            <p class="text-sm font-medium text-gray-500">{{ __('Total Users') }}</p>
-            <p class="mt-2 text-3xl font-semibold text-gray-900">{{ $totalUsers }}</p>
-        </x-admin.card>
+                    @if ($recentActivity->isEmpty())
+                        <p class="text-sm text-gray-500">{{ __('No activity recorded yet.') }}</p>
+                    @else
+                        <ul class="divide-y divide-gray-100">
+                            @foreach ($recentActivity as $activity)
+                                <li class="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0">
+                                    <div class="min-w-0">
+                                        <p class="truncate text-sm text-gray-900">
+                                            <span class="font-medium">{{ $activity->causer?->name ?? __('System') }}</span>
+                                            {{ $activity->description }}
+                                            <span class="text-gray-500">{{ class_basename($activity->subject_type) }}</span>
+                                            @if ($label = \App\Support\ActivitySubject::label($activity))
+                                                <span class="text-gray-500">&mdash; {{ $label }}</span>
+                                            @endif
+                                        </p>
+                                    </div>
+                                    <time
+                                        class="flex-shrink-0 text-xs text-gray-400"
+                                        title="{{ $activity->created_at->format('M j, Y g:i A') }}"
+                                    >
+                                        {{ $activity->created_at->diffForHumans() }}
+                                    </time>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
+                </x-admin.card>
+            </div>
+        @endcan
 
-        <x-admin.card>
-            <p class="text-sm font-medium text-gray-500">{{ __('Total Roles') }}</p>
-            <p class="mt-2 text-3xl font-semibold text-gray-900">{{ $totalRoles }}</p>
-        </x-admin.card>
-    </div>
-
-    <div class="mt-6">
-        <x-admin.card :title="__('Getting Started')">
-            <p class="text-sm text-gray-600">
-                {{ __('This is the admin framework placeholder. As content modules (Pages, Media, Menus, Settings) are built in upcoming phases, their data and management screens will appear here, and their sidebar entries will activate automatically once each module registers its routes.') }}
-            </p>
-        </x-admin.card>
+        @if ($quickActions->isNotEmpty())
+            <div>
+                <x-admin.card :title="__('Quick Actions')">
+                    <div class="space-y-2">
+                        @foreach ($quickActions as $action)
+                            <a
+                                href="{{ route($action['route']) }}"
+                                class="flex items-center gap-3 rounded-md border border-gray-200 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                            >
+                                <x-admin.icon :name="$action['icon']" class="h-5 w-5 text-gray-400" />
+                                {{ $action['label'] }}
+                            </a>
+                        @endforeach
+                    </div>
+                </x-admin.card>
+            </div>
+        @endif
     </div>
 </x-admin-layout>

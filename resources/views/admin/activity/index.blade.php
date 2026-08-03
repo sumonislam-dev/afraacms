@@ -23,20 +23,7 @@
         <tbody class="divide-y divide-gray-100">
             @forelse ($activities as $activity)
                 @php
-                    $subject = $activity->subject;
-                    $subjectLabel = $subject?->title ?? $subject?->name ?? $subject?->caption ?? $subject?->label ?? null;
-
-                    $parentContext = match (true) {
-                        $subject instanceof \App\Models\GalleryItem => $subject->gallery?->title,
-                        $subject instanceof \App\Models\MenuItem => $subject->menu?->name,
-                        $subject instanceof \App\Models\SectionItem => $subject->section?->heading ?: $subject->section?->type,
-                        default => null,
-                    };
-
-                    if ($parentContext) {
-                        $subjectLabel = trim(($subjectLabel ? "{$subjectLabel} " : '')."(in {$parentContext})");
-                    }
-
+                    $subjectLabel = \App\Support\ActivitySubject::label($activity);
                     $changedFields = collect($activity->changes()['attributes'] ?? [])->keys()->all();
                 @endphp
                 <tr>
