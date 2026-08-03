@@ -27,7 +27,7 @@
     @else
         <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
             @foreach ($items as $item)
-                <div class="group relative overflow-hidden rounded-lg bg-white shadow ring-1 ring-black/5">
+                <div class="group relative overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-black/5">
                     <img src="{{ $item->thumb_url }}" alt="{{ $item->title }}" class="aspect-square w-full object-cover">
 
                     <div class="p-2">
@@ -35,13 +35,13 @@
                         <p class="text-xs text-gray-400">{{ $item->dimensions }}</p>
                     </div>
 
-                    <div class="absolute inset-x-0 top-0 flex items-center justify-end gap-1 bg-gradient-to-b from-black/50 to-transparent p-1 opacity-0 transition-opacity group-hover:opacity-100">
+                    <div class="absolute inset-x-0 top-0 flex items-center justify-end gap-1 bg-linear-to-b from-black/50 to-transparent p-1 opacity-0 transition-opacity group-hover:opacity-100">
                         @can('update', $item)
-                            <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'rename-media-{{ $item->id }}')" class="rounded bg-white/90 p-1 text-gray-700 hover:bg-white" title="{{ __('Rename') }}">
+                            <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'rename-media-{{ $item->id }}')" class="rounded-sm bg-white/90 p-1 text-gray-700 hover:bg-white" title="{{ __('Rename') }}">
                                 <x-admin.icon name="document-text" class="h-4 w-4" />
                             </button>
 
-                            <label class="cursor-pointer rounded bg-white/90 p-1 text-gray-700 hover:bg-white" title="{{ __('Replace') }}">
+                            <label class="cursor-pointer rounded-sm bg-white/90 p-1 text-gray-700 hover:bg-white" title="{{ __('Replace') }}">
                                 <x-admin.icon name="photo" class="h-4 w-4" />
                                 <form method="POST" action="{{ route('admin.media.replace', $item) }}" enctype="multipart/form-data" class="hidden">
                                     @csrf
@@ -51,7 +51,7 @@
                         @endcan
 
                         @can('delete', $item)
-                            <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'delete-media-{{ $item->id }}')" class="rounded bg-white/90 p-1 text-red-600 hover:bg-white" title="{{ __('Delete') }}">
+                            <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'delete-media-{{ $item->id }}')" class="rounded-sm bg-white/90 p-1 text-red-600 hover:bg-white" title="{{ __('Delete') }}">
                                 <x-admin.icon name="x-mark" class="h-4 w-4" />
                             </button>
                         @endcan

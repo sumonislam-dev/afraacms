@@ -58,10 +58,10 @@
 
     <div class="mt-1 flex items-center gap-4">
         <template x-if="selectedThumb">
-            <img :src="selectedThumb" alt="" class="h-16 w-16 flex-shrink-0 rounded-md border border-gray-200 bg-white object-contain">
+            <img :src="selectedThumb" alt="" class="h-16 w-16 shrink-0 rounded-md border border-gray-200 bg-white object-contain">
         </template>
         <template x-if="! selectedThumb">
-            <div class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-md border border-dashed border-gray-300 text-gray-300">
+            <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-md border border-dashed border-gray-300 text-gray-300">
                 <x-admin.icon name="photo" class="h-6 w-6" />
             </div>
         </template>
@@ -106,7 +106,7 @@
                     x-model="search"
                     @input.debounce.400ms="loadItems()"
                     placeholder="{{ __('Search media...') }}"
-                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    class="block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500"
                 >
             </div>
 

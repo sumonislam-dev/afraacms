@@ -14,7 +14,7 @@
                 <ul class="space-y-1 text-sm text-gray-600">
                     @foreach ($permissions as $permission)
                         <li class="flex items-center gap-2">
-                            <span class="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-indigo-400"></span>
+                            <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-indigo-400"></span>
                             {{ $permission->name }}
                         </li>
                     @endforeach

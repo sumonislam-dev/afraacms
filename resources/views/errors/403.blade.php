@@ -14,7 +14,7 @@
     </head>
     <body class="font-sans antialiased">
         <div class="flex min-h-screen items-center justify-center bg-gray-100 px-4">
-            <div class="w-full max-w-md rounded-lg bg-white p-8 text-center shadow">
+            <div class="w-full max-w-md rounded-lg bg-white p-8 text-center shadow-sm">
                 <p class="text-sm font-semibold uppercase tracking-wide text-red-500">{{ __('403') }}</p>
                 <h1 class="mt-2 text-2xl font-semibold text-gray-900">{{ __('Access Denied') }}</h1>
                 <p class="mt-2 text-sm text-gray-600">

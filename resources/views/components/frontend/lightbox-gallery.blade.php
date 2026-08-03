@@ -47,12 +47,12 @@
         <template x-if="open && items[index]">
             <div class="max-h-full max-w-4xl" @click.outside="open = false">
                 <template x-if="items[index].type === 'image'">
-                    <img :src="items[index].image_url" :alt="items[index].caption ?? ''" class="max-h-[80vh] w-full rounded object-contain">
+                    <img :src="items[index].image_url" :alt="items[index].caption ?? ''" class="max-h-[80vh] w-full rounded-sm object-contain">
                 </template>
 
                 <template x-if="items[index].type === 'video'">
                     <div class="aspect-video w-full max-w-3xl">
-                        <iframe :src="items[index].embed_url" class="h-full w-full rounded" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <iframe :src="items[index].embed_url" class="h-full w-full rounded-sm" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                     </div>
                 </template>
 

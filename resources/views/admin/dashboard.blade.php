@@ -23,7 +23,7 @@
                                     </p>
                                 @endif
                             </div>
-                            <span class="flex-shrink-0 rounded-lg p-2 {{ ! empty($card['alert']) ? 'bg-amber-50 text-amber-500' : 'bg-indigo-50 text-indigo-500' }}">
+                            <span class="shrink-0 rounded-lg p-2 {{ ! empty($card['alert']) ? 'bg-amber-50 text-amber-500' : 'bg-indigo-50 text-indigo-500' }}">
                                 <x-admin.icon :name="$card['icon']" class="h-6 w-6" />
                             </span>
                         </div>
@@ -60,7 +60,7 @@
                                         </p>
                                     </div>
                                     <time
-                                        class="flex-shrink-0 text-xs text-gray-400"
+                                        class="shrink-0 text-xs text-gray-400"
                                         title="{{ $activity->created_at->format('M j, Y g:i A') }}"
                                     >
                                         {{ $activity->created_at->diffForHumans() }}

@@ -29,7 +29,7 @@
     class="fixed inset-y-0 left-0 z-40 flex w-64 -translate-x-full flex-col bg-gray-900 text-gray-100 transition-transform duration-200 ease-in-out lg:translate-x-0"
     :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
 >
-    <div class="flex h-16 flex-shrink-0 items-center justify-between border-b border-gray-800 px-4">
+    <div class="flex h-16 shrink-0 items-center justify-between border-b border-gray-800 px-4">
         <a href="{{ Route::has('admin.dashboard') ? route('admin.dashboard') : '#' }}" class="text-lg font-semibold tracking-tight text-white">
             {{ config('app.name', 'AfraaCMS') }}
         </a>

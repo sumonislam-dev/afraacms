@@ -26,7 +26,7 @@
             @break
 
         @case('select')
-            <select id="{{ $id }}" name="{{ $key }}" @disabled(! $canEdit) class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+            <select id="{{ $id }}" name="{{ $key }}" @disabled(! $canEdit) class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
                 @foreach ($field['resolved_options'] ?? [] as $optionValue => $optionLabel)
                     <option value="{{ $optionValue }}" @selected((string) $currentValue === (string) $optionValue)>{{ $optionLabel }}</option>
                 @endforeach

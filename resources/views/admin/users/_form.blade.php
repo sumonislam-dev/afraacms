@@ -35,7 +35,7 @@
 
     <div>
         <x-input-label for="role" :value="__('Role')" />
-        <select id="role" name="role" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+        <select id="role" name="role" required class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
             <option value="">{{ __('Select a role') }}</option>
             @foreach ($roles as $roleName)
                 <option value="{{ $roleName }}" @selected(old('role', $currentRole) === $roleName)>{{ $roleName }}</option>
@@ -45,7 +45,7 @@
     </div>
 
     <div class="flex items-center gap-2">
-        <input id="is_active" name="is_active" type="checkbox" value="1" @checked(old('is_active', $user->is_active ?? true)) class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
+        <input id="is_active" name="is_active" type="checkbox" value="1" @checked(old('is_active', $user->is_active ?? true)) class="rounded-sm border-gray-300 text-indigo-600 shadow-xs focus:ring-indigo-500">
         <x-input-label for="is_active" :value="__('Active')" class="mb-0" />
     </div>
 

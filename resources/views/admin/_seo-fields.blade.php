@@ -54,7 +54,7 @@
                 @php
                     $currentRobots = old('seo_robots', $seo->robots ?? '');
                 @endphp
-                <select id="seo_robots" name="seo_robots" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                <select id="seo_robots" name="seo_robots" class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
                     <option value="" @selected($currentRobots === '')>{{ __('— Site Default —') }}</option>
                     <option value="index, follow" @selected($currentRobots === 'index, follow')>{{ __('Index, Follow') }}</option>
                     <option value="noindex, follow" @selected($currentRobots === 'noindex, follow')>{{ __('No Index, Follow') }}</option>

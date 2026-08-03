@@ -7,7 +7,7 @@
 <div x-data="{ type: '{{ $currentType }}' }">
     <div class="mb-4">
         <x-input-label for="{{ $prefix }}type" :value="__('Type')" />
-        <select id="{{ $prefix }}type" name="type" x-model="type" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+        <select id="{{ $prefix }}type" name="type" x-model="type" class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
             <option value="image" @selected($currentType === 'image')>{{ __('Photo') }}</option>
             <option value="video" @selected($currentType === 'video')>{{ __('Video') }}</option>
         </select>

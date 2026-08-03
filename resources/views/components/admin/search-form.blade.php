@@ -10,7 +10,7 @@
             name="search"
             value="{{ request('search') }}"
             placeholder="{{ $placeholder ?? __('Search...') }}"
-            class="block w-full rounded-md border-gray-300 pl-9 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            class="block w-full rounded-md border-gray-300 pl-9 shadow-xs focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
         >
     </div>
 </form>

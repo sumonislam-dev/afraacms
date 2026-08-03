@@ -51,7 +51,7 @@
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div>
                 <x-input-label for="status" :value="__('Status')" />
-                <select id="status" name="status" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                <select id="status" name="status" required class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
                     <option value="draft" @selected($currentStatus === 'draft')>{{ __('Draft') }}</option>
                     <option value="published" @selected($currentStatus === 'published')>{{ __('Published') }}</option>
                 </select>
@@ -60,7 +60,7 @@
 
             <div>
                 <x-input-label for="template" :value="__('Template')" />
-                <select id="template" name="template" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                <select id="template" name="template" required class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
                     @foreach (config('pages.templates', []) as $templateKey => $templateLabel)
                         <option value="{{ $templateKey }}" @selected($currentTemplate === $templateKey)>{{ $templateLabel }}</option>
                     @endforeach

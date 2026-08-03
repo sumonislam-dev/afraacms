@@ -24,9 +24,9 @@
                                     </span>
 
                                     @if ($item->type === 'image' && $item->image_url)
-                                        <img src="{{ $item->image_url }}" alt="" class="h-10 w-10 flex-shrink-0 rounded object-cover">
+                                        <img src="{{ $item->image_url }}" alt="" class="h-10 w-10 shrink-0 rounded-sm object-cover">
                                     @else
-                                        <span class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded bg-gray-100 text-gray-400">
+                                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm bg-gray-100 text-gray-400">
                                             <x-admin.icon name="photo" class="h-5 w-5" />
                                         </span>
                                     @endif
@@ -39,7 +39,7 @@
                                     </div>
                                 </div>
 
-                                <div class="flex flex-shrink-0 items-center gap-3">
+                                <div class="flex shrink-0 items-center gap-3">
                                     <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'edit-gallery-item-{{ $item->id }}')" class="text-sm font-medium text-indigo-600 hover:text-indigo-900">
                                         {{ __('Edit') }}
                                     </button>

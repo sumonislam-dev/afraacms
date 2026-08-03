@@ -13,23 +13,23 @@
                 @endif
 
                 @if ($item->icon)
-                    <x-admin.icon :name="$item->icon" class="h-4 w-4 flex-shrink-0 text-gray-400" />
+                    <x-admin.icon :name="$item->icon" class="h-4 w-4 shrink-0 text-gray-400" />
                 @endif
 
                 <span class="flex-1 truncate text-sm font-medium text-gray-900">{{ $item->label }}</span>
 
                 @unless ($item->is_active)
-                    <span class="flex-shrink-0 rounded bg-gray-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-gray-500">{{ __('Hidden') }}</span>
+                    <span class="shrink-0 rounded-sm bg-gray-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-gray-500">{{ __('Hidden') }}</span>
                 @endunless
 
-                <span class="flex-shrink-0 text-xs text-gray-400">{{ $item->type === 'external' ? __('External') : __('Internal') }}</span>
+                <span class="shrink-0 text-xs text-gray-400">{{ $item->type === 'external' ? __('External') : __('Internal') }}</span>
 
                 @if ($canEdit)
-                    <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'edit-item-{{ $item->id }}')" class="flex-shrink-0 rounded p-1 text-gray-500 hover:bg-gray-100" title="{{ __('Edit') }}">
+                    <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'edit-item-{{ $item->id }}')" class="shrink-0 rounded-sm p-1 text-gray-500 hover:bg-gray-100" title="{{ __('Edit') }}">
                         <x-admin.icon name="pencil" class="h-4 w-4" />
                     </button>
 
-                    <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'delete-item-{{ $item->id }}')" class="flex-shrink-0 rounded p-1 text-red-500 hover:bg-red-50" title="{{ __('Delete') }}">
+                    <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'delete-item-{{ $item->id }}')" class="shrink-0 rounded-sm p-1 text-red-500 hover:bg-red-50" title="{{ __('Delete') }}">
                         <x-admin.icon name="trash" class="h-4 w-4" />
                     </button>
                 @endif

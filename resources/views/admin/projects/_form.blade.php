@@ -51,7 +51,7 @@
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div>
                 <x-input-label for="category_id" :value="__('Category')" />
-                <select id="category_id" name="category_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                <select id="category_id" name="category_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
                     <option value="">{{ __('— None —') }}</option>
                     @foreach (\App\Models\ProjectCategory::orderBy('name')->get() as $category)
                         <option value="{{ $category->id }}" @selected((string) $currentCategoryId === (string) $category->id)>{{ $category->name }}</option>
@@ -62,7 +62,7 @@
 
             <div>
                 <x-input-label for="status" :value="__('Status')" />
-                <select id="status" name="status" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                <select id="status" name="status" required class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
                     <option value="draft" @selected($currentStatus === 'draft')>{{ __('Draft') }}</option>
                     <option value="published" @selected($currentStatus === 'published')>{{ __('Published') }}</option>
                 </select>
@@ -71,7 +71,7 @@
 
             <div>
                 <x-input-label for="gallery_id" :value="__('Photo/Video Gallery')" />
-                <select id="gallery_id" name="gallery_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                <select id="gallery_id" name="gallery_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
                     <option value="">{{ __('— None —') }}</option>
                     @foreach (\App\Models\Gallery::orderBy('title')->get() as $gallery)
                         <option value="{{ $gallery->id }}" @selected((string) $currentGalleryId === (string) $gallery->id)>{{ $gallery->title }}</option>

@@ -23,7 +23,7 @@
         </div>
 
         @if ($buttonText && $buttonUrl)
-            <a href="{{ $buttonUrl }}" class="flex-shrink-0 rounded-md bg-white px-5 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-100">
+            <a href="{{ $buttonUrl }}" class="shrink-0 rounded-md bg-white px-5 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-100">
                 {{ $buttonText }}
             </a>
         @endif

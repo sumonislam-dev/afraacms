@@ -84,7 +84,7 @@
                     x-model="search"
                     @input.debounce.400ms="loadItems()"
                     placeholder="{{ __('Search media...') }}"
-                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    class="block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500"
                 >
             </div>
 
@@ -123,19 +123,19 @@
                 <div class="mt-2 max-h-64 space-y-2 overflow-y-auto">
                     <template x-for="(photo, index) in selected" :key="photo.id">
                         <div class="flex items-center gap-3 rounded-md border border-gray-200 p-2">
-                            <img :src="photo.thumb_url" :alt="photo.title" class="h-12 w-12 flex-shrink-0 rounded object-cover">
+                            <img :src="photo.thumb_url" :alt="photo.title" class="h-12 w-12 shrink-0 rounded-sm object-cover">
 
                             <input
                                 type="text"
                                 x-model="photo.caption"
                                 :name="`photos[${index}][caption]`"
                                 placeholder="{{ __('Caption (optional)') }}"
-                                class="block w-full flex-1 rounded-md border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                class="block w-full flex-1 rounded-md border-gray-300 text-sm shadow-xs focus:border-indigo-500 focus:ring-indigo-500"
                             >
 
                             <input type="hidden" :name="`photos[${index}][id]`" :value="photo.id">
 
-                            <button type="button" @click="remove(photo.id)" class="flex-shrink-0 rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-red-600">
+                            <button type="button" @click="remove(photo.id)" class="shrink-0 rounded-sm p-1 text-gray-400 hover:bg-gray-100 hover:text-red-600">
                                 <x-admin.icon name="x-mark" class="h-4 w-4" />
                             </button>
                         </div>

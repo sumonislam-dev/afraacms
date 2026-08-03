@@ -29,17 +29,17 @@
                             <x-admin.icon name="bars-4" class="h-5 w-5" />
                         </span>
 
-                        <span class="inline-flex flex-shrink-0 items-center rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700">
+                        <span class="inline-flex shrink-0 items-center rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700">
                             {{ config("sections.types.{$section->type}.label", $section->type) }}
                         </span>
 
                         <span class="flex-1 truncate text-sm font-medium text-gray-900">{{ $section->heading ?: __('(no heading)') }}</span>
 
                         @unless ($section->is_active)
-                            <span class="flex-shrink-0 rounded bg-gray-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-gray-500">{{ __('Hidden') }}</span>
+                            <span class="shrink-0 rounded-sm bg-gray-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-gray-500">{{ __('Hidden') }}</span>
                         @endunless
 
-                        <div class="flex flex-shrink-0 items-center gap-3">
+                        <div class="flex shrink-0 items-center gap-3">
                             @can('update', $section)
                                 <a href="{{ route('admin.pages.sections.edit', [$page, $section]) }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-900">{{ __('Edit') }}</a>
                             @endcan

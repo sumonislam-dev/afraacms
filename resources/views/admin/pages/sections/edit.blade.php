@@ -25,7 +25,7 @@
                         <div class="flex items-center justify-between rounded-md border border-gray-200 p-3">
                             <div class="flex items-center gap-3">
                                 @if ($item->image_url)
-                                    <img src="{{ $item->image_url }}" alt="" class="h-10 w-10 flex-shrink-0 rounded object-cover">
+                                    <img src="{{ $item->image_url }}" alt="" class="h-10 w-10 shrink-0 rounded-sm object-cover">
                                 @endif
                                 <div>
                                     <p class="text-sm font-medium text-gray-900">{{ $item->title ?: $item->value ?: __('(untitled)') }}</p>

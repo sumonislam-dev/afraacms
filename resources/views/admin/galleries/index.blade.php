@@ -30,18 +30,18 @@
                         </span>
 
                         @if ($album->cover_image_url)
-                            <img src="{{ $album->cover_image_url }}" alt="" class="h-10 w-10 flex-shrink-0 rounded object-cover">
+                            <img src="{{ $album->cover_image_url }}" alt="" class="h-10 w-10 shrink-0 rounded-sm object-cover">
                         @endif
 
                         <span class="flex-1 truncate text-sm font-medium text-gray-900">{{ $album->title }}</span>
 
-                        <span class="flex-shrink-0 text-xs text-gray-500">{{ trans_choice(':count item|:count items', $album->items_count, ['count' => $album->items_count]) }}</span>
+                        <span class="shrink-0 text-xs text-gray-500">{{ trans_choice(':count item|:count items', $album->items_count, ['count' => $album->items_count]) }}</span>
 
                         @unless ($album->is_active)
-                            <span class="flex-shrink-0 rounded bg-gray-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-gray-500">{{ __('Hidden') }}</span>
+                            <span class="shrink-0 rounded-sm bg-gray-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-gray-500">{{ __('Hidden') }}</span>
                         @endunless
 
-                        <div class="flex flex-shrink-0 items-center gap-3">
+                        <div class="flex shrink-0 items-center gap-3">
                             @if ($album->is_active)
                                 <a href="{{ route('gallery.show', $album->slug) }}" target="_blank" rel="noopener" class="text-sm font-medium text-gray-500 hover:text-gray-700">{{ __('View') }}</a>
                             @endif

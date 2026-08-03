@@ -10,7 +10,7 @@
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <div>
                     <x-input-label for="type" :value="__('Type')" />
-                    <select id="type" name="type" x-model="type" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <select id="type" name="type" x-model="type" required class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
                         <option value="">{{ __('Select a type') }}</option>
                         @foreach ($typesConfig as $typeKey => $typeMeta)
                             <option value="{{ $typeKey }}" @selected($currentType === $typeKey)>{{ $typeMeta['label'] }}</option>
@@ -63,11 +63,11 @@
             >
                 <x-input-label :value="__('Albums to Show')" />
                 <div class="mt-1 inline-flex rounded-md border border-gray-300 bg-white p-0.5 text-sm">
-                    <label class="cursor-pointer rounded px-3 py-1 font-medium transition-colors" :class="galleryMode === 'all' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-50'">
+                    <label class="cursor-pointer rounded-sm px-3 py-1 font-medium transition-colors" :class="galleryMode === 'all' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-50'">
                         <input type="radio" x-model="galleryMode" value="all" class="sr-only">
                         {{ __('All Active Albums') }}
                     </label>
-                    <label class="cursor-pointer rounded px-3 py-1 font-medium transition-colors" :class="galleryMode === 'specific' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-50'">
+                    <label class="cursor-pointer rounded-sm px-3 py-1 font-medium transition-colors" :class="galleryMode === 'specific' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-50'">
                         <input type="radio" x-model="galleryMode" value="specific" class="sr-only">
                         {{ __('Specific Albums') }}
                     </label>
@@ -82,7 +82,7 @@
                                 value="{{ $gallery->id }}"
                                 @checked(in_array($gallery->id, $selectedGalleryIds ?? [], true))
                                 x-bind:disabled="galleryMode !== 'specific'"
-                                class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                class="rounded-sm border-gray-300 text-indigo-600 focus:ring-indigo-500"
                             >
                             {{ $gallery->title }}
                             @unless ($gallery->is_active)
@@ -99,7 +99,7 @@
 
             <div class="sm:max-w-xs" x-show="fields[type]?.includes('layout')" style="display: none;">
                 <x-input-label for="layout" :value="__('Layout')" />
-                <select id="layout" name="layout" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                <select id="layout" name="layout" class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
                     <option value="image-left" @selected(old('layout', $section->layout ?? '') === 'image-left')>{{ __('Image Left') }}</option>
                     <option value="image-right" @selected(old('layout', $section->layout ?? '') === 'image-right')>{{ __('Image Right') }}</option>
                 </select>

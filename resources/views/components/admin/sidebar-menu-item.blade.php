@@ -47,11 +47,11 @@
             class="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium transition-colors {{ $isActive ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-800 hover:text-white' }}"
         >
             <span class="flex items-center gap-3">
-                <x-admin.icon :name="$item['icon'] ?? 'squares-2x2'" class="h-5 w-5 flex-shrink-0" />
+                <x-admin.icon :name="$item['icon'] ?? 'squares-2x2'" class="h-5 w-5 shrink-0" />
                 {{ $item['label'] }}
             </span>
 
-            <x-admin.icon name="chevron-down" class="h-4 w-4 flex-shrink-0 transition-transform duration-150" x-bind:class="{ 'rotate-180': open }" />
+            <x-admin.icon name="chevron-down" class="h-4 w-4 shrink-0 transition-transform duration-150" x-bind:class="{ 'rotate-180': open }" />
         </button>
 
         <div x-show="open" x-transition class="mt-1 space-y-1 pl-8" @if (! $isActive) style="display: none;" @endif>
@@ -68,13 +68,13 @@
     >
         <span class="flex items-center gap-3">
             @if ($level === 0)
-                <x-admin.icon :name="$item['icon'] ?? 'squares-2x2'" class="h-5 w-5 flex-shrink-0" />
+                <x-admin.icon :name="$item['icon'] ?? 'squares-2x2'" class="h-5 w-5 shrink-0" />
             @endif
             {{ $item['label'] }}
         </span>
 
         @if ($disabled)
-            <span class="rounded bg-gray-700 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-gray-300">Soon</span>
+            <span class="rounded-sm bg-gray-700 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-gray-300">Soon</span>
         @endif
     </a>
 @endif

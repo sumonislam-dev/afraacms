@@ -36,7 +36,7 @@
 
         <div>
             <x-input-label for="{{ $prefix }}icon" :value="__('Icon')" />
-            <select id="{{ $prefix }}icon" name="icon" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+            <select id="{{ $prefix }}icon" name="icon" class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
                 <option value="">{{ __('None') }}</option>
                 @foreach (array_keys(config('icons', [])) as $iconName)
                     <option value="{{ $iconName }}" @selected(old('icon', $item->icon ?? '') === $iconName)>
@@ -51,11 +51,11 @@
         <div>
             <x-input-label :value="__('Link Type')" />
             <div class="mt-1 inline-flex rounded-md border border-gray-300 bg-white p-0.5 text-sm">
-                <label class="cursor-pointer rounded px-3 py-1 font-medium transition-colors" :class="type === 'internal' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-50'">
+                <label class="cursor-pointer rounded-sm px-3 py-1 font-medium transition-colors" :class="type === 'internal' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-50'">
                     <input type="radio" name="type" value="internal" x-model="type" class="sr-only">
                     {{ __('Internal') }}
                 </label>
-                <label class="cursor-pointer rounded px-3 py-1 font-medium transition-colors" :class="type === 'external' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-50'">
+                <label class="cursor-pointer rounded-sm px-3 py-1 font-medium transition-colors" :class="type === 'external' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-50'">
                     <input type="radio" name="type" value="external" x-model="type" class="sr-only">
                     {{ __('External') }}
                 </label>
@@ -65,7 +65,7 @@
 
         <div>
             <x-input-label for="{{ $prefix }}parent_id" :value="__('Parent Item')" />
-            <select id="{{ $prefix }}parent_id" name="parent_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+            <select id="{{ $prefix }}parent_id" name="parent_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
                 <option value="">{{ __('— Top Level —') }}</option>
                 @foreach ($parentOptions ?? [] as $id => $label)
                     @continue(in_array($id, $excludedParentIds, true))
@@ -93,7 +93,7 @@
         <div x-show="type === 'internal'" style="display: none;">
             <x-input-label :value="__('Select a Page')" />
             <select
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500"
                 x-on:change="if ($event.target.value) { url = $event.target.value; if (! labelTouched) { label = $event.target.options[$event.target.selectedIndex].text; } }"
             >
                 <option value="">{{ __('— Choose a page —') }}</option>

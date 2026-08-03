@@ -53,7 +53,7 @@
 @if (in_array('icon', $itemFields))
     <div class="mb-4">
         <x-input-label for="{{ $prefix }}icon" :value="__('Icon')" />
-        <select id="{{ $prefix }}icon" name="icon" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+        <select id="{{ $prefix }}icon" name="icon" class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
             <option value="">{{ __('None') }}</option>
             @foreach (array_keys(config('icons', [])) as $iconName)
                 <option value="{{ $iconName }}" @selected(old('icon', $item->icon ?? '') === $iconName)>

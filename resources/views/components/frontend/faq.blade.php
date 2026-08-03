@@ -15,7 +15,7 @@
                     @if ($item['title'] ?? null)
                         <button type="button" @click="open = ! open" class="flex w-full items-center justify-between text-left" :aria-expanded="open">
                             <h3 class="font-semibold text-gray-900">{{ $item['title'] }}</h3>
-                            <span class="flex-shrink-0 text-gray-400 transition-transform" :class="{ 'rotate-180': open }">
+                            <span class="shrink-0 text-gray-400 transition-transform" :class="{ 'rotate-180': open }">
                                 <x-icon name="chevron-down" class="h-5 w-5" />
                             </span>
                         </button>

@@ -10,7 +10,7 @@
         name="{{ $name }}"
         value="{{ $color }}"
         @disabled($disabled)
-        class="h-10 w-14 cursor-pointer rounded border border-gray-300 p-1"
+        class="h-10 w-14 cursor-pointer rounded-sm border border-gray-300 p-1"
     >
     <span class="text-sm text-gray-500">{{ $color }}</span>
 </div>
