@@ -75,5 +75,10 @@ return [
             'fields' => ['heading', 'subheading'],
             'has_items' => false,
         ],
+        'projects' => [
+            'label' => 'Projects',
+            'fields' => ['heading', 'subheading', 'button_text', 'button_url'],
+            'has_items' => false,
+        ],
     ],
 ];
