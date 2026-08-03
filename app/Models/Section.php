@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable(['page_id', 'type', 'heading', 'subheading', 'body', 'image', 'button_text', 'button_url', 'layout', 'is_active', 'sort_order'])]
@@ -31,6 +32,15 @@ class Section extends Model
     public function items(): HasMany
     {
         return $this->hasMany(SectionItem::class)->orderBy('sort_order');
+    }
+
+    /**
+     * Albums explicitly picked for this section (only meaningful for the
+     * "gallery_albums" type) - empty means "show all active albums".
+     */
+    public function galleries(): BelongsToMany
+    {
+        return $this->belongsToMany(Gallery::class)->orderBy('galleries.sort_order');
     }
 
     public function getImageUrlAttribute(): ?string

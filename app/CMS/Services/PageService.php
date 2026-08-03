@@ -73,7 +73,7 @@ class PageService
     {
         return Cache::rememberForever(self::CACHE_KEY, fn () => Page::published()
             ->with([
-                'sections' => fn ($query) => $query->where('is_active', true)->with('items'),
+                'sections' => fn ($query) => $query->where('is_active', true)->with(['items', 'galleries']),
                 'seo',
             ])
             ->get()
@@ -95,6 +95,7 @@ class PageService
                         'button_text' => $section->button_text,
                         'button_url' => $section->button_url,
                         'layout' => $section->layout,
+                        'gallery_ids' => $section->galleries->pluck('id')->all(),
                         'items' => $section->items->map(fn ($item) => [
                             'title' => $item->title,
                             'subtitle' => $item->subtitle,

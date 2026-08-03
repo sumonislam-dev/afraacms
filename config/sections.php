@@ -80,5 +80,10 @@ return [
             'fields' => ['heading', 'subheading', 'button_text', 'button_url'],
             'has_items' => false,
         ],
+        'gallery_albums' => [
+            'label' => 'Gallery Albums',
+            'fields' => ['heading', 'subheading', 'button_text', 'button_url'],
+            'has_items' => false,
+        ],
     ],
 ];

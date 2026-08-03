@@ -49,6 +49,7 @@ class GalleryService
             ->get()
             ->mapWithKeys(fn (Gallery $gallery) => [
                 $gallery->slug => [
+                    'id' => $gallery->id,
                     'title' => $gallery->title,
                     'slug' => $gallery->slug,
                     'description' => $gallery->description,

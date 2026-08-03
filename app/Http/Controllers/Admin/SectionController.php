@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ReorderSectionsRequest;
 use App\Http\Requests\Admin\StoreSectionRequest;
 use App\Http\Requests\Admin\UpdateSectionRequest;
+use App\Models\Gallery;
 use App\Models\Page;
 use App\Models\Section;
 use Illuminate\Http\JsonResponse;
@@ -35,7 +36,9 @@ class SectionController extends Controller
      */
     public function create(Page $page): View
     {
-        return view('admin.pages.sections.create', compact('page'));
+        $galleries = Gallery::orderBy('sort_order')->get(['id', 'title', 'is_active']);
+
+        return view('admin.pages.sections.create', compact('page', 'galleries'));
     }
 
     /**
@@ -43,7 +46,12 @@ class SectionController extends Controller
      */
     public function store(StoreSectionRequest $request, Page $page): RedirectResponse
     {
-        $section = $this->sections->createSection($page, $request->validated());
+        $data = $request->validated();
+        $galleryIds = $data['galleries'] ?? [];
+        unset($data['galleries']);
+
+        $section = $this->sections->createSection($page, $data);
+        $section->galleries()->sync($galleryIds);
 
         return redirect()
             ->route('admin.pages.sections.edit', [$page, $section])
@@ -56,9 +64,12 @@ class SectionController extends Controller
      */
     public function edit(Page $page, Section $section): View
     {
-        $section->load('items');
+        $section->load(['items', 'galleries']);
 
-        return view('admin.pages.sections.edit', compact('page', 'section'));
+        $galleries = Gallery::orderBy('sort_order')->get(['id', 'title', 'is_active']);
+        $selectedGalleryIds = $section->galleries->pluck('id')->all();
+
+        return view('admin.pages.sections.edit', compact('page', 'section', 'galleries', 'selectedGalleryIds'));
     }
 
     /**
@@ -66,7 +77,12 @@ class SectionController extends Controller
      */
     public function update(UpdateSectionRequest $request, Page $page, Section $section): RedirectResponse
     {
-        $this->sections->updateSection($section, $request->validated());
+        $data = $request->validated();
+        $galleryIds = $data['galleries'] ?? [];
+        unset($data['galleries']);
+
+        $this->sections->updateSection($section, $data);
+        $section->galleries()->sync($galleryIds);
 
         return redirect()
             ->route('admin.pages.sections.edit', [$page, $section])

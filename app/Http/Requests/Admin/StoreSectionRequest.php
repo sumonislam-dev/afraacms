@@ -37,6 +37,8 @@ class StoreSectionRequest extends FormRequest
             'button_url' => ['nullable', 'string', 'max:2048'],
             'layout' => ['nullable', Rule::in(['image-left', 'image-right'])],
             'is_active' => ['sometimes', 'boolean'],
+            'galleries' => ['sometimes', 'array'],
+            'galleries.*' => ['integer', Rule::exists('galleries', 'id')],
         ];
     }
 }

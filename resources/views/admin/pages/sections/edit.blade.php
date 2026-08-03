@@ -14,7 +14,7 @@
     <form method="POST" action="{{ route('admin.pages.sections.update', [$page, $section]) }}">
         @csrf
         @method('PUT')
-        @include('admin.pages.sections._section-form', ['page' => $page, 'section' => $section])
+        @include('admin.pages.sections._section-form', ['page' => $page, 'section' => $section, 'galleries' => $galleries, 'selectedGalleryIds' => $selectedGalleryIds])
     </form>
 
     @if ($typeConfig['has_items'] ?? false)

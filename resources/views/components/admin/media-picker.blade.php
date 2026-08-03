@@ -72,7 +72,7 @@
                 :disabled="$disabled"
                 @click="loadItems(); $dispatch('open-modal', '{{ $modalName }}')"
             >
-                {{ __('Select Image') }}
+                <span x-text="selectedId ? @js(__('Replace Image')) : @js(__('Select Image'))"></span>
             </x-secondary-button>
 
             <button
