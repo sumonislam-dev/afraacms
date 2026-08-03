@@ -14,14 +14,14 @@ class PagesSeeder extends Seeder
      */
     public function run(): void
     {
-        // "gallery" is deliberately absent: the Gallery module (Phase 14) owns
-        // the /gallery URL directly via its own controller and routes.
+        // "gallery" and "projects" are deliberately absent: those modules
+        // (Phases 14 and 15) own their URLs directly via their own
+        // controllers and routes.
         $pages = [
             'About' => 'about',
             'History' => 'history',
             'Registration' => 'registration',
             'Contact' => 'contact',
-            'Projects' => 'projects',
         ];
 
         foreach ($pages as $title => $slug) {

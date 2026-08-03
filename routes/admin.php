@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\MenuItemController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\ProjectCategoryController;
+use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SectionController;
 use App\Http\Controllers\Admin\SectionItemController;
@@ -59,6 +61,12 @@ Route::middleware(['auth', 'verified'])
             Route::delete('items/{item}', [GalleryItemController::class, 'destroy'])->name('items.destroy');
             Route::post('items/reorder', [GalleryItemController::class, 'reorder'])->name('items.reorder');
         });
+
+        Route::resource('project-categories', ProjectCategoryController::class)
+            ->except('show')
+            ->parameters(['project-categories' => 'category']);
+
+        Route::resource('projects', ProjectController::class)->except('show');
 
         Route::prefix('pages/{page}')->name('pages.')->group(function () {
             Route::get('sections', [SectionController::class, 'index'])->name('sections.index');

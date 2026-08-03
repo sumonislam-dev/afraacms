@@ -7,6 +7,7 @@ use App\CMS\Services\BannerService;
 use App\CMS\Services\GalleryService;
 use App\CMS\Services\MenuService;
 use App\CMS\Services\PageService;
+use App\CMS\Services\ProjectService;
 use App\CMS\Services\SettingService;
 use Illuminate\Support\ServiceProvider;
 
@@ -31,5 +32,6 @@ class AppServiceProvider extends ServiceProvider
         $cache->register('pages', fn () => $this->app->make(PageService::class)->forget());
         $cache->register('banners', fn () => $this->app->make(BannerService::class)->forget());
         $cache->register('galleries', fn () => $this->app->make(GalleryService::class)->forget());
+        $cache->register('projects', fn () => $this->app->make(ProjectService::class)->forget());
     }
 }

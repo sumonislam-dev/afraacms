@@ -56,6 +56,14 @@ return [
         'permission' => 'gallery.view',
     ],
     [
+        'label' => 'Projects',
+        'icon' => 'chart-bar',
+        'children' => [
+            ['label' => 'All Projects', 'route' => 'admin.projects.index', 'permission' => 'projects.view'],
+            ['label' => 'Categories', 'route' => 'admin.project-categories.index', 'permission' => 'projects.view'],
+        ],
+    ],
+    [
         'label' => 'Access Control',
         'icon' => 'users',
         'children' => [
