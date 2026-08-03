@@ -28,14 +28,6 @@ class ProjectCategoryController extends Controller
     }
 
     /**
-     * Show the form for creating a new category.
-     */
-    public function create(): View
-    {
-        return view('admin.project-categories.create');
-    }
-
-    /**
      * Store a newly created category.
      */
     public function store(StoreProjectCategoryRequest $request): RedirectResponse
@@ -43,14 +35,6 @@ class ProjectCategoryController extends Controller
         $this->categories->create($request->validated());
 
         return redirect()->route('admin.project-categories.index')->with('success', __('Category created successfully.'));
-    }
-
-    /**
-     * Show the form for editing the given category.
-     */
-    public function edit(ProjectCategory $category): View
-    {
-        return view('admin.project-categories.edit', compact('category'));
     }
 
     /**

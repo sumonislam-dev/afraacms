@@ -9,7 +9,7 @@
             </div>
 
             @can('create', \App\Models\ProjectCategory::class)
-                <x-primary-button type="button" onclick="window.location='{{ route('admin.project-categories.create') }}'">
+                <x-primary-button type="button" x-data="" x-on:click="$dispatch('open-modal', 'create-category')">
                     {{ __('New Category') }}
                 </x-primary-button>
             @endcan
@@ -34,7 +34,26 @@
                     <x-admin.table-td>
                         <div class="flex items-center justify-end gap-3">
                             @can('update', $category)
-                                <a href="{{ route('admin.project-categories.edit', $category) }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-900">{{ __('Edit') }}</a>
+                                <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'edit-category-{{ $category->id }}')" class="text-sm font-medium text-indigo-600 hover:text-indigo-900">
+                                    {{ __('Edit') }}
+                                </button>
+
+                                <x-modal :name="'edit-category-'.$category->id">
+                                    <form method="POST" action="{{ route('admin.project-categories.update', $category) }}" class="p-6">
+                                        @csrf
+                                        @method('PUT')
+                                        <h2 class="text-lg font-medium text-gray-900">{{ __('Edit Category') }}</h2>
+
+                                        <div class="mt-6">
+                                            @include('admin.project-categories._form', ['category' => $category, 'prefix' => 'edit-'.$category->id.'-'])
+                                        </div>
+
+                                        <div class="mt-6 flex justify-end gap-3">
+                                            <x-secondary-button type="button" x-on:click="$dispatch('close')">{{ __('Cancel') }}</x-secondary-button>
+                                            <x-primary-button>{{ __('Save') }}</x-primary-button>
+                                        </div>
+                                    </form>
+                                </x-modal>
                             @endcan
 
                             @can('delete', $category)
@@ -70,4 +89,22 @@
             @endforelse
         </tbody>
     </x-admin.table>
+
+    @can('create', \App\Models\ProjectCategory::class)
+        <x-modal name="create-category">
+            <form method="POST" action="{{ route('admin.project-categories.store') }}" class="p-6">
+                @csrf
+                <h2 class="text-lg font-medium text-gray-900">{{ __('New Category') }}</h2>
+
+                <div class="mt-6">
+                    @include('admin.project-categories._form', ['category' => null, 'prefix' => 'new-'])
+                </div>
+
+                <div class="mt-6 flex justify-end gap-3">
+                    <x-secondary-button type="button" x-on:click="$dispatch('close')">{{ __('Cancel') }}</x-secondary-button>
+                    <x-primary-button>{{ __('Create Category') }}</x-primary-button>
+                </div>
+            </form>
+        </x-modal>
+    @endcan
 </x-admin-layout>

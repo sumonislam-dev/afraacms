@@ -69,7 +69,7 @@ Route::middleware(['auth', 'verified'])
         });
 
         Route::resource('project-categories', ProjectCategoryController::class)
-            ->except('show')
+            ->except(['show', 'create', 'edit'])
             ->parameters(['project-categories' => 'category']);
 
         Route::resource('projects', ProjectController::class)->except('show');
