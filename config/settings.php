@@ -120,6 +120,27 @@ return [
             ],
         ],
 
+        'developer' => [
+            'label' => 'Developer',
+            'icon' => 'link',
+            'fields' => [
+                'developer_credit_text' => [
+                    'label' => 'Developer Credit Text',
+                    'type' => 'text',
+                    'default' => 'Developed by AfraaWorld',
+                    'locked' => true,
+                    'description' => 'Shown in the site footer. Only a Super Admin can change this.',
+                ],
+                'developer_credit_url' => [
+                    'label' => 'Developer Credit URL',
+                    'type' => 'url',
+                    'default' => 'https://afraaworld.com',
+                    'locked' => true,
+                    'description' => 'Where the credit text links to. Only a Super Admin can change this.',
+                ],
+            ],
+        ],
+
         'system' => [
             'label' => 'System',
             'icon' => 'cog-6-tooth',

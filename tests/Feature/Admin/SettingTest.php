@@ -24,7 +24,7 @@ class SettingTest extends TestCase
         $this->actingAs($user)->get(route('admin.settings.edit'))->assertForbidden();
     }
 
-    public function test_editor_can_view_settings_but_not_edit_them(): void
+    public function test_editor_can_view_and_edit_general_settings(): void
     {
         $editor = $this->editor();
         $this->seed(SettingsSeeder::class);
@@ -32,8 +32,42 @@ class SettingTest extends TestCase
         $this->actingAs($editor)->get(route('admin.settings.edit'))->assertOk();
 
         $this->actingAs($editor)
-            ->put(route('admin.settings.update'), ['site_name' => 'Hacked Name'])
-            ->assertForbidden();
+            ->put(route('admin.settings.update'), ['site_name' => 'Client Renamed Site'])
+            ->assertRedirect(route('admin.settings.edit'));
+
+        $this->assertSame('Client Renamed Site', Setting::where('key', 'site_name')->value('value'));
+    }
+
+    public function test_editor_cannot_change_the_locked_developer_credit_even_by_forging_the_field(): void
+    {
+        $editor = $this->editor();
+        $this->seed(SettingsSeeder::class);
+        $original = Setting::where('key', 'developer_credit_text')->value('value');
+
+        $this->actingAs($editor)
+            ->put(route('admin.settings.update'), [
+                'site_name' => 'Client Renamed Site',
+                'developer_credit_text' => 'Hacked Credit',
+                'developer_credit_url' => 'https://evil.example',
+            ])
+            ->assertRedirect(route('admin.settings.edit'));
+
+        $this->assertSame($original, Setting::where('key', 'developer_credit_text')->value('value'));
+    }
+
+    public function test_super_admin_can_change_the_developer_credit(): void
+    {
+        $superAdmin = $this->superAdmin();
+        $this->seed(SettingsSeeder::class);
+
+        $this->actingAs($superAdmin)
+            ->put(route('admin.settings.update'), [
+                'developer_credit_text' => 'Developed by NewAgency',
+                'developer_credit_url' => 'https://newagency.example',
+            ])
+            ->assertRedirect(route('admin.settings.edit'));
+
+        $this->assertSame('Developed by NewAgency', Setting::where('key', 'developer_credit_text')->value('value'));
     }
 
     public function test_super_admin_can_update_settings(): void

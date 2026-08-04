@@ -39,7 +39,12 @@
                         <x-admin.card :title="$group['label']">
                             <div class="space-y-6">
                                 @foreach ($group['fields'] as $fieldKey => $field)
-                                    @include('admin.settings._field', ['key' => $fieldKey, 'field' => $field, 'value' => $values[$fieldKey] ?? null])
+                                    @include('admin.settings._field', [
+                                        'key' => $fieldKey,
+                                        'field' => $field,
+                                        'value' => $values[$fieldKey] ?? null,
+                                        'canEdit' => $canEdit && (! ($field['locked'] ?? false) || $canEditDeveloper),
+                                    ])
                                 @endforeach
                             </div>
                         </x-admin.card>

@@ -54,15 +54,33 @@ class SettingController extends Controller
             'groups' => $groups,
             'values' => Setting::query()->pluck('value', 'key'),
             'canEdit' => auth()->user()->can('update', Setting::class),
+            'canEditDeveloper' => auth()->user()->can('settings.developer'),
         ]);
     }
 
     /**
      * Update every setting submitted from the tabbed settings form.
+     *
+     * Fields flagged "locked" in config/settings.php (the developer credit)
+     * stay Super-Admin-only regardless of the submitted payload: an Editor
+     * who has been granted general settings.edit still cannot touch them,
+     * even by forging a POST past their disabled form field.
      */
     public function update(UpdateSettingsRequest $request): RedirectResponse
     {
-        $this->settings->updateMany($request->validated());
+        $data = $request->validated();
+
+        if ($request->user()->cannot('settings.developer')) {
+            foreach (config('settings.groups', []) as $group) {
+                foreach ($group['fields'] as $key => $field) {
+                    if ($field['locked'] ?? false) {
+                        unset($data[$key]);
+                    }
+                }
+            }
+        }
+
+        $this->settings->updateMany($data);
 
         return redirect()->route('admin.settings.edit')->with('success', __('Settings updated successfully.'));
     }

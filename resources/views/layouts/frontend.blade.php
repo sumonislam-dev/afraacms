@@ -146,6 +146,16 @@
                     @if (setting('footer_text'))
                         <p>{{ setting('footer_text') }}</p>
                     @endif
+
+                    @if (setting('developer_credit_text'))
+                        <p>
+                            @if (setting('developer_credit_url'))
+                                <a href="{{ setting('developer_credit_url') }}" target="_blank" rel="noopener" class="hover:text-white">{{ setting('developer_credit_text') }}</a>
+                            @else
+                                {{ setting('developer_credit_text') }}
+                            @endif
+                        </p>
+                    @endif
                 </div>
             </div>
         </footer>

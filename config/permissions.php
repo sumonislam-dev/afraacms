@@ -10,8 +10,12 @@
 | "{module}.{action}" (e.g. "pages.create") by the RolesAndPermissionsSeeder.
 |
 | Modules with only ['view', 'edit'] represent singleton/config-style
-| screens (Settings, SEO) that have nothing to "create" or "delete".
+| screens (SEO) that have nothing to "create" or "delete".
 | "Dashboard" only needs "view" since it isn't a manageable resource.
+| Settings adds a third action, "developer", gating the handful of
+| fields (config/settings.php field key "locked") that must stay
+| Super-Admin-only even for an Editor who's been granted general
+| settings.edit - see UpdateSettingsRequest/SettingController.
 |
 | Future modules only need to add an entry here and reference the
 | resulting permission name from their routes/policies - the seeder
@@ -26,7 +30,7 @@ return [
         'roles' => ['view', 'create', 'edit', 'delete'],
         'permissions' => ['view'],
         'activity' => ['view'],
-        'settings' => ['view', 'edit'],
+        'settings' => ['view', 'edit', 'developer'],
         'media' => ['view', 'create', 'edit', 'delete'],
         'menus' => ['view', 'create', 'edit', 'delete'],
         'pages' => ['view', 'create', 'edit', 'delete'],
@@ -61,11 +65,14 @@ return [
     |
     | Individual permission names to grant Editor beyond the full-module
     | grants above, for modules where Editor should only get a subset of
-    | actions (e.g. Editor may view Settings but never modify them).
+    | actions (e.g. Editor can view and edit Settings, but never the
+    | Super-Admin-only "developer" fields - deliberately NOT granting
+    | settings.developer here).
     |
     */
 
     'editor_extra_permissions' => [
         'settings.view',
+        'settings.edit',
     ],
 ];
