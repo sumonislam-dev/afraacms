@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,40 +17,47 @@
             <link rel="icon" href="{{ media_url(setting('favicon')) }}">
         @endif
 
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,400&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased text-gray-900" x-data="{ mobileMenuOpen: false }">
-        <header class="border-b border-gray-100 bg-white">
-            <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
-                <a href="{{ url('/') }}" class="flex items-center gap-2">
-                    @if (setting('logo'))
-                        <img
-                            src="{{ media_url(setting('logo')) }}"
-                            alt="{{ setting('site_name') }}"
-                            class="h-9 w-auto"
-                        >
-                    @else
-                        <span class="text-lg font-semibold">{{ setting('site_name', config('app.name', 'AfraaCMS')) }}</span>
+    <body class="font-body text-ink-900 antialiased" x-data="{ mobileMenuOpen: false }">
+        <header
+            class="{{ $isHome
+                ? 'fixed top-0 inset-x-0 z-50 bg-ink-900/95 backdrop-blur supports-backdrop-filter:bg-ink-900/80 shadow-lg shadow-black/10'
+                : 'bg-ink-900 shadow-lg shadow-black/10' }}"
+        >
+            <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="flex h-20 items-center justify-between">
+                    <a href="{{ url('/') }}" class="flex shrink-0 items-center gap-3">
+                        @if (setting('logo'))
+                            <img
+                                src="{{ media_url(setting('logo')) }}"
+                                alt="{{ setting('site_name') }}"
+                                class="h-12 w-12 rounded-full object-cover ring-2 ring-brand-500"
+                            >
+                        @else
+                            <span class="font-display text-lg font-bold leading-tight text-white">{{ setting('site_name', config('app.name', 'AfraaCMS')) }}</span>
+                        @endif
+                    </a>
+
+                    <x-menu slug="header" class="hidden items-center gap-1 lg:flex" />
+
+                    <button type="button" class="p-2 text-white lg:hidden" @click="mobileMenuOpen = ! mobileMenuOpen" aria-label="{{ __('Toggle navigation') }}" :aria-expanded="mobileMenuOpen">
+                        <span class="sr-only">{{ __('Menu') }}</span>
+                        <x-icon name="bars-3" class="h-7 w-7" />
+                    </button>
+                </div>
+
+                <div x-show="mobileMenuOpen" x-transition class="space-y-1 pb-4 lg:hidden" style="display: none;">
+                    @php($headerMenu = menu('header'))
+                    @if ($headerMenu && ! empty($headerMenu['tree']))
+                        @include('components._menu-items', ['items' => $headerMenu['tree'], 'level' => 1, 'dark' => true])
                     @endif
-                </a>
-
-                <x-menu slug="header" class="hidden sm:flex" />
-
-                <button type="button" class="text-gray-500 sm:hidden" @click="mobileMenuOpen = ! mobileMenuOpen">
-                    <span class="sr-only">{{ __('Menu') }}</span>
-                    <x-icon name="bars-3" class="h-6 w-6" />
-                </button>
-            </div>
-
-            <div x-show="mobileMenuOpen" x-transition class="border-t border-gray-100 px-4 py-3 sm:hidden" style="display: none;">
-                @php($headerMenu = menu('header'))
-                @if ($headerMenu && ! empty($headerMenu['tree']))
-                    @include('components._menu-items', ['items' => $headerMenu['tree'], 'level' => 1])
-                @endif
-            </div>
+                </div>
+            </nav>
         </header>
 
         <main>
@@ -59,33 +66,87 @@
 
         <x-banner type="cta" />
 
-        <footer class="mt-12 border-t border-gray-100 bg-gray-50">
-            <div class="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-                <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
-                    <p class="text-sm text-gray-500">
-                        {{ setting('copyright', '© '.date('Y').' '.config('app.name', 'AfraaCMS').'. All rights reserved.') }}
-                    </p>
+        <footer class="bg-black text-white/70">
+            <div class="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
+                <div>
+                    <div class="mb-4 flex items-center gap-3">
+                        @if (setting('logo'))
+                            <img src="{{ media_url(setting('logo')) }}" alt="{{ setting('site_name') }}" class="h-10 w-10 rounded-full object-cover ring-2 ring-brand-500">
+                        @endif
+                        <span class="font-display font-bold text-white">{{ setting('site_name', config('app.name', 'AfraaCMS')) }}</span>
+                    </div>
 
-                    <div class="flex items-center gap-4">
+                    @if (setting('tagline'))
+                        <p class="text-sm leading-relaxed">{{ setting('tagline') }}</p>
+                    @endif
+
+                    <div class="mt-5 flex gap-3">
                         @foreach (['facebook' => 'Facebook', 'linkedin' => 'LinkedIn', 'youtube' => 'YouTube', 'instagram' => 'Instagram', 'twitter' => 'Twitter / X'] as $network => $label)
                             @if (setting($network))
-                                <a href="{{ setting($network) }}" target="_blank" rel="noopener" class="text-sm text-gray-500 hover:text-gray-700">
-                                    {{ $label }}
+                                <a
+                                    href="{{ setting($network) }}"
+                                    target="_blank"
+                                    rel="noopener"
+                                    aria-label="{{ $label }}"
+                                    class="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 transition hover:bg-brand-500"
+                                >
+                                    <x-icon name="link" class="h-4 w-4" />
                                 </a>
                             @endif
                         @endforeach
                     </div>
                 </div>
 
-                @if (setting('footer_text'))
-                    <p class="mt-4 text-center text-xs text-gray-400">{{ setting('footer_text') }}</p>
+                @php($footerMenu = menu('footer'))
+                @if ($footerMenu && ! empty($footerMenu['tree']))
+                    <div>
+                        <h4 class="mb-4 font-semibold text-white">{{ __('Quick Links') }}</h4>
+                        <ul class="space-y-2 text-sm">
+                            @foreach (array_slice($footerMenu['tree'], 0, (int) setting('footer_links_limit', 6)) as $item)
+                                <li><a href="{{ $item['resolved_url'] }}" target="{{ $item['target'] }}" class="transition hover:text-brand-400">{{ $item['label'] }}</a></li>
+                            @endforeach
+                        </ul>
+                    </div>
                 @endif
 
-                @if (setting('contact_email') || setting('contact_phone'))
-                    <p class="mt-2 text-center text-xs text-gray-400">
-                        {{ collect([setting('contact_email'), setting('contact_phone')])->filter()->implode(' · ') }}
-                    </p>
+                @php($footerProjects = array_slice(app(\App\CMS\Services\ProjectService::class)->all(), 0, 5))
+                @if (! empty($footerProjects))
+                    <div>
+                        <h4 class="mb-4 font-semibold text-white">{{ __('Our Projects') }}</h4>
+                        <ul class="space-y-2 text-sm">
+                            @foreach ($footerProjects as $project)
+                                <li><a href="{{ route('projects.show', $project['slug']) }}" class="transition hover:text-brand-400">{{ $project['title'] }}</a></li>
+                            @endforeach
+                        </ul>
+                    </div>
                 @endif
+
+                @if (setting('contact_address') || setting('contact_phone') || setting('contact_email'))
+                    <div>
+                        <h4 class="mb-4 font-semibold text-white">{{ __('Contact') }}</h4>
+                        <ul class="space-y-3 text-sm">
+                            @if (setting('contact_address'))
+                                <li>{{ setting('contact_address') }}</li>
+                            @endif
+                            @if (setting('contact_phone'))
+                                <li><a href="tel:{{ preg_replace('/[^0-9+]/', '', setting('contact_phone')) }}" class="transition hover:text-brand-400">{{ setting('contact_phone') }}</a></li>
+                            @endif
+                            @if (setting('contact_email'))
+                                <li><a href="mailto:{{ setting('contact_email') }}" class="transition hover:text-brand-400">{{ setting('contact_email') }}</a></li>
+                            @endif
+                        </ul>
+                    </div>
+                @endif
+            </div>
+
+            <div class="border-t border-white/10">
+                <div class="mx-auto flex max-w-7xl flex-col justify-between gap-2 px-4 py-6 text-xs text-white/50 sm:flex-row sm:px-6 lg:px-8">
+                    <p>{{ setting('copyright', '© '.date('Y').' '.config('app.name', 'AfraaCMS').'. All rights reserved.') }}</p>
+
+                    @if (setting('footer_text'))
+                        <p>{{ setting('footer_text') }}</p>
+                    @endif
+                </div>
             </div>
         </footer>
 

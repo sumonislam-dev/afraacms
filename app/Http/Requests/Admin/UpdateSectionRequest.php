@@ -24,6 +24,7 @@ class UpdateSectionRequest extends FormRequest
     {
         return [
             'type' => ['required', Rule::in(array_keys(config('sections.types', [])))],
+            'anchor' => ['nullable', 'string', 'max:100', 'alpha_dash'],
             'heading' => ['nullable', 'string', 'max:255'],
             'subheading' => ['nullable', 'string', 'max:255'],
             'body' => ['nullable', 'string'],

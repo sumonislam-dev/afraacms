@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['page_id', 'type', 'heading', 'subheading', 'body', 'image', 'button_text', 'button_url', 'layout', 'is_active', 'sort_order'])]
+#[Fillable(['page_id', 'type', 'anchor', 'heading', 'subheading', 'body', 'image', 'button_text', 'button_url', 'layout', 'is_active', 'sort_order'])]
 class Section extends Model
 {
     use HasFactory;

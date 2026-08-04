@@ -42,6 +42,10 @@ class SettingController extends Controller
                         ->pluck('title', 'id')
                         ->all();
                 }
+
+                if (is_array($field['options'] ?? null)) {
+                    $field['resolved_options'] = $field['options'];
+                }
             }
         }
         unset($group, $field);

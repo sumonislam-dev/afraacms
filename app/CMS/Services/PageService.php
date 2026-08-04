@@ -86,10 +86,13 @@ class PageService
                     'slug' => $page->slug,
                     'template' => $page->template,
                     'content' => $page->content,
+                    'banner_eyebrow' => $page->banner_eyebrow,
+                    'banner_image_url' => $page->banner_image_url,
                     'updated_at' => $page->updated_at?->toIso8601String(),
                     'seo' => SeoMeta::toCacheArray($page->seo),
                     'sections' => $page->sections->map(fn (Section $section) => [
                         'type' => $section->type,
+                        'anchor' => $section->anchor,
                         'heading' => $section->heading,
                         'subheading' => $section->subheading,
                         'body' => $section->body,

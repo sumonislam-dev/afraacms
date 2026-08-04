@@ -34,7 +34,7 @@ return [
             'label' => 'Cards',
             'fields' => ['heading', 'subheading'],
             'has_items' => true,
-            'item_fields' => ['title', 'body', 'image', 'url'],
+            'item_fields' => ['title', 'body', 'image', 'icon', 'url'],
         ],
         'gallery' => [
             'label' => 'Gallery',

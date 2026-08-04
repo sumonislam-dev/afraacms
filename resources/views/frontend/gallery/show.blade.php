@@ -5,12 +5,10 @@
     :canonical="$album['seo']['canonical_url'] ?? null"
     :robots="$album['seo']['robots'] ?? null"
 >
-    <x-banner type="page" />
+    <x-banner type="page" :page-title="$album['title']" />
 
     <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
         <div class="text-center">
-            <h1 class="text-3xl font-bold text-gray-900">{{ $album['title'] }}</h1>
-
             @if ($album['description'])
                 <p class="mt-4 text-gray-600">{{ $album['description'] }}</p>
             @endif
@@ -25,7 +23,7 @@
         </div>
 
         <div class="mt-10 text-center">
-            <a href="{{ route('gallery.index') }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">&larr; {{ __('Back to Gallery') }}</a>
+            <a href="{{ route('gallery.index') }}" class="text-sm font-medium text-brand-600 hover:text-brand-500">&larr; {{ __('Back to Gallery') }}</a>
         </div>
     </div>
 </x-frontend-layout>

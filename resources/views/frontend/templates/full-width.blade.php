@@ -4,8 +4,22 @@
     :image="$page['seo']['image_url'] ?? null"
     :canonical="$page['seo']['canonical_url'] ?? null"
     :robots="$page['seo']['robots'] ?? null"
+    :is-home="$isHome ?? false"
 >
-    <x-banner :type="($isHome ?? false) ? 'homepage' : 'page'" />
+    @php
+        // A page whose first section is a Hero already gets its own big
+        // title treatment there - showing the small page-banner's title too
+        // would just duplicate it, so skip the banner's title in that case.
+        $startsWithHero = ($page['sections'][0]['type'] ?? null) === 'hero';
+    @endphp
+
+    @unless ($isHome ?? false)
+        <x-banner
+            type="page"
+            :override="['title' => $page['banner_eyebrow'] ?? null, 'image_url' => $page['banner_image_url'] ?? null]"
+            :page-title="$startsWithHero ? null : $page['title']"
+        />
+    @endunless
 
     @if (! empty($page['sections']))
         <x-sections :sections="$page['sections']" />

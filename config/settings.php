@@ -71,6 +71,12 @@ return [
             'fields' => [
                 'copyright' => ['label' => 'Copyright', 'type' => 'text', 'default' => ''],
                 'footer_text' => ['label' => 'Footer Text', 'type' => 'textarea', 'default' => ''],
+                'footer_links_limit' => [
+                    'label' => 'Quick Links Count',
+                    'type' => 'number',
+                    'default' => 6,
+                    'description' => 'Maximum number of items shown in the footer "Quick Links" column, taken from the "footer" menu in Menu Builder.',
+                ],
             ],
         ],
 
@@ -91,6 +97,20 @@ return [
                 'google_analytics' => ['label' => 'Google Analytics ID', 'type' => 'text', 'default' => ''],
                 'google_tag_manager' => ['label' => 'Google Tag Manager ID', 'type' => 'text', 'default' => ''],
                 'facebook_pixel' => ['label' => 'Facebook Pixel ID', 'type' => 'text', 'default' => ''],
+            ],
+        ],
+
+        'gallery' => [
+            'label' => 'Gallery',
+            'icon' => 'photo',
+            'fields' => [
+                'gallery_display_mode' => [
+                    'label' => 'Gallery Display Mode',
+                    'type' => 'select',
+                    'options' => ['albums' => 'Show as Albums', 'flat' => 'Show All Photos in One Grid'],
+                    'default' => 'albums',
+                    'description' => 'Controls how the public Gallery page displays photos: grouped into albums, or as a single flat grid of every photo.',
+                ],
             ],
         ],
 

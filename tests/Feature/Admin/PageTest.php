@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Models\MediaItem;
 use App\Models\Page;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Concerns\CreatesAdminUsers;
@@ -52,6 +53,27 @@ class PageTest extends TestCase
 
         $response->assertRedirect(route('admin.pages.index'));
         $this->assertDatabaseHas('pages', ['slug' => 'contact-us', 'title' => 'Contact Us']);
+    }
+
+    public function test_editor_can_set_a_page_specific_banner_override(): void
+    {
+        $editor = $this->editor();
+        $photo = MediaItem::create(['title' => 'Campus']);
+
+        $this->actingAs($editor)->post(route('admin.pages.store'), [
+            'title' => 'About',
+            'slug' => 'about',
+            'status' => 'published',
+            'template' => 'default',
+            'banner_image' => $photo->id,
+            'banner_eyebrow' => 'About RSUF',
+        ])->assertRedirect(route('admin.pages.index'));
+
+        $this->assertDatabaseHas('pages', [
+            'slug' => 'about',
+            'banner_image' => $photo->id,
+            'banner_eyebrow' => 'About RSUF',
+        ]);
     }
 
     public function test_a_user_without_permissions_cannot_create_a_page(): void

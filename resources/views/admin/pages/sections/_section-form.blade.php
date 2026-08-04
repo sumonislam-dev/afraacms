@@ -19,6 +19,13 @@
                     <x-input-error class="mt-2" :messages="$errors->get('type')" />
                 </div>
 
+                <div>
+                    <x-input-label for="anchor" :value="__('Anchor ID')" />
+                    <x-text-input id="anchor" name="anchor" type="text" class="mt-1 block w-full" :value="old('anchor', $section->anchor ?? '')" placeholder="e.g. history" />
+                    <p class="mt-1 text-xs text-gray-500">{{ __('Optional. Lets a menu link jump straight to this section, e.g. /about#history.') }}</p>
+                    <x-input-error class="mt-2" :messages="$errors->get('anchor')" />
+                </div>
+
                 <div x-show="fields[type]?.includes('heading')" style="display: none;">
                     <x-input-label for="heading" :value="__('Heading')" />
                     <x-text-input id="heading" name="heading" type="text" class="mt-1 block w-full" :value="old('heading', $section->heading ?? '')" />
@@ -95,6 +102,30 @@
                 </div>
 
                 <p class="mt-2 text-xs text-gray-500">{{ __('"All Active Albums" always shows your latest active albums automatically. Choose "Specific Albums" to hand-pick which ones appear here.') }}</p>
+            </div>
+
+            <div x-show="type === 'hero'" style="display: none;">
+                <x-input-label :value="__('Background Images')" />
+                <p class="mt-1 text-xs text-gray-500">{{ __('Optional. Pick one or more albums to rotate their photos behind the heading. Left blank, the single Image above is used instead.') }}</p>
+                <div class="mt-2 max-h-56 space-y-2 overflow-y-auto rounded-md border border-gray-200 p-3">
+                    @forelse ($galleries ?? [] as $gallery)
+                        <label class="flex items-center gap-2 text-sm text-gray-700">
+                            <input
+                                type="checkbox"
+                                name="galleries[]"
+                                value="{{ $gallery->id }}"
+                                @checked(in_array($gallery->id, $selectedGalleryIds ?? [], true))
+                                class="rounded-sm border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            >
+                            {{ $gallery->title }}
+                            @unless ($gallery->is_active)
+                                <span class="text-xs text-gray-400">({{ __('inactive') }})</span>
+                            @endunless
+                        </label>
+                    @empty
+                        <p class="text-sm text-gray-500">{{ __('No albums yet.') }}</p>
+                    @endforelse
+                </div>
             </div>
 
             <div class="sm:max-w-xs" x-show="fields[type]?.includes('layout')" style="display: none;">

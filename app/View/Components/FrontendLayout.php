@@ -20,6 +20,7 @@ class FrontendLayout extends Component
         public ?string $image = null,
         public ?string $canonical = null,
         public ?string $robots = null,
+        public bool $isHome = false,
     ) {
     }
 

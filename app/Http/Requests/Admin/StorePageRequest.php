@@ -37,6 +37,8 @@ class StorePageRequest extends FormRequest
             'template' => ['required', Rule::in(array_keys(config('pages.templates', [])))],
             'published_at' => ['nullable', 'date'],
             'content' => ['nullable', 'string'],
+            'banner_image' => ['nullable', 'integer', Rule::exists('media_items', 'id')],
+            'banner_eyebrow' => ['nullable', 'string', 'max:255'],
             ...$this->seoRules(),
         ];
     }

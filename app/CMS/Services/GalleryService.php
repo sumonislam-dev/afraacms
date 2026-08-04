@@ -45,6 +45,21 @@ class GalleryService
     }
 
     /**
+     * Every item across every active album, flattened into a single
+     * ordered list (album order, then item order within each album) - used
+     * by the "flat" gallery display mode.
+     *
+     * @return array<int, array>
+     */
+    public function allItemsFlat(): array
+    {
+        return collect($this->allCached())
+            ->flatMap(fn (array $album) => $album['items'])
+            ->values()
+            ->all();
+    }
+
+    /**
      * @return array<string, array>
      */
     private function allCached(): array

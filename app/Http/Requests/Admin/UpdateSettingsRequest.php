@@ -32,6 +32,7 @@ class UpdateSettingsRequest extends FormRequest
             foreach ($group['fields'] as $key => $field) {
                 $rules[$key] = match (true) {
                     ($field['options'] ?? null) === 'pages' => ['nullable', 'integer', Rule::exists('pages', 'id')],
+                    is_array($field['options'] ?? null) => ['nullable', Rule::in(array_keys($field['options']))],
                     $field['type'] === 'email' => ['nullable', 'email', 'max:255'],
                     $field['type'] === 'url' => ['nullable', 'url', 'max:2048'],
                     $field['type'] === 'number' => ['nullable', 'numeric'],

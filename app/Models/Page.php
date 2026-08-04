@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-#[Fillable(['title', 'slug', 'status', 'template', 'content', 'published_at'])]
+#[Fillable(['title', 'slug', 'status', 'template', 'content', 'published_at', 'banner_image', 'banner_eyebrow'])]
 class Page extends Model
 {
     use HasFactory, LogsActivity, SoftDeletes;
@@ -62,5 +62,14 @@ class Page extends Model
     {
         return $this->status === 'published'
             && (! $this->published_at || $this->published_at->isPast());
+    }
+
+    /**
+     * Get this page's own banner image URL, resolved from its stored
+     * MediaItem id, if it overrides the site-wide "page" banner.
+     */
+    public function getBannerImageUrlAttribute(): ?string
+    {
+        return media_url($this->banner_image);
     }
 }

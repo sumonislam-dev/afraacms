@@ -1,10 +1,21 @@
-@props(['type'])
+@props(['type', 'override' => null, 'pageTitle' => null])
 
 @php
-    $data = banner($type);
+    // A truthy field in $override (e.g. a page's own banner image/eyebrow)
+    // takes precedence over the shared, site-wide banner for this $type;
+    // any field the override doesn't set falls back to the shared banner.
+    // All keys are always present (defaulting to null) so the direct
+    // $data[...] access below never hits an undefined array key.
+    $data = array_filter($override ?? []) + (banner($type) ?? []) + [
+        'id' => null, 'title' => null, 'subtitle' => null,
+        'image_url' => null, 'button_text' => null, 'button_url' => null,
+    ];
+    // A page banner always has content to show (the page's own title), even
+    // with no eyebrow/image configured anywhere.
+    $hasContent = $pageTitle || $data['title'] || $data['subtitle'] || $data['image_url'] || $data['button_text'] || $data['button_url'];
 @endphp
 
-@if ($data)
+@if ($hasContent)
     @if ($type === 'cta')
         <x-frontend.cta
             :heading="$data['title']"
@@ -56,6 +67,7 @@
             :image-url="$data['image_url']"
             :button-text="$data['button_text']"
             :button-url="$data['button_url']"
+            :page-title="$pageTitle"
         />
     @endif
 @endif

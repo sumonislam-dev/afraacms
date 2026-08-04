@@ -1,5 +1,11 @@
 @props(['sections' => []])
 
 @foreach ($sections as $section)
-    @includeIf("frontend.sections.{$section['type']}", ['section' => $section])
+    @if ($section['anchor'] ?? null)
+        <div id="{{ $section['anchor'] }}">
+            @includeIf("frontend.sections.{$section['type']}", ['section' => $section])
+        </div>
+    @else
+        @includeIf("frontend.sections.{$section['type']}", ['section' => $section])
+    @endif
 @endforeach
