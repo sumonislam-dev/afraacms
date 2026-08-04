@@ -40,7 +40,7 @@
                             @endcan
 
                             @can('delete', $role)
-                                <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'confirm-role-deletion-{{ $role->id }}')" class="text-sm font-medium text-red-600 hover:text-red-900">
+                                <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'confirm-role-deletion-{{ $role->id }}')" class="cursor-pointer text-sm font-medium text-red-600 hover:text-red-900">
                                     {{ __('Delete') }}
                                 </button>
 

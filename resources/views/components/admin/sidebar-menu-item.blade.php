@@ -44,7 +44,7 @@
         <button
             type="button"
             @click="open = ! open"
-            class="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium transition-colors {{ $isActive ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-800 hover:text-white' }}"
+            class="flex w-full cursor-pointer items-center justify-between rounded-md px-3 py-2 text-sm font-medium transition-colors {{ $isActive ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-800 hover:text-white' }}"
         >
             <span class="flex items-center gap-3">
                 <x-admin.icon :name="$item['icon'] ?? 'squares-2x2'" class="h-5 w-5 shrink-0" />

@@ -25,11 +25,11 @@
                 <span class="shrink-0 text-xs text-gray-400">{{ $item->type === 'external' ? __('External') : __('Internal') }}</span>
 
                 @if ($canEdit)
-                    <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'edit-item-{{ $item->id }}')" class="shrink-0 rounded-sm p-1 text-gray-500 hover:bg-gray-100" title="{{ __('Edit') }}">
+                    <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'edit-item-{{ $item->id }}')" class="shrink-0 cursor-pointer rounded-sm p-1 text-gray-500 hover:bg-gray-100" title="{{ __('Edit') }}">
                         <x-admin.icon name="pencil" class="h-4 w-4" />
                     </button>
 
-                    <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'delete-item-{{ $item->id }}')" class="shrink-0 rounded-sm p-1 text-red-500 hover:bg-red-50" title="{{ __('Delete') }}">
+                    <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'delete-item-{{ $item->id }}')" class="shrink-0 cursor-pointer rounded-sm p-1 text-red-500 hover:bg-red-50" title="{{ __('Delete') }}">
                         <x-admin.icon name="trash" class="h-4 w-4" />
                     </button>
                 @endif

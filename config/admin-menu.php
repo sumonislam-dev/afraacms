@@ -39,7 +39,7 @@ return [
     ],
     [
         'label' => 'Banners',
-        'icon' => 'bars-4',
+        'icon' => 'circle',
         'route' => 'admin.banners.index',
         'permission' => 'banners.view',
     ],
@@ -51,7 +51,7 @@ return [
     ],
     [
         'label' => 'Galleries',
-        'icon' => 'photo',
+        'icon' => 'play',
         'route' => 'admin.galleries.index',
         'permission' => 'gallery.view',
     ],
@@ -65,7 +65,7 @@ return [
     ],
     [
         'label' => 'Team',
-        'icon' => 'users',
+        'icon' => 'user-circle',
         'children' => [
             ['label' => 'All Members', 'route' => 'admin.team.index', 'permission' => 'team.view'],
             ['label' => 'Categories', 'route' => 'admin.team-categories.index', 'permission' => 'team.view'],

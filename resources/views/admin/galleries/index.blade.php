@@ -51,7 +51,7 @@
                             @endcan
 
                             @can('delete', $album)
-                                <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'delete-album-{{ $album->id }}')" class="text-sm font-medium text-red-600 hover:text-red-900">
+                                <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'delete-album-{{ $album->id }}')" class="cursor-pointer text-sm font-medium text-red-600 hover:text-red-900">
                                     {{ __('Delete') }}
                                 </button>
 

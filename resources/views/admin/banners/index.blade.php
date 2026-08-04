@@ -15,7 +15,7 @@
                     type="button"
                     @click="tab = '{{ $typeKey }}'"
                     :class="tab === '{{ $typeKey }}' ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50'"
-                    class="flex shrink-0 items-center gap-2 rounded-md px-3 py-2 text-sm font-medium whitespace-nowrap"
+                    class="flex shrink-0 cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm font-medium whitespace-nowrap"
                 >
                     {{ $typeConfig['label'] }}
                     <span class="rounded-full bg-gray-100 px-1.5 text-xs text-gray-500">{{ $banners->get($typeKey, collect())->count() }}</span>

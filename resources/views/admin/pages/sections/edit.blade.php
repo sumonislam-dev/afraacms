@@ -41,10 +41,10 @@
                             </div>
 
                             <div class="flex items-center gap-3">
-                                <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'edit-section-item-{{ $item->id }}')" class="text-sm font-medium text-indigo-600 hover:text-indigo-900">
+                                <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'edit-section-item-{{ $item->id }}')" class="cursor-pointer text-sm font-medium text-indigo-600 hover:text-indigo-900">
                                     {{ __('Edit') }}
                                 </button>
-                                <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'delete-section-item-{{ $item->id }}')" class="text-sm font-medium text-red-600 hover:text-red-900">
+                                <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'delete-section-item-{{ $item->id }}')" class="cursor-pointer text-sm font-medium text-red-600 hover:text-red-900">
                                     {{ __('Delete') }}
                                 </button>
                             </div>

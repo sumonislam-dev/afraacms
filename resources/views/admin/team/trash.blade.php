@@ -36,14 +36,14 @@
                             @can('restore', $member)
                                 <form method="POST" action="{{ route('admin.team.restore', $member) }}">
                                     @csrf
-                                    <button type="submit" class="text-sm font-medium text-indigo-600 hover:text-indigo-900">
+                                    <button type="submit" class="cursor-pointer text-sm font-medium text-indigo-600 hover:text-indigo-900">
                                         {{ __('Restore') }}
                                     </button>
                                 </form>
                             @endcan
 
                             @can('forceDelete', $member)
-                                <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'force-delete-member-{{ $member->id }}')" class="text-sm font-medium text-red-600 hover:text-red-900">
+                                <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'force-delete-member-{{ $member->id }}')" class="cursor-pointer text-sm font-medium text-red-600 hover:text-red-900">
                                     {{ __('Delete Permanently') }}
                                 </button>
 

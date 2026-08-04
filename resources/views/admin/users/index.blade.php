@@ -53,14 +53,14 @@
                                 <form method="POST" action="{{ route('admin.users.toggle-active', $user) }}">
                                     @csrf
                                     @method('PATCH')
-                                    <button type="submit" class="text-sm font-medium text-gray-600 hover:text-gray-900">
+                                    <button type="submit" class="cursor-pointer text-sm font-medium text-gray-600 hover:text-gray-900">
                                         {{ $user->is_active ? __('Deactivate') : __('Activate') }}
                                     </button>
                                 </form>
                             @endcan
 
                             @can('delete', $user)
-                                <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'confirm-user-deletion-{{ $user->id }}')" class="text-sm font-medium text-red-600 hover:text-red-900">
+                                <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'confirm-user-deletion-{{ $user->id }}')" class="cursor-pointer text-sm font-medium text-red-600 hover:text-red-900">
                                     {{ __('Delete') }}
                                 </button>
 

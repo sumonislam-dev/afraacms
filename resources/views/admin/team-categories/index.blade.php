@@ -34,7 +34,7 @@
                     <x-admin.table-td>
                         <div class="flex items-center justify-end gap-3">
                             @can('update', $category)
-                                <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'edit-category-{{ $category->id }}')" class="text-sm font-medium text-indigo-600 hover:text-indigo-900">
+                                <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'edit-category-{{ $category->id }}')" class="cursor-pointer text-sm font-medium text-indigo-600 hover:text-indigo-900">
                                     {{ __('Edit') }}
                                 </button>
 
@@ -57,7 +57,7 @@
                             @endcan
 
                             @can('delete', $category)
-                                <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'delete-category-{{ $category->id }}')" class="text-sm font-medium text-red-600 hover:text-red-900">
+                                <button type="button" x-data="" x-on:click="$dispatch('open-modal', 'delete-category-{{ $category->id }}')" class="cursor-pointer text-sm font-medium text-red-600 hover:text-red-900">
                                     {{ __('Delete') }}
                                 </button>
 

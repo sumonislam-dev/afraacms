@@ -21,7 +21,7 @@
                     type="button"
                     @click="tab = '{{ $groupKey }}'"
                     :class="tab === '{{ $groupKey }}' ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50'"
-                    class="flex shrink-0 items-center gap-3 rounded-md px-3 py-2 text-sm font-medium whitespace-nowrap"
+                    class="flex shrink-0 cursor-pointer items-center gap-3 rounded-md px-3 py-2 text-sm font-medium whitespace-nowrap"
                 >
                     <x-admin.icon :name="$group['icon']" class="h-5 w-5" />
                     {{ $group['label'] }}

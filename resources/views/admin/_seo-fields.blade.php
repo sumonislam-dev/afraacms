@@ -6,7 +6,7 @@
 @endphp
 
 <div x-data="{ open: {{ $seoOpen ? 'true' : 'false' }} }" class="border-t border-gray-100 pt-6">
-    <button type="button" x-on:click="open = ! open" class="flex w-full items-center justify-between text-left">
+    <button type="button" x-on:click="open = ! open" class="flex w-full cursor-pointer items-center justify-between text-left">
         <div>
             <h3 class="text-sm font-semibold text-gray-900">{{ __('SEO') }}</h3>
             <p class="mt-1 text-sm text-gray-500" x-show="! open" x-cloak>{{ __('Optional overrides. Anything left blank falls back to the site-wide defaults in Settings.') }}</p>
