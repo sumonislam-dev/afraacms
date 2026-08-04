@@ -46,6 +46,25 @@ class Section extends Model
         return $this->belongsToMany(Gallery::class)->orderBy('galleries.sort_order');
     }
 
+    /**
+     * Team members explicitly hand-picked for this section (only
+     * meaningful for the "team_members" type, in "Specific Members" mode).
+     */
+    public function teamMembers(): BelongsToMany
+    {
+        return $this->belongsToMany(TeamMember::class, 'section_team_member')->orderBy('team_members.sort_order');
+    }
+
+    /**
+     * Team categories picked for this section (only meaningful for the
+     * "team_members" type, in "By Category" mode) - e.g. show only
+     * "Volunteers" here and only "Board" on another page.
+     */
+    public function teamCategories(): BelongsToMany
+    {
+        return $this->belongsToMany(TeamCategory::class, 'section_team_category');
+    }
+
     public function getImageUrlAttribute(): ?string
     {
         return media_url($this->image);

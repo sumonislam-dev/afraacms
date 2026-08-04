@@ -104,6 +104,73 @@
                 <p class="mt-2 text-xs text-gray-500">{{ __('"All Active Albums" always shows your latest active albums automatically. Choose "Specific Albums" to hand-pick which ones appear here.') }}</p>
             </div>
 
+            <div
+                x-show="type === 'team_members'"
+                style="display: none;"
+                x-data="{
+                    teamMode: @js(! empty($selectedTeamCategoryIds ?? [])
+                        ? 'category'
+                        : (! empty($selectedTeamMemberIds ?? []) ? 'specific' : 'all')),
+                }"
+            >
+                <x-input-label :value="__('Members to Show')" />
+                <div class="mt-1 inline-flex rounded-md border border-gray-300 bg-white p-0.5 text-sm">
+                    <label class="cursor-pointer rounded-sm px-3 py-1 font-medium transition-colors" :class="teamMode === 'all' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-50'">
+                        <input type="radio" x-model="teamMode" value="all" class="sr-only">
+                        {{ __('All Active Members') }}
+                    </label>
+                    <label class="cursor-pointer rounded-sm px-3 py-1 font-medium transition-colors" :class="teamMode === 'category' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-50'">
+                        <input type="radio" x-model="teamMode" value="category" class="sr-only">
+                        {{ __('By Category') }}
+                    </label>
+                    <label class="cursor-pointer rounded-sm px-3 py-1 font-medium transition-colors" :class="teamMode === 'specific' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-50'">
+                        <input type="radio" x-model="teamMode" value="specific" class="sr-only">
+                        {{ __('Specific Members') }}
+                    </label>
+                </div>
+
+                <div class="mt-3 max-h-56 space-y-2 overflow-y-auto rounded-md border border-gray-200 p-3" x-show="teamMode === 'category'" style="display: none;">
+                    @forelse ($teamCategories ?? [] as $category)
+                        <label class="flex items-center gap-2 text-sm text-gray-700">
+                            <input
+                                type="checkbox"
+                                name="team_category_ids[]"
+                                value="{{ $category->id }}"
+                                @checked(in_array($category->id, $selectedTeamCategoryIds ?? [], true))
+                                x-bind:disabled="teamMode !== 'category'"
+                                class="rounded-sm border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            >
+                            {{ $category->name }}
+                        </label>
+                    @empty
+                        <p class="text-sm text-gray-500">{{ __('No categories yet.') }}</p>
+                    @endforelse
+                </div>
+
+                <div class="mt-3 max-h-56 space-y-2 overflow-y-auto rounded-md border border-gray-200 p-3" x-show="teamMode === 'specific'" style="display: none;">
+                    @forelse ($teamMembers ?? [] as $member)
+                        <label class="flex items-center gap-2 text-sm text-gray-700">
+                            <input
+                                type="checkbox"
+                                name="team_members[]"
+                                value="{{ $member->id }}"
+                                @checked(in_array($member->id, $selectedTeamMemberIds ?? [], true))
+                                x-bind:disabled="teamMode !== 'specific'"
+                                class="rounded-sm border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            >
+                            {{ $member->name }}
+                            @if ($member->role)
+                                <span class="text-xs text-gray-400">({{ $member->role }})</span>
+                            @endif
+                        </label>
+                    @empty
+                        <p class="text-sm text-gray-500">{{ __('No team members yet. Add some under Team in the sidebar.') }}</p>
+                    @endforelse
+                </div>
+
+                <p class="mt-2 text-xs text-gray-500">{{ __('"All Active Members" shows everyone. "By Category" shows only the categories you pick here (e.g. Volunteers on one page, Board on another). "Specific Members" lets you hand-pick exactly who appears.') }}</p>
+            </div>
+
             <div x-show="type === 'hero'" style="display: none;">
                 <x-input-label :value="__('Background Images')" />
                 <p class="mt-1 text-xs text-gray-500">{{ __('Optional. Pick one or more albums to rotate their photos behind the heading. Left blank, the single Image above is used instead.') }}</p>

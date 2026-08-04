@@ -40,6 +40,10 @@ class StoreSectionRequest extends FormRequest
             'is_active' => ['sometimes', 'boolean'],
             'galleries' => ['sometimes', 'array'],
             'galleries.*' => ['integer', Rule::exists('galleries', 'id')],
+            'team_members' => ['sometimes', 'array'],
+            'team_members.*' => ['integer', Rule::exists('team_members', 'id')],
+            'team_category_ids' => ['sometimes', 'array'],
+            'team_category_ids.*' => ['integer', Rule::exists('team_categories', 'id')],
         ];
     }
 }

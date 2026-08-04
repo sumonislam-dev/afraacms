@@ -85,5 +85,22 @@ return [
             'fields' => ['heading', 'subheading', 'button_text', 'button_url'],
             'has_items' => false,
         ],
+        'team' => [
+            'label' => 'Team (Manual List)',
+            'fields' => ['heading', 'subheading'],
+            'has_items' => true,
+            'item_fields' => ['title', 'subtitle', 'body', 'image', 'url'],
+            'item_labels' => [
+                'title' => 'Name',
+                'subtitle' => 'Role / Position',
+                'body' => 'Bio',
+                'url' => 'Profile Link (optional, e.g. LinkedIn)',
+            ],
+        ],
+        'team_members' => [
+            'label' => 'Team (Global Directory)',
+            'fields' => ['heading', 'subheading'],
+            'has_items' => false,
+        ],
     ],
 ];

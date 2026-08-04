@@ -64,6 +64,14 @@ return [
         ],
     ],
     [
+        'label' => 'Team',
+        'icon' => 'users',
+        'children' => [
+            ['label' => 'All Members', 'route' => 'admin.team.index', 'permission' => 'team.view'],
+            ['label' => 'Categories', 'route' => 'admin.team-categories.index', 'permission' => 'team.view'],
+        ],
+    ],
+    [
         'label' => 'Inbox',
         'icon' => 'phone',
         'route' => 'admin.contact.index',

@@ -10,6 +10,8 @@ use App\Http\Requests\Admin\UpdateSectionRequest;
 use App\Models\Gallery;
 use App\Models\Page;
 use App\Models\Section;
+use App\Models\TeamCategory;
+use App\Models\TeamMember;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -37,8 +39,10 @@ class SectionController extends Controller
     public function create(Page $page): View
     {
         $galleries = Gallery::orderBy('sort_order')->get(['id', 'title', 'is_active']);
+        $teamMembers = TeamMember::where('is_active', true)->orderBy('sort_order')->get(['id', 'name', 'role', 'category_id']);
+        $teamCategories = TeamCategory::orderBy('name')->get(['id', 'name']);
 
-        return view('admin.pages.sections.create', compact('page', 'galleries'));
+        return view('admin.pages.sections.create', compact('page', 'galleries', 'teamMembers', 'teamCategories'));
     }
 
     /**
@@ -48,10 +52,14 @@ class SectionController extends Controller
     {
         $data = $request->validated();
         $galleryIds = $data['galleries'] ?? [];
-        unset($data['galleries']);
+        $teamMemberIds = $data['team_members'] ?? [];
+        $teamCategoryIds = $data['team_category_ids'] ?? [];
+        unset($data['galleries'], $data['team_members'], $data['team_category_ids']);
 
         $section = $this->sections->createSection($page, $data);
         $section->galleries()->sync($galleryIds);
+        $section->teamMembers()->sync($teamMemberIds);
+        $section->teamCategories()->sync($teamCategoryIds);
 
         return redirect()
             ->route('admin.pages.sections.edit', [$page, $section])
@@ -64,12 +72,20 @@ class SectionController extends Controller
      */
     public function edit(Page $page, Section $section): View
     {
-        $section->load(['items', 'galleries']);
+        $section->load(['items', 'galleries', 'teamMembers', 'teamCategories']);
 
         $galleries = Gallery::orderBy('sort_order')->get(['id', 'title', 'is_active']);
         $selectedGalleryIds = $section->galleries->pluck('id')->all();
 
-        return view('admin.pages.sections.edit', compact('page', 'section', 'galleries', 'selectedGalleryIds'));
+        $teamMembers = TeamMember::where('is_active', true)->orderBy('sort_order')->get(['id', 'name', 'role', 'category_id']);
+        $teamCategories = TeamCategory::orderBy('name')->get(['id', 'name']);
+        $selectedTeamMemberIds = $section->teamMembers->pluck('id')->all();
+        $selectedTeamCategoryIds = $section->teamCategories->pluck('id')->all();
+
+        return view('admin.pages.sections.edit', compact(
+            'page', 'section', 'galleries', 'selectedGalleryIds',
+            'teamMembers', 'teamCategories', 'selectedTeamMemberIds', 'selectedTeamCategoryIds'
+        ));
     }
 
     /**
@@ -79,10 +95,14 @@ class SectionController extends Controller
     {
         $data = $request->validated();
         $galleryIds = $data['galleries'] ?? [];
-        unset($data['galleries']);
+        $teamMemberIds = $data['team_members'] ?? [];
+        $teamCategoryIds = $data['team_category_ids'] ?? [];
+        unset($data['galleries'], $data['team_members'], $data['team_category_ids']);
 
         $this->sections->updateSection($section, $data);
         $section->galleries()->sync($galleryIds);
+        $section->teamMembers()->sync($teamMemberIds);
+        $section->teamCategories()->sync($teamCategoryIds);
 
         return redirect()
             ->route('admin.pages.sections.edit', [$page, $section])

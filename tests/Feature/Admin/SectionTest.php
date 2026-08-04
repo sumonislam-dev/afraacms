@@ -4,6 +4,8 @@ namespace Tests\Feature\Admin;
 
 use App\Models\Page;
 use App\Models\Section;
+use App\Models\TeamCategory;
+use App\Models\TeamMember;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Concerns\CreatesAdminUsers;
 use Tests\TestCase;
@@ -133,5 +135,64 @@ class SectionTest extends TestCase
         $section = Section::first();
         $response->assertRedirect(route('admin.pages.sections.edit', [$page, $section]));
         $this->assertSame([$gallery->id], $section->galleries()->pluck('galleries.id')->all());
+    }
+
+    public function test_editor_can_add_a_team_section_with_a_member(): void
+    {
+        $editor = $this->editor();
+        $page = Page::factory()->create();
+
+        $this->actingAs($editor)->post(route('admin.pages.sections.store', $page), [
+            'type' => 'team',
+            'heading' => 'Our Team',
+        ])->assertRedirect();
+
+        $section = Section::first();
+
+        $this->actingAs($editor)->post(route('admin.pages.sections.items.store', [$page, $section]), [
+            'title' => 'Jane Doe',
+            'subtitle' => 'Executive Director',
+            'body' => 'Leads the organisation.',
+        ])->assertRedirect();
+
+        $this->assertDatabaseHas('section_items', [
+            'section_id' => $section->id,
+            'title' => 'Jane Doe',
+            'subtitle' => 'Executive Director',
+        ]);
+    }
+
+    public function test_editor_can_pick_specific_team_members_for_a_team_directory_section(): void
+    {
+        $editor = $this->editor();
+        $page = Page::factory()->create();
+        $member = TeamMember::factory()->create();
+
+        $response = $this->actingAs($editor)->post(route('admin.pages.sections.store', $page), [
+            'type' => 'team_members',
+            'heading' => 'Our Volunteers',
+            'team_members' => [$member->id],
+        ]);
+
+        $section = Section::first();
+        $response->assertRedirect(route('admin.pages.sections.edit', [$page, $section]));
+        $this->assertSame([$member->id], $section->teamMembers()->pluck('team_members.id')->all());
+    }
+
+    public function test_editor_can_pick_a_team_category_for_a_team_directory_section(): void
+    {
+        $editor = $this->editor();
+        $page = Page::factory()->create();
+        $category = TeamCategory::factory()->create();
+
+        $response = $this->actingAs($editor)->post(route('admin.pages.sections.store', $page), [
+            'type' => 'team_members',
+            'heading' => 'Volunteers',
+            'team_category_ids' => [$category->id],
+        ]);
+
+        $section = Section::first();
+        $response->assertRedirect(route('admin.pages.sections.edit', [$page, $section]));
+        $this->assertSame([$category->id], $section->teamCategories()->pluck('team_categories.id')->all());
     }
 }

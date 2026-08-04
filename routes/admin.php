@@ -18,6 +18,8 @@ use App\Http\Controllers\Admin\SectionController;
 use App\Http\Controllers\Admin\SectionItemController;
 use App\Http\Controllers\Admin\SeoController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\TeamCategoryController;
+use App\Http\Controllers\Admin\TeamMemberController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -82,6 +84,15 @@ Route::middleware(['auth', 'verified'])
         Route::get('projects-trash', [ProjectController::class, 'trash'])->name('projects.trash');
         Route::post('projects/{project}/restore', [ProjectController::class, 'restore'])->name('projects.restore')->withTrashed();
         Route::delete('projects/{project}/force', [ProjectController::class, 'forceDelete'])->name('projects.force-delete')->withTrashed();
+
+        Route::resource('team-categories', TeamCategoryController::class)
+            ->except(['show', 'create', 'edit'])
+            ->parameters(['team-categories' => 'category']);
+
+        Route::resource('team', TeamMemberController::class)->except('show');
+        Route::get('team-trash', [TeamMemberController::class, 'trash'])->name('team.trash');
+        Route::post('team/{team}/restore', [TeamMemberController::class, 'restore'])->name('team.restore')->withTrashed();
+        Route::delete('team/{team}/force', [TeamMemberController::class, 'forceDelete'])->name('team.force-delete')->withTrashed();
 
         Route::resource('contact', ContactController::class)
             ->only(['index', 'show', 'destroy'])

@@ -75,7 +75,7 @@ class PageService
     {
         return $this->rememberForever(fn () => Page::published()
             ->with([
-                'sections' => fn ($query) => $query->where('is_active', true)->with(['items', 'galleries']),
+                'sections' => fn ($query) => $query->where('is_active', true)->with(['items', 'galleries', 'teamMembers', 'teamCategories']),
                 'seo',
             ])
             ->get()
@@ -101,6 +101,8 @@ class PageService
                         'button_url' => $section->button_url,
                         'layout' => $section->layout,
                         'gallery_ids' => $section->galleries->pluck('id')->all(),
+                        'team_member_ids' => $section->teamMembers->pluck('id')->all(),
+                        'team_category_ids' => $section->teamCategories->pluck('id')->all(),
                         'items' => $section->items->map(fn ($item) => [
                             'title' => $item->title,
                             'subtitle' => $item->subtitle,

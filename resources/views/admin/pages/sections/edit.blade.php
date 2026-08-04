@@ -1,6 +1,7 @@
 @php
     $typeConfig = $section->typeConfig();
     $itemFields = $typeConfig['item_fields'] ?? [];
+    $itemLabels = $typeConfig['item_labels'] ?? [];
 @endphp
 
 <x-admin-layout :breadcrumbs="[['label' => __('Pages'), 'url' => route('admin.pages.index')], ['label' => $page->title, 'url' => route('admin.pages.sections.index', $page)], ['label' => $typeConfig['label'] ?? __('Section')]]">
@@ -14,7 +15,11 @@
     <form method="POST" action="{{ route('admin.pages.sections.update', [$page, $section]) }}">
         @csrf
         @method('PUT')
-        @include('admin.pages.sections._section-form', ['page' => $page, 'section' => $section, 'galleries' => $galleries, 'selectedGalleryIds' => $selectedGalleryIds])
+        @include('admin.pages.sections._section-form', [
+            'page' => $page, 'section' => $section, 'galleries' => $galleries, 'selectedGalleryIds' => $selectedGalleryIds,
+            'teamMembers' => $teamMembers, 'teamCategories' => $teamCategories,
+            'selectedTeamMemberIds' => $selectedTeamMemberIds, 'selectedTeamCategoryIds' => $selectedTeamCategoryIds,
+        ])
     </form>
 
     @if ($typeConfig['has_items'] ?? false)
@@ -50,7 +55,7 @@
                                 @csrf
                                 @method('PUT')
                                 <h2 class="text-lg font-medium text-gray-900">{{ __('Edit Item') }}</h2>
-                                @include('admin.pages.sections._item-form', ['item' => $item, 'itemFields' => $itemFields])
+                                @include('admin.pages.sections._item-form', ['item' => $item, 'itemFields' => $itemFields, 'itemLabels' => $itemLabels])
                                 <div class="mt-6 flex justify-end gap-3">
                                     <x-secondary-button type="button" x-on:click="$dispatch('close')">{{ __('Cancel') }}</x-secondary-button>
                                     <x-primary-button>{{ __('Save') }}</x-primary-button>
@@ -80,7 +85,7 @@
                     <h3 class="text-sm font-semibold text-gray-900">{{ __('Add Item') }}</h3>
                     <form method="POST" action="{{ route('admin.pages.sections.items.store', [$page, $section]) }}" class="mt-4">
                         @csrf
-                        @include('admin.pages.sections._item-form', ['item' => null, 'itemFields' => $itemFields])
+                        @include('admin.pages.sections._item-form', ['item' => null, 'itemFields' => $itemFields, 'itemLabels' => $itemLabels])
                         <div class="mt-4 flex justify-end">
                             <x-primary-button>{{ __('Add Item') }}</x-primary-button>
                         </div>
