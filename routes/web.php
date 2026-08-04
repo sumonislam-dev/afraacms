@@ -3,6 +3,7 @@
 use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
@@ -29,6 +30,11 @@ Route::get('/projects', [ProjectController::class, 'index'])->name('projects.ind
 Route::get('/projects/{slug}', [ProjectController::class, 'show'])
     ->where('slug', '[a-z0-9-]+')
     ->name('projects.show');
+
+Route::get('/news', [NewsController::class, 'index'])->name('news.index');
+Route::get('/news/{slug}', [NewsController::class, 'show'])
+    ->where('slug', '[a-z0-9-]+')
+    ->name('news.show');
 
 Route::post('/contact', [ContactMessageController::class, 'store'])
     ->middleware('throttle:5,1')

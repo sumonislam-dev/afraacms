@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\GalleryItemController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\MenuItemController;
+use App\Http\Controllers\Admin\NewsCategoryController;
+use App\Http\Controllers\Admin\NewsPostController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ProjectCategoryController;
@@ -93,6 +95,15 @@ Route::middleware(['auth', 'verified'])
         Route::get('team-trash', [TeamMemberController::class, 'trash'])->name('team.trash');
         Route::post('team/{team}/restore', [TeamMemberController::class, 'restore'])->name('team.restore')->withTrashed();
         Route::delete('team/{team}/force', [TeamMemberController::class, 'forceDelete'])->name('team.force-delete')->withTrashed();
+
+        Route::resource('news-categories', NewsCategoryController::class)
+            ->except(['show', 'create', 'edit'])
+            ->parameters(['news-categories' => 'category']);
+
+        Route::resource('news', NewsPostController::class)->except('show')->parameters(['news' => 'post']);
+        Route::get('news-trash', [NewsPostController::class, 'trash'])->name('news.trash');
+        Route::post('news/{post}/restore', [NewsPostController::class, 'restore'])->name('news.restore')->withTrashed();
+        Route::delete('news/{post}/force', [NewsPostController::class, 'forceDelete'])->name('news.force-delete')->withTrashed();
 
         Route::resource('contact', ContactController::class)
             ->only(['index', 'show', 'destroy'])

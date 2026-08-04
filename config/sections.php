@@ -85,6 +85,11 @@ return [
             'fields' => ['heading', 'subheading', 'button_text', 'button_url'],
             'has_items' => false,
         ],
+        'news' => [
+            'label' => 'Latest News',
+            'fields' => ['heading', 'subheading', 'button_text', 'button_url'],
+            'has_items' => false,
+        ],
         'team' => [
             'label' => 'Team (Manual List)',
             'fields' => ['heading', 'subheading'],

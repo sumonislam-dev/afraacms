@@ -72,6 +72,14 @@ return [
         ],
     ],
     [
+        'label' => 'News',
+        'icon' => 'information-circle',
+        'children' => [
+            ['label' => 'All Posts', 'route' => 'admin.news.index', 'permission' => 'news.view'],
+            ['label' => 'Categories', 'route' => 'admin.news-categories.index', 'permission' => 'news.view'],
+        ],
+    ],
+    [
         'label' => 'Inbox',
         'icon' => 'phone',
         'route' => 'admin.contact.index',
