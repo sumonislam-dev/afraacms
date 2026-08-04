@@ -109,7 +109,7 @@
                     </div>
                 @endif
 
-                @php($footerProjects = array_slice(app(\App\CMS\Services\ProjectService::class)->all(), 0, 5))
+                @php($footerProjects = array_slice(app(\App\CMS\Services\ProjectService::class)->all(), 0, (int) setting('footer_projects_limit', 5)))
                 @if (! empty($footerProjects))
                     <div>
                         <h4 class="mb-4 font-semibold text-white">{{ __('Our Projects') }}</h4>

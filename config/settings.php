@@ -77,6 +77,12 @@ return [
                     'default' => 6,
                     'description' => 'Maximum number of items shown in the footer "Quick Links" column, taken from the "footer" menu in Menu Builder.',
                 ],
+                'footer_projects_limit' => [
+                    'label' => 'Projects Count',
+                    'type' => 'number',
+                    'default' => 5,
+                    'description' => 'Maximum number of projects shown in the footer "Our Projects" column. Featured projects show first, then most recently updated.',
+                ],
             ],
         ],
 
