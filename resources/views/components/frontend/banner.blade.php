@@ -10,11 +10,11 @@
 @if ($pageTitle)
     {{-- Page-header band: small eyebrow + the page's own title, over an
          optional background image. Used at the top of every inner page. --}}
-    <section class="relative bg-ink-900 py-20 text-center">
+    <section class="relative flex min-h-50 items-center justify-center bg-ink-900 py-12 text-center sm:min-h-70">
         @if ($imageUrl)
-            <div class="absolute inset-0 bg-cover bg-center opacity-20" style="background-image:url('{{ $imageUrl }}')"></div>
+            <div class="absolute inset-0 bg-cover bg-center" style="background-image:url('{{ $imageUrl }}')"></div>
         @endif
-        <div class="absolute inset-0 bg-ink-900/80"></div>
+        <div class="absolute inset-0 bg-hero-overlay"></div>
 
         <div class="relative">
             @if ($title)
