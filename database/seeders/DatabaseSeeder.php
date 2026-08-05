@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             SettingsSeeder::class,
             MenuSeeder::class,
             PagesSeeder::class,
+            NewsSeeder::class,
         ]);
 
         // User::factory(10)->create();
