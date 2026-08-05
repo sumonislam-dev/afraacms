@@ -8,6 +8,8 @@ use App\CMS\Services\MenuService;
 use App\CMS\Services\PageService;
 use App\CMS\Services\ProjectService;
 use App\CMS\Services\SettingService;
+use App\CMS\Services\StoryService;
+use App\CMS\Services\TeamService;
 use App\Models\Banner;
 use App\Models\Gallery;
 use App\Models\MediaItem;
@@ -15,6 +17,9 @@ use App\Models\Menu;
 use App\Models\Page;
 use App\Models\Project;
 use App\Models\Setting;
+use App\Models\Story;
+use App\Models\TeamCategory;
+use App\Models\TeamMember;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 use Intervention\Image\Drivers\Gd\Driver;
@@ -43,6 +48,8 @@ class RsufDemoSeeder extends Seeder
 
     private ?Page $homePage = null;
 
+    private ?TeamCategory $executiveCommittee = null;
+
     public function run(): void
     {
         $this->call(SettingsSeeder::class);
@@ -52,6 +59,8 @@ class RsufDemoSeeder extends Seeder
         $this->seedBanners();
         $this->seedGalleries();
         $this->seedProjects();
+        $this->seedStories();
+        $this->seedTeam();
         $this->seedMenus();
         $this->seedHomePage();
         $this->seedAboutPage();
@@ -72,6 +81,8 @@ class RsufDemoSeeder extends Seeder
         app(ProjectService::class)->forget();
         app(BannerService::class)->forget();
         app(SettingService::class)->forget();
+        app(TeamService::class)->forget();
+        app(StoryService::class)->forget();
 
         $this->command?->info('RSUF demo content seeded.');
     }
@@ -103,6 +114,32 @@ class RsufDemoSeeder extends Seeder
         $project->save();
 
         return $project;
+    }
+
+    /**
+     * Same reasoning as upsertPage(): TeamMember also uses SoftDeletes.
+     */
+    private function upsertTeamMember(array $attributes, array $values): TeamMember
+    {
+        $member = TeamMember::withTrashed()->firstOrNew($attributes);
+        $member->fill($values);
+        $member->deleted_at = null;
+        $member->save();
+
+        return $member;
+    }
+
+    /**
+     * Same reasoning as upsertPage(): Story also uses SoftDeletes.
+     */
+    private function upsertStory(array $attributes, array $values): Story
+    {
+        $story = Story::withTrashed()->firstOrNew($attributes);
+        $story->fill($values);
+        $story->deleted_at = null;
+        $story->save();
+
+        return $story;
     }
 
     /**
@@ -257,6 +294,81 @@ class RsufDemoSeeder extends Seeder
         }
     }
 
+    /**
+     * Real success stories from the live site, migrated from the About
+     * page's old hardcoded "Success" text into their own dedicated Story
+     * records, linked to the training project they both came from.
+     */
+    private function seedStories(): void
+    {
+        $trainingProject = Project::where('slug', 'rahmatunnesa-skill-training-project-rstp')->first();
+
+        $stories = [
+            [
+                'slug' => 'from-daily-laborer-to-technician',
+                'title' => 'From Daily Laborer to Technician — Mohammad Sabbir Hossain',
+                'excerpt' => 'A day laborer from a poor farming family completes RSUF\'s residential technical course and secures a stable job.',
+                'content' => "<p>Sabbir came from a poor farming family in a backward village. After completing his SSC, he could not continue his education due to financial constraints, and worked as a day laborer in agricultural fields alongside his father. Despite dreaming of stable employment and social dignity, he saw no path forward — until a friend told him about RSUF's technical training program in 2019.</p><p>Sabbir enrolled in January 2020 and completed a 2-year residential course covering:</p><ul><li>Electrical Installation and House Wiring</li><li>Computer Operation</li><li>Solar Systems</li></ul><p>\"The teachers' support helped me gradually master all subjects despite lacking a technical background,\" he says. The program also included a month each of rural electricity and industrial training.</p><p>On completion, Sabbir received a free certificate and toolbox, and secured employment at Super Star Limited, a renowned Bangladeshi company — later earning a promotion. He now supports his family financially, and his success has inspired other villagers to pursue similar training.</p>",
+                'days_ago' => 400,
+            ],
+            [
+                'slug' => 'from-neglected-girl-to-independent-woman',
+                'title' => 'From Neglected Girl to Independent Woman — Fatema',
+                'excerpt' => 'Rejecting early marriage, Fatema completes RSUF\'s electrical training course and becomes financially independent.',
+                'content' => "<p>Fatema, from Ojparagaon Paturiya village, rejected the typical path of early marriage. Lacking access to education due to poverty, she felt trapped — until she discovered RSUF in 2019.</p><p>She completed the same 2-year residential electrical course. \"The teaching system was excellent — I understood all subjects easily despite having no prior technical knowledge,\" she says.</p><p>After receiving her free certificate and toolbox, Fatema secured employment and later a promotion, and now earns an income to support her family. She has since recommended fellow trainees for positions at her company, and continues working alongside her RSUF classmates.</p><p>Her success has motivated other girls in her village to pursue vocational training instead of accepting early marriage — transforming educational prospects in the area.</p>",
+                'days_ago' => 380,
+            ],
+        ];
+
+        foreach ($stories as $i => $s) {
+            $this->upsertStory(
+                ['slug' => $s['slug']],
+                [
+                    'project_id' => $trainingProject->id ?? null,
+                    'title' => $s['title'],
+                    'excerpt' => $s['excerpt'],
+                    'content' => $s['content'],
+                    'published_at' => now()->subDays($s['days_ago']),
+                    'is_featured' => $i === 0,
+                    'status' => 'published',
+                ]
+            );
+        }
+    }
+
+    /**
+     * The site's own About Us page names 5 of its 9 Executive Committee
+     * seats; the remaining 4 aren't disclosed anywhere public, so only the
+     * named 5 are seeded here rather than inventing placeholder names.
+     */
+    private function seedTeam(): void
+    {
+        $this->executiveCommittee = TeamCategory::firstOrCreate(
+            ['slug' => 'executive-committee'],
+            ['name' => 'Executive Committee']
+        );
+
+        $members = [
+            ['name' => 'Md. Jahidul Islam', 'role' => 'Founder & Chairman / President', 'bio' => 'Contact: +88 01708515958, rsufbd@gmail.com', 'sort_order' => 0],
+            ['name' => 'Md. Sohidul Islam', 'role' => 'Director', 'bio' => 'Contact: +88 01711231830', 'sort_order' => 1],
+            ['name' => 'Md. Abdullah Ibrahim', 'role' => 'Vice-President', 'bio' => null, 'sort_order' => 2],
+            ['name' => 'Rokeya Razzak', 'role' => 'General Secretary', 'bio' => null, 'sort_order' => 3],
+            ['name' => 'M A Bari', 'role' => 'Treasurer', 'bio' => null, 'sort_order' => 4],
+        ];
+
+        foreach ($members as $m) {
+            $this->upsertTeamMember(
+                ['name' => $m['name'], 'category_id' => $this->executiveCommittee->id],
+                [
+                    'role' => $m['role'],
+                    'bio' => $m['bio'],
+                    'is_active' => true,
+                    'sort_order' => $m['sort_order'],
+                ]
+            );
+        }
+    }
+
     private function seedMenus(): void
     {
         $header = Menu::firstOrCreate(['slug' => 'header'], ['name' => 'Header Menu']);
@@ -386,13 +498,13 @@ class RsufDemoSeeder extends Seeder
         $page->sections()->delete();
 
         $sections = [
-            [null, 'About Us', 'Rahmantunnessa Shikkha Unnayan Foundation (RSUF) is a Bangladeshi organization engaged in socio-economic development activities among the poorest of the poor. It is a non-government, non-political and non-profitable organization working with the poor of all levels irrespective of caste or creed. RSUF is a people-based learning organization — participation of grass-root communities in every development effort is one of our key principles.'],
+            [null, 'About Us', "<p>Founded on 10 January 2002, Rahmantunnessa Shikkha Unnayan Foundation (RSUF) is a Bangladeshi organization engaged in socio-economic development activities among the poorest of the poor. It is a non-government, non-political and non-profitable organization working with the poor of all levels irrespective of caste or creed.</p><p>RSUF is a people-based learning organization — participation of grass-root communities in every development effort is one of our key principles.</p>"],
             ['history', 'History', 'Full history details coming soon.'],
-            ['registration', 'Registration', 'Registration details coming soon.'],
+            ['registration', 'Registration', "<p>Rahmantunnessa Shikkha Unnayan Foundation (RSUF) is registered with the Government of the People's Republic of Bangladesh under the following departments:</p><ul><li><strong>Department of Social Welfare</strong> — under the Joint Stock Companies and Firms, Bangladesh Registration and Control Ordinance No. (XXI) of 1860. Registration No: S-5460(574)/06, dated 23 February 2006.</li><li><strong>NGO Affairs Bureau</strong> — Registration No: 3142/18.</li><li><strong>National Skill Development Authority (NSDA)</strong> — Registration No: STP-RAJ-000375, dated 2022.</li></ul>"],
             ['vision-mission', 'Vision & Mission', "Vision: A poverty free, educated and peaceful society.\n\nMission: Reducing poverty, establishing equal opportunities, promoting peace and justice, and ensuring quality education, agriculture support, hygiene, sanitation, skills development and income generation for marginalized communities — grounded in human dignity, ethical values, participation, teamwork, mutual respect and inter-religious harmony."],
             ['areas', 'Areas of Operation', 'Details on our areas of operation coming soon.'],
             ['what-we-do', 'What We Do', 'Education & skills training, healthcare access, safe drinking water, elderly care and emergency relief — see our Projects on the homepage.'],
-            ['success', 'Success', 'Success stories coming soon.'],
+            ['success', 'Success', '<p>Real stories of transformation from the people RSUF has trained and supported.</p>'],
         ];
 
         foreach ($sections as $i => [$anchor, $heading, $body]) {
@@ -400,6 +512,23 @@ class RsufDemoSeeder extends Seeder
                 'type' => 'rich_text', 'sort_order' => $i,
                 'anchor' => $anchor, 'heading' => $heading, 'body' => $body,
             ]);
+        }
+
+        $page->sections()->create([
+            'type' => 'stories', 'sort_order' => count($sections),
+            'subheading' => 'Success Stories',
+            'heading' => 'Lives Changed Through RSUF',
+        ]);
+
+        $leadership = $page->sections()->create([
+            'type' => 'team_members', 'sort_order' => count($sections) + 1,
+            'anchor' => 'leadership',
+            'subheading' => 'Leadership',
+            'heading' => 'Our Executive Committee',
+        ]);
+
+        if ($this->executiveCommittee) {
+            $leadership->teamCategories()->sync([$this->executiveCommittee->id]);
         }
     }
 
@@ -415,8 +544,21 @@ class RsufDemoSeeder extends Seeder
         );
         $page->sections()->delete();
 
+        $ways = $page->sections()->create([
+            'type' => 'cards', 'sort_order' => 0,
+            'subheading' => 'Get Involved',
+            'heading' => 'Ways to Support RSUF',
+        ]);
+
+        $ways->items()->createMany([
+            ['title' => 'Membership', 'body' => 'RSUF welcomes all adults with good social reputation and character who support our core principles and philosophy.', 'icon' => 'user-circle', 'sort_order' => 0],
+            ['title' => 'Volunteers', 'body' => 'We welcome unpaid volunteers, both domestic and international, to exchange experience and assistance on development and cultural issues.', 'icon' => 'users', 'sort_order' => 1],
+            ['title' => 'Collaboration', 'body' => 'We pursue joint ventures with other NGOs and Government institutions, and engage consultants. RSUF holds membership with the National Skill Development Authority (NSDA).', 'icon' => 'link', 'sort_order' => 2],
+            ['title' => 'Partners & Donors', 'body' => 'Shanti (Switzerland), SHETU (Germany), and the Swiss Agency for Development Cooperation (SDC) support our work.', 'icon' => 'globe-alt', 'sort_order' => 3],
+        ]);
+
         $page->sections()->create([
-            'type' => 'cta', 'sort_order' => 0,
+            'type' => 'cta', 'sort_order' => 1,
             'subheading' => "Whether you can give your time, your skills or your support, RSUF welcomes anyone who wants to help build self-reliant communities across Bangladesh. Reach out to us and we'll help you find the right way to contribute.",
             'button_text' => 'Contact Us',
             'button_url' => '/contact',

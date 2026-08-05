@@ -90,6 +90,11 @@ return [
             'fields' => ['heading', 'subheading', 'button_text', 'button_url'],
             'has_items' => false,
         ],
+        'stories' => [
+            'label' => 'Success Stories',
+            'fields' => ['heading', 'subheading', 'button_text', 'button_url'],
+            'has_items' => false,
+        ],
         'team' => [
             'label' => 'Team (Manual List)',
             'fields' => ['heading', 'subheading'],

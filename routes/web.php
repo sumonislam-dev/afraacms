@@ -8,6 +8,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\StoryController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -35,6 +36,11 @@ Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{slug}', [NewsController::class, 'show'])
     ->where('slug', '[a-z0-9-]+')
     ->name('news.show');
+
+Route::get('/stories', [StoryController::class, 'index'])->name('stories.index');
+Route::get('/stories/{slug}', [StoryController::class, 'show'])
+    ->where('slug', '[a-z0-9-]+')
+    ->name('stories.show');
 
 Route::post('/contact', [ContactMessageController::class, 'store'])
     ->middleware('throttle:5,1')

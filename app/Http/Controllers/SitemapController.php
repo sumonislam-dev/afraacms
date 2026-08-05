@@ -6,6 +6,7 @@ use App\CMS\Services\GalleryService;
 use App\CMS\Services\NewsService;
 use App\CMS\Services\PageService;
 use App\CMS\Services\ProjectService;
+use App\CMS\Services\StoryService;
 use Illuminate\Http\Response;
 
 class SitemapController extends Controller
@@ -15,6 +16,7 @@ class SitemapController extends Controller
         private readonly ProjectService $projects,
         private readonly GalleryService $galleries,
         private readonly NewsService $news,
+        private readonly StoryService $stories,
     ) {
     }
 
@@ -61,6 +63,14 @@ class SitemapController extends Controller
 
             foreach ($this->news->all() as $post) {
                 $urls->push(['loc' => route('news.show', $post['slug']), 'lastmod' => $post['updated_at']]);
+            }
+        }
+
+        if (setting('sitemap_include_stories', true)) {
+            $urls->push(['loc' => route('stories.index'), 'lastmod' => null]);
+
+            foreach ($this->stories->all() as $story) {
+                $urls->push(['loc' => route('stories.show', $story['slug']), 'lastmod' => $story['updated_at']]);
             }
         }
 

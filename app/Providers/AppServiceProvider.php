@@ -10,6 +10,7 @@ use App\CMS\Services\PageService;
 use App\CMS\Services\NewsService;
 use App\CMS\Services\ProjectService;
 use App\CMS\Services\SettingService;
+use App\CMS\Services\StoryService;
 use App\CMS\Services\TeamService;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
@@ -38,6 +39,7 @@ class AppServiceProvider extends ServiceProvider
         $cache->register('projects', fn () => $this->app->make(ProjectService::class)->forget());
         $cache->register('team', fn () => $this->app->make(TeamService::class)->forget());
         $cache->register('news', fn () => $this->app->make(NewsService::class)->forget());
+        $cache->register('stories', fn () => $this->app->make(StoryService::class)->forget());
 
         Password::defaults(function () {
             $rule = Password::min(10)->mixedCase()->numbers();

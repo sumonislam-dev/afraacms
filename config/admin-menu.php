@@ -80,6 +80,12 @@ return [
         ],
     ],
     [
+        'label' => 'Success Stories',
+        'icon' => 'check-circle',
+        'route' => 'admin.stories.index',
+        'permission' => 'stories.view',
+    ],
+    [
         'label' => 'Inbox',
         'icon' => 'phone',
         'route' => 'admin.contact.index',
