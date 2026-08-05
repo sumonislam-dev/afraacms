@@ -32,8 +32,8 @@
         </div>
 
         @if ($post['content'])
-            <div class="mt-8 space-y-4 text-gray-700">
-                {!! nl2br(e($post['content'])) !!}
+            <div class="prose prose-neutral mt-8 max-w-none text-gray-700">
+                {!! str_starts_with(ltrim($post['content']), '<') ? $post['content'] : nl2br(e($post['content'])) !!}
             </div>
         @endif
 

@@ -20,7 +20,7 @@
             @endif
 
             @if ($section['body'])
-                <div class="space-y-4 leading-relaxed text-ink-900/70">{!! nl2br(e($section['body'])) !!}</div>
+                <div class="prose prose-neutral max-w-none leading-relaxed text-ink-900/70">{!! str_starts_with(ltrim($section['body']), '<') ? $section['body'] : nl2br(e($section['body'])) !!}</div>
             @endif
         </div>
     </div>

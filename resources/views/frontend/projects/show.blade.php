@@ -25,8 +25,8 @@
         </div>
 
         @if ($project['content'])
-            <div class="mt-8 space-y-4 text-gray-700">
-                {!! nl2br(e($project['content'])) !!}
+            <div class="prose prose-neutral mt-8 max-w-none text-gray-700">
+                {!! str_starts_with(ltrim($project['content']), '<') ? $project['content'] : nl2br(e($project['content'])) !!}
             </div>
         @endif
 

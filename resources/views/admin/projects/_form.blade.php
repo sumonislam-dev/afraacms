@@ -90,7 +90,7 @@
 
         <div>
             <x-input-label for="content" :value="__('Content')" />
-            <x-textarea id="content" name="content" class="mt-1 block w-full" rows="8">{{ old('content', $project->content ?? '') }}</x-textarea>
+            <x-admin.rich-text-editor name="content" class="mt-1" :value="old('content', $project->content ?? '')" />
             <x-input-error class="mt-2" :messages="$errors->get('content')" />
         </div>
 

@@ -39,9 +39,21 @@
                 </div>
             </div>
 
-            <div x-show="fields[type]?.includes('body')" style="display: none;">
+            <div x-show="['rich_text', 'image_text'].includes(type)" style="display: none;">
                 <x-input-label for="body" :value="__('Content')" />
-                <x-textarea id="body" name="body" class="mt-1 block w-full" rows="5">{{ old('body', $section->body ?? '') }}</x-textarea>
+                <x-admin.rich-text-editor
+                    id="body"
+                    name-expression="['rich_text', 'image_text'].includes(type) ? 'body' : null"
+                    class="mt-1"
+                    :value="old('body', $section->body ?? '')"
+                    rows="5"
+                />
+                <x-input-error class="mt-2" :messages="$errors->get('body')" />
+            </div>
+
+            <div x-show="type === 'hero'" style="display: none;">
+                <x-input-label for="body-plain" :value="__('Content')" />
+                <x-textarea id="body-plain" x-bind:name="type === 'hero' ? 'body' : null" class="mt-1 block w-full" rows="5">{{ old('body', $section->body ?? '') }}</x-textarea>
                 <x-input-error class="mt-2" :messages="$errors->get('body')" />
             </div>
 

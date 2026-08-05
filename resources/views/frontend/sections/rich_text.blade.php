@@ -5,8 +5,8 @@
         @endif
 
         @if ($section['body'])
-            <div class="mt-4 space-y-4 text-gray-700">
-                {!! nl2br(e($section['body'])) !!}
+            <div class="prose prose-neutral mt-4 max-w-none text-gray-700">
+                {!! str_starts_with(ltrim($section['body']), '<') ? $section['body'] : nl2br(e($section['body'])) !!}
             </div>
         @endif
     </div>
