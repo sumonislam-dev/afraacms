@@ -32,6 +32,7 @@ class StoreGalleryRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'cover_image' => ['nullable', 'integer', Rule::exists('media_items', 'id')],
             'is_active' => ['sometimes', 'boolean'],
+            'is_public' => ['sometimes', 'boolean'],
             ...$this->seoRules(),
         ];
     }

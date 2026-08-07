@@ -53,7 +53,7 @@ class SitemapController extends Controller
         if (setting('sitemap_include_galleries', true)) {
             $urls->push(['loc' => route('gallery.index'), 'lastmod' => null]);
 
-            foreach ($this->galleries->all() as $gallery) {
+            foreach ($this->galleries->allPublic() as $gallery) {
                 $urls->push(['loc' => route('gallery.show', $gallery['slug']), 'lastmod' => $gallery['updated_at']]);
             }
         }

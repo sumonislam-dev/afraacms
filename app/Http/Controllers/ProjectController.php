@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\CMS\Services\ProjectService;
+use App\CMS\Services\StoryService;
 use App\Models\ProjectCategory;
 use Illuminate\View\View;
 
 class ProjectController extends Controller
 {
-    public function __construct(private readonly ProjectService $projects)
-    {
+    public function __construct(
+        private readonly ProjectService $projects,
+        private readonly StoryService $stories,
+    ) {
     }
 
     /**
@@ -39,6 +42,11 @@ class ProjectController extends Controller
 
         abort_unless($project, 404);
 
-        return view('frontend.projects.show', compact('project'));
+        $stories = collect($this->stories->all())
+            ->filter(fn (array $story) => ($story['project']['slug'] ?? null) === $slug)
+            ->values()
+            ->all();
+
+        return view('frontend.projects.show', compact('project', 'stories'));
     }
 }

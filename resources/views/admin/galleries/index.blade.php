@@ -41,8 +41,12 @@
                             <span class="shrink-0 rounded-sm bg-gray-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-gray-500">{{ __('Hidden') }}</span>
                         @endunless
 
+                        @if ($album->is_active && ! $album->is_public)
+                            <span title="{{ __('Not shown on the public /gallery page - used only as a photo source for other sections.') }}" class="shrink-0 rounded-sm bg-amber-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-amber-600">{{ __('Internal Only') }}</span>
+                        @endif
+
                         <div class="flex shrink-0 items-center gap-3">
-                            @if ($album->is_active)
+                            @if ($album->is_active && $album->is_public)
                                 <a href="{{ route('gallery.show', $album->slug) }}" target="_blank" rel="noopener" class="text-sm font-medium text-gray-500 hover:text-gray-700">{{ __('View') }}</a>
                             @endif
 

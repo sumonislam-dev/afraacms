@@ -36,6 +36,18 @@
             </div>
         @endif
 
+        @if (! empty($stories))
+            <div class="mt-16">
+                <h2 class="text-center font-display text-2xl font-bold text-ink-900">{{ __('Success Stories From This Project') }}</h2>
+
+                <div class="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2">
+                    @foreach ($stories as $story)
+                        <x-frontend.story-card :story="$story" />
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
         <div class="mt-10 text-center">
             <a href="{{ route('projects.index') }}" class="text-sm font-medium text-brand-600 hover:text-brand-500">&larr; {{ __('Back to Projects') }}</a>
         </div>

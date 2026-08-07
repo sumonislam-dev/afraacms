@@ -51,7 +51,7 @@
             <x-input-error class="mt-2" :messages="$errors->get('description')" />
         </div>
 
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div>
                 <x-input-label :value="__('Cover Image')" />
                 <x-admin.media-picker name="cover_image" :current="old('cover_image', $album->cover_image ?? null)" />
@@ -64,7 +64,17 @@
                     <div class="mt-1 flex items-center rounded-md border border-gray-200 px-3 py-2 sm:max-w-xs">
                         <x-admin.toggle name="is_active" :checked="old('is_active', $album->is_active)" />
                     </div>
+                    <p class="mt-1 text-xs text-gray-500">{{ __('Turn off to fully disable this album everywhere, including Hero backgrounds and Photo Sliders that use it.') }}</p>
                     <x-input-error class="mt-2" :messages="$errors->get('is_active')" />
+                </div>
+
+                <div>
+                    <x-input-label :value="__('Show in Public Gallery')" />
+                    <div class="mt-1 flex items-center rounded-md border border-gray-200 px-3 py-2 sm:max-w-xs">
+                        <x-admin.toggle name="is_public" :checked="old('is_public', $album->is_public)" />
+                    </div>
+                    <p class="mt-1 text-xs text-gray-500">{{ __('Turn off if this album is only a photo source for a Hero background or Photo Slider section, and shouldn\'t appear on the /gallery page or get its own public URL.') }}</p>
+                    <x-input-error class="mt-2" :messages="$errors->get('is_public')" />
                 </div>
             @endif
         </div>

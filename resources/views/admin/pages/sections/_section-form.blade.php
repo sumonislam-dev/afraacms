@@ -183,6 +183,30 @@
                 <p class="mt-2 text-xs text-gray-500">{{ __('"All Active Members" shows everyone. "By Category" shows only the categories you pick here (e.g. Volunteers on one page, Board on another). "Specific Members" lets you hand-pick exactly who appears.') }}</p>
             </div>
 
+            <div x-show="type === 'photo_slider'" style="display: none;">
+                <x-input-label :value="__('Slides')" />
+                <p class="mt-1 text-xs text-gray-500">{{ __('Pick one or more albums - their photos become the slides, in order.') }}</p>
+                <div class="mt-2 max-h-56 space-y-2 overflow-y-auto rounded-md border border-gray-200 p-3">
+                    @forelse ($galleries ?? [] as $gallery)
+                        <label class="flex items-center gap-2 text-sm text-gray-700">
+                            <input
+                                type="checkbox"
+                                name="galleries[]"
+                                value="{{ $gallery->id }}"
+                                @checked(in_array($gallery->id, $selectedGalleryIds ?? [], true))
+                                class="rounded-sm border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            >
+                            {{ $gallery->title }}
+                            @unless ($gallery->is_active)
+                                <span class="text-xs text-gray-400">({{ __('inactive') }})</span>
+                            @endunless
+                        </label>
+                    @empty
+                        <p class="text-sm text-gray-500">{{ __('No albums yet.') }}</p>
+                    @endforelse
+                </div>
+            </div>
+
             <div x-show="type === 'hero'" style="display: none;">
                 <x-input-label :value="__('Background Images')" />
                 <p class="mt-1 text-xs text-gray-500">{{ __('Optional. Pick one or more albums to rotate their photos behind the heading. Left blank, the single Image above is used instead.') }}</p>

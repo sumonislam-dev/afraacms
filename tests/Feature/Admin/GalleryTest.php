@@ -86,6 +86,20 @@ class GalleryTest extends TestCase
         $this->assertFalse($album->is_active);
     }
 
+    public function test_editor_can_turn_off_public_gallery_visibility(): void
+    {
+        $editor = $this->editor();
+        $album = Gallery::factory()->create(['title' => 'Homepage Hero Slides']);
+
+        $this->actingAs($editor)->put(route('admin.galleries.update', $album), [
+            'title' => $album->title,
+            'slug' => $album->slug,
+            'is_public' => false,
+        ])->assertRedirect(route('admin.galleries.edit', $album));
+
+        $this->assertFalse($album->fresh()->is_public);
+    }
+
     public function test_editor_can_delete_an_album(): void
     {
         $editor = $this->editor();

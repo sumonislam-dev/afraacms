@@ -46,6 +46,10 @@ class RsufDemoSeeder extends Seeder
 
     private ?Gallery $heroGallery = null;
 
+    private ?Gallery $scholarshipGallery = null;
+
+    private ?Gallery $workshopGallery = null;
+
     private ?Page $homePage = null;
 
     private ?TeamCategory $executiveCommittee = null;
@@ -239,7 +243,7 @@ class RsufDemoSeeder extends Seeder
 
         $this->heroGallery = Gallery::updateOrCreate(
             ['slug' => 'homepage-hero'],
-            ['title' => 'Homepage Hero Slides', 'is_active' => true, 'sort_order' => 1]
+            ['title' => 'Homepage Hero Slides', 'is_active' => true, 'is_public' => false, 'sort_order' => 1]
         );
         $this->heroGallery->items()->delete();
 
@@ -263,6 +267,46 @@ class RsufDemoSeeder extends Seeder
             }
 
             $this->heroGallery->items()->create([
+                'type' => 'image', 'image' => $this->media[$key]->id, 'sort_order' => $i,
+            ]);
+        }
+
+        // The live site's two homepage carousels ("Small Project Scholarship
+        // Program", "RSUF Family Development Workshop") each showed 10+ distinct
+        // photos we don't have locally - these reuse the same imported demo
+        // images as a stand-in until the client supplies the real photo sets.
+        $this->scholarshipGallery = Gallery::updateOrCreate(
+            ['slug' => 'small-project-scholarship-program'],
+            ['title' => 'Small Project Scholarship Program', 'is_active' => true, 'is_public' => false, 'sort_order' => 2]
+        );
+        $this->scholarshipGallery->items()->delete();
+
+        $this->workshopGallery = Gallery::updateOrCreate(
+            ['slug' => 'family-development-workshop'],
+            ['title' => 'RSUF Family Development Workshop', 'is_active' => true, 'is_public' => false, 'sort_order' => 3]
+        );
+        $this->workshopGallery->items()->delete();
+
+        $scholarshipPhotos = ['scholarship', 'campus', 'slider_2', 'slider_3'];
+
+        foreach ($scholarshipPhotos as $i => $key) {
+            if (! isset($this->media[$key])) {
+                continue;
+            }
+
+            $this->scholarshipGallery->items()->create([
+                'type' => 'image', 'image' => $this->media[$key]->id, 'sort_order' => $i,
+            ]);
+        }
+
+        $workshopPhotos = ['old_care', 'relief', 'hospital', 'safe_water'];
+
+        foreach ($workshopPhotos as $i => $key) {
+            if (! isset($this->media[$key])) {
+                continue;
+            }
+
+            $this->workshopGallery->items()->create([
                 'type' => 'image', 'image' => $this->media[$key]->id, 'sort_order' => $i,
             ]);
         }
@@ -437,8 +481,28 @@ class RsufDemoSeeder extends Seeder
             $hero->galleries()->sync([$this->heroGallery->id]);
         }
 
+        $scholarshipSlider = $page->sections()->create([
+            'type' => 'photo_slider', 'sort_order' => 1,
+            'subheading' => 'Scholarships',
+            'heading' => 'Small Project Scholarship Program',
+        ]);
+
+        if ($this->scholarshipGallery) {
+            $scholarshipSlider->galleries()->sync([$this->scholarshipGallery->id]);
+        }
+
+        $workshopSlider = $page->sections()->create([
+            'type' => 'photo_slider', 'sort_order' => 2,
+            'subheading' => 'Community Development',
+            'heading' => 'RSUF Family Development Workshop',
+        ]);
+
+        if ($this->workshopGallery) {
+            $workshopSlider->galleries()->sync([$this->workshopGallery->id]);
+        }
+
         $whatWeDo = $page->sections()->create([
-            'type' => 'cards', 'sort_order' => 1,
+            'type' => 'cards', 'sort_order' => 3,
             'subheading' => 'What We Do',
             'heading' => 'Focus Areas That Drive Our Work',
         ]);
@@ -450,7 +514,7 @@ class RsufDemoSeeder extends Seeder
         ]);
 
         $page->sections()->create([
-            'type' => 'image_text', 'sort_order' => 2,
+            'type' => 'image_text', 'sort_order' => 4,
             'subheading' => 'Welcome to RSUF',
             'heading' => 'Socio-Economic Development Among the Poorest of the Poor',
             'body' => "Rahmantunnessa Shikkha Unnayan Foundation (RSUF) is a Bangladeshi organization engaged in socio-economic development activities among the poorest of the poor. It is a non-government, non-political and non-profitable organization working with the poor of all levels irrespective of caste or creed.\n\nThe main aim of RSUF is to bring about self-reliance of the people through participation of grass-root communities in every development effort. We remain grateful to our well-wishers, partners, donors and the Government for their continuous support of our initiatives.",
@@ -459,14 +523,14 @@ class RsufDemoSeeder extends Seeder
         ]);
 
         $page->sections()->create([
-            'type' => 'projects', 'sort_order' => 3,
+            'type' => 'projects', 'sort_order' => 5,
             'subheading' => 'Our Projects',
             'heading' => 'Where Your Support Makes a Difference',
             'button_text' => 'View All Projects',
         ]);
 
         $galleryPreview = $page->sections()->create([
-            'type' => 'gallery_albums', 'sort_order' => 4,
+            'type' => 'gallery_albums', 'sort_order' => 6,
             'subheading' => 'Gallery',
             'heading' => 'Moments From the Field',
             'button_text' => 'View Full Gallery',
@@ -477,7 +541,7 @@ class RsufDemoSeeder extends Seeder
         }
 
         $page->sections()->create([
-            'type' => 'contact', 'sort_order' => 5,
+            'type' => 'contact', 'sort_order' => 7,
             'subheading' => 'Be a Volunteer',
             'heading' => 'Doing Nothing Is Not an Option',
         ]);
@@ -619,7 +683,9 @@ class RsufDemoSeeder extends Seeder
      */
     private function hideUnrelatedDemoContent(): void
     {
-        Gallery::whereNotIn('slug', ['field-work', 'homepage-hero'])->update(['is_active' => false]);
+        Gallery::whereNotIn('slug', [
+            'field-work', 'homepage-hero', 'small-project-scholarship-program', 'family-development-workshop',
+        ])->update(['is_active' => false]);
 
         Project::whereNotIn('slug', [
             'rahmatunnesa-skill-training-project-rstp',

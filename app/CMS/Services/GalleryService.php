@@ -22,7 +22,10 @@ class GalleryService
     }
 
     /**
-     * Find an active album by slug, from cache where possible.
+     * Find a public album by slug, from cache where possible. Albums with
+     * "Show in Public Gallery" switched off (used only as a photo source for
+     * Hero/Photo Slider sections) are excluded - they have no standalone
+     * public page.
      *
      * Returns a plain array, not a Gallery model: the cache store's
      * serializable_classes hardening (see config/cache.php) strips objects
@@ -33,10 +36,16 @@ class GalleryService
      */
     public function find(string $slug): ?array
     {
-        return $this->allCached()[$slug] ?? null;
+        $gallery = $this->allCached()[$slug] ?? null;
+
+        return ($gallery && $gallery['is_public']) ? $gallery : null;
     }
 
     /**
+     * Every active album, public or not - for internal use by section types
+     * (Hero, Photo Slider, Gallery Albums) that source photos from a
+     * specifically-picked album regardless of its public-gallery visibility.
+     *
      * @return array<int, array>
      */
     public function all(): array
@@ -45,15 +54,26 @@ class GalleryService
     }
 
     /**
-     * Every item across every active album, flattened into a single
-     * ordered list (album order, then item order within each album) - used
-     * by the "flat" gallery display mode.
+     * Every album with "Show in Public Gallery" on - what the public Gallery
+     * page (in "albums" mode) and the sitemap should list.
+     *
+     * @return array<int, array>
+     */
+    public function allPublic(): array
+    {
+        return array_values(array_filter($this->allCached(), fn (array $gallery) => $gallery['is_public']));
+    }
+
+    /**
+     * Every item across every public album, flattened into a single ordered
+     * list (album order, then item order within each album) - used by the
+     * "flat" gallery display mode.
      *
      * @return array<int, array>
      */
     public function allItemsFlat(): array
     {
-        return collect($this->allCached())
+        return collect($this->allPublic())
             ->flatMap(fn (array $album) => $album['items'])
             ->values()
             ->all();
@@ -75,6 +95,7 @@ class GalleryService
                     'slug' => $gallery->slug,
                     'description' => $gallery->description,
                     'cover_image_url' => $gallery->cover_image_url,
+                    'is_public' => $gallery->is_public,
                     'updated_at' => $gallery->updated_at?->toIso8601String(),
                     'seo' => SeoMeta::toCacheArray($gallery->seo),
                     'items' => $gallery->items->map(fn (GalleryItem $item) => [

@@ -47,11 +47,11 @@
         @endforeach
 
         @if (count($items) > 1)
-            <button type="button" @click="prev()" aria-label="{{ __('Previous slide') }}" class="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 text-gray-700 hover:bg-white">
+            <button type="button" @click="prev()" aria-label="{{ __('Previous slide') }}" class="absolute left-2 top-1/2 -translate-y-1/2 cursor-pointer rounded-full bg-white/80 p-2 text-gray-700 hover:bg-white">
                 <x-icon name="chevron-right" class="rotate-180" />
             </button>
 
-            <button type="button" @click="next()" aria-label="{{ __('Next slide') }}" class="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 text-gray-700 hover:bg-white">
+            <button type="button" @click="next()" aria-label="{{ __('Next slide') }}" class="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer rounded-full bg-white/80 p-2 text-gray-700 hover:bg-white">
                 <x-icon name="chevron-right" class="h-5 w-5" />
             </button>
 
@@ -61,7 +61,7 @@
                         type="button"
                         @click="goTo({{ $index }})"
                         :class="active === {{ $index }} ? 'bg-white' : 'bg-white/50'"
-                        class="h-2 w-2 rounded-full"
+                        class="h-2 w-2 cursor-pointer rounded-full"
                         aria-label="{{ __('Go to slide') }} {{ $index + 1 }}"
                     ></button>
                 @endforeach

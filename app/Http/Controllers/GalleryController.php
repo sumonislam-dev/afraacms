@@ -21,7 +21,7 @@ class GalleryController extends Controller
             return view('frontend.gallery.index', ['items' => $this->galleries->allItemsFlat()]);
         }
 
-        return view('frontend.gallery.index', ['albums' => $this->galleries->all()]);
+        return view('frontend.gallery.index', ['albums' => $this->galleries->allPublic()]);
     }
 
     /**

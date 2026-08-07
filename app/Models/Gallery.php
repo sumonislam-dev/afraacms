@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-#[Fillable(['title', 'slug', 'description', 'cover_image', 'is_active', 'sort_order'])]
+#[Fillable(['title', 'slug', 'description', 'cover_image', 'is_active', 'is_public', 'sort_order'])]
 class Gallery extends Model
 {
     use HasFactory, LogsActivity;
@@ -30,6 +30,7 @@ class Gallery extends Model
     {
         return [
             'is_active' => 'boolean',
+            'is_public' => 'boolean',
             'sort_order' => 'integer',
         ];
     }
