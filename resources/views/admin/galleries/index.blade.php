@@ -22,15 +22,19 @@
         </x-admin.card>
     @else
         <div id="gallery-list-root" data-reorder-url="{{ route('admin.galleries.reorder') }}">
-            <ul class="space-y-2" data-sortable-list>
+            <ul class="space-y-1.5" data-sortable-list>
                 @foreach ($albums as $album)
-                    <li data-id="{{ $album->id }}" class="flex items-center gap-3 rounded-md border border-gray-200 bg-white p-3">
-                        <span class="cursor-move text-gray-300 hover:text-gray-500" data-drag-handle>
-                            <x-admin.icon name="bars-4" class="h-5 w-5" />
+                    <li data-id="{{ $album->id }}" class="flex items-center gap-2.5 rounded-md border border-gray-200 bg-white py-2 pl-2.5 pr-3">
+                        <span class="shrink-0 cursor-move text-gray-300 hover:text-gray-500" data-drag-handle>
+                            <x-admin.icon name="bars-4" class="h-4 w-4" />
                         </span>
 
                         @if ($album->cover_image_url)
-                            <img src="{{ $album->cover_image_url }}" alt="" class="h-10 w-10 shrink-0 rounded-sm object-cover">
+                            <img src="{{ $album->cover_image_url }}" alt="" class="h-9 w-9 shrink-0 rounded-md object-cover">
+                        @else
+                            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-gray-100 text-gray-300">
+                                <x-admin.icon name="photo" class="h-4 w-4" />
+                            </span>
                         @endif
 
                         <span class="flex-1 truncate text-sm font-medium text-gray-900">{{ $album->title }}</span>
@@ -45,7 +49,7 @@
                             <span title="{{ __('Not shown on the public /gallery page - used only as a photo source for other sections.') }}" class="shrink-0 rounded-sm bg-amber-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-amber-600">{{ __('Internal Only') }}</span>
                         @endif
 
-                        <div class="flex shrink-0 items-center gap-3">
+                        <div class="flex shrink-0 items-center gap-2.5">
                             @if ($album->is_active && $album->is_public)
                                 <a href="{{ route('gallery.show', $album->slug) }}" target="_blank" rel="noopener" class="text-sm font-medium text-gray-500 hover:text-gray-700">{{ __('View') }}</a>
                             @endif
