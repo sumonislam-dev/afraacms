@@ -18,7 +18,9 @@
             @if (empty($album['items']))
                 <p class="text-center text-gray-500">{{ __('No photos or videos yet.') }}</p>
             @else
-                <x-frontend.lightbox-gallery :items="$album['items']" />
+                <x-frontend.lightbox-gallery :items="$album['items']" :show-captions="setting('gallery_show_captions', true)" />
+
+                <x-frontend.pagination :paginator="$paginator" />
             @endif
         </div>
 

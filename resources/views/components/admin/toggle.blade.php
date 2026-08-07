@@ -4,6 +4,7 @@
     <input type="hidden" name="{{ $name }}" value="0">
 
     <input
+        {{ $attributes }}
         type="checkbox"
         name="{{ $name }}"
         value="1"

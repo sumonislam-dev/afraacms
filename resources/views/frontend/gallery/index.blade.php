@@ -7,8 +7,10 @@
                 <p class="mt-6 text-center text-gray-500">{{ __('No photos yet.') }}</p>
             @else
                 <div class="mt-10">
-                    <x-frontend.lightbox-gallery :items="$items" />
+                    <x-frontend.lightbox-gallery :items="$items" :show-captions="setting('gallery_show_captions', true)" />
                 </div>
+
+                <x-frontend.pagination :paginator="$paginator" />
             @endif
         @elseif (empty($albums))
             <p class="mt-6 text-center text-gray-500">{{ __('No albums yet.') }}</p>

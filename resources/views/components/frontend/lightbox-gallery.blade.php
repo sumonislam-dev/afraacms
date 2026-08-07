@@ -1,10 +1,16 @@
-@props(['items' => []])
+@props(['items' => [], 'showCaptions' => true])
+
+@php
+    // Captions are stripped here, not just hidden with CSS, so a disabled
+    // caption setting also keeps them out of the page's embedded JSON payload.
+    $items = collect($items)->values()->map(fn (array $item) => $showCaptions ? $item : [...$item, 'caption' => null])->all();
+@endphp
 
 <div
     x-data="{
         open: false,
         index: 0,
-        items: @js(collect($items)->values()->all()),
+        items: @js($items),
         show(i) { this.index = i; this.open = true; },
         next() { this.index = (this.index + 1) % this.items.length; },
         prev() { this.index = (this.index - 1 + this.items.length) % this.items.length; },

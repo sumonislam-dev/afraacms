@@ -117,6 +117,18 @@ return [
                     'default' => 'albums',
                     'description' => 'Controls how the public Gallery page displays photos: grouped into albums, or as a single flat grid of every photo.',
                 ],
+                'gallery_show_captions' => [
+                    'label' => 'Show Captions',
+                    'type' => 'boolean',
+                    'default' => true,
+                    'description' => 'Show each photo/video\'s caption on the public Gallery page and in the lightbox viewer. Turn off for a cleaner, caption-free look.',
+                ],
+                'gallery_items_per_page' => [
+                    'label' => 'Photos Per Page',
+                    'type' => 'number',
+                    'default' => 24,
+                    'description' => 'How many photos/videos show per page on the flat grid view and on each album page, before older ones move to the next page.',
+                ],
             ],
         ],
 
