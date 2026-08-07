@@ -12,7 +12,7 @@
          optional background image. Used at the top of every inner page. --}}
     <section class="relative flex min-h-50 items-center justify-center bg-ink-900 py-12 text-center sm:min-h-70">
         @if ($imageUrl)
-            <div class="absolute inset-0 bg-cover bg-center" style="background-image:url('{{ $imageUrl }}')"></div>
+            <div class="absolute inset-0 bg-cover bg-center" style="background-image:url('{{ $imageUrl }}');"></div>
         @endif
         <div class="absolute inset-0 bg-hero-overlay"></div>
 

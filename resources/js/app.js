@@ -2,8 +2,11 @@ import Alpine from 'alpinejs';
 import Sortable from 'sortablejs';
 import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
+import Cropper from 'cropperjs';
+import 'cropperjs/dist/cropper.css';
 
 window.Alpine = Alpine;
+window.Cropper = Cropper;
 
 Alpine.start();
 

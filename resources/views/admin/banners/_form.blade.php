@@ -6,11 +6,11 @@
 @endphp
 
 <x-admin.card>
-    <div class="space-y-4">
+    <div x-data="{ type: '{{ $currentType }}' }" class="space-y-4">
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div>
                 <x-input-label for="type" :value="__('Placement')" />
-                <select id="type" name="type" required class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
+                <select id="type" name="type" x-model="type" required class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
                     @foreach (config('banners.types', []) as $typeKey => $typeConfig)
                         <option value="{{ $typeKey }}" @selected($currentType === $typeKey)>{{ $typeConfig['label'] }}</option>
                     @endforeach
@@ -46,7 +46,12 @@
 
             <div class="sm:col-span-3">
                 <x-input-label :value="__('Image')" />
-                <x-admin.media-picker name="image" :current="old('image', $banner->image ?? null)" />
+                <x-admin.media-picker
+                    name="image"
+                    :current="old('image', $banner->image ?? null)"
+                    crop-aspect-expression="['page', 'homepage'].includes(type) ? (3 / 1) : null"
+                />
+                <p class="mt-1 text-xs text-gray-500">{{ __("Page and Homepage banners crop to a wide letterbox shape; CTA and Popup banners don't crop.") }}</p>
                 <x-input-error class="mt-2" :messages="$errors->get('image')" />
             </div>
         </div>

@@ -41,7 +41,14 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
+            // No 'url' key: Laravel then generates relative "/storage/..."
+            // URLs instead of hardcoding APP_URL's host. A hardcoded host
+            // here made every media file a different-origin resource
+            // whenever the app was reached via any other hostname (e.g.
+            // "localhost" while APP_URL is "127.0.0.1") - browsers treat
+            // those as distinct origins even on the same machine/port, and
+            // the CORS-enforced cross-origin image reads that Cropper.js
+            // needs for canvas access then silently fail.
             'visibility' => 'public',
             'throw' => false,
             'report' => false,

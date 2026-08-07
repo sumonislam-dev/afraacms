@@ -74,7 +74,7 @@
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div>
                                 <x-input-label :value="__('Banner Image')" />
-                                <x-admin.media-picker name="banner_image" :current="old('banner_image', $page->banner_image ?? null)" />
+                                <x-admin.media-picker name="banner_image" :current="old('banner_image', $page->banner_image ?? null)" :crop-aspect-ratio="3" />
                                 <x-input-error class="mt-2" :messages="$errors->get('banner_image')" />
                             </div>
 
