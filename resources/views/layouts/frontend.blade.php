@@ -90,7 +90,7 @@
                                     aria-label="{{ $label }}"
                                     class="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 transition hover:bg-brand-500"
                                 >
-                                    <x-icon name="link" class="h-4 w-4" />
+                                    <x-frontend.social-icon :name="$network" class="h-4 w-4" />
                                 </a>
                             @endif
                         @endforeach
