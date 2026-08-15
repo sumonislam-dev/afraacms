@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\CertificateController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\DonationController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\GalleryItemController;
@@ -121,6 +122,12 @@ Route::middleware(['auth', 'verified'])
         Route::post('certificates/{certificate}/restore', [CertificateController::class, 'restore'])->name('certificates.restore')->withTrashed();
         Route::delete('certificates/{certificate}/force', [CertificateController::class, 'forceDelete'])->name('certificates.force-delete')->withTrashed();
         Route::get('certificates/{certificate}/qr', [CertificateController::class, 'qr'])->name('certificates.qr');
+
+        Route::resource('donations', DonationController::class)->except('show');
+        Route::get('donations-trash', [DonationController::class, 'trash'])->name('donations.trash');
+        Route::post('donations/{donation}/restore', [DonationController::class, 'restore'])->name('donations.restore')->withTrashed();
+        Route::delete('donations/{donation}/force', [DonationController::class, 'forceDelete'])->name('donations.force-delete')->withTrashed();
+        Route::post('donations/{donation}/resend-receipt', [DonationController::class, 'resendReceipt'])->name('donations.resend-receipt');
 
         Route::prefix('pages/{page}')->name('pages.')->group(function () {
             Route::get('sections', [SectionController::class, 'index'])->name('sections.index');

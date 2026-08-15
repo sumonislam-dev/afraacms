@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="g87H9q3r4gGNYZWjDXH4eBZ165dMaV9unyFchd6U">
+
+        <title>Edit Donation - AfraaCMS Admin</title>
+
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+        <!-- Scripts -->
+        <link rel="preload" as="style" href="http://127.0.0.1:8000/build/assets/app-Bbcmlwfl.css" /><link rel="preload" as="style" href="http://127.0.0.1:8000/build/assets/app-B4N2AuBp.css" /><link rel="modulepreload" as="script" href="http://127.0.0.1:8000/build/assets/app-D1nEFSfu.js" /><link rel="stylesheet" href="http://127.0.0.1:8000/build/assets/app-Bbcmlwfl.css" /><link rel="stylesheet" href="http://127.0.0.1:8000/build/assets/app-B4N2AuBp.css" /><script type="module" src="http://127.0.0.1:8000/build/assets/app-D1nEFSfu.js"></script>    </head>
+    <body class="font-sans antialiased" x-data="{ sidebarOpen: false }">
+        <div class="min-h-screen bg-gray-100">
+            <aside
+    class="fixed inset-y-0 left-0 z-40 flex w-64 -translate-x-full flex-col bg-gray-900 text-gray-100 transition-transform duration-200 ease-in-out lg:translate-x-0"
+    :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
+>
+    <div class="flex h-16 shrink-0 items-center justify-between border-b border-gray-800 px-4">
+        <a href="http://127.0.0.1:8000/admin" class="text-lg font-semibold tracking-tight text-white">
+            AfraaCMS
+        </a>
+
+        <button type="button" class="text-gray-400 hover:text-white lg:hidden" @click="sidebarOpen = false">
+            <span class="sr-only">Close sidebar</span>
+            <svg class="h-5 w-5 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+</svg>
+        </button>
+    </div>
+
+    <nav class="flex-1 space-y-1 overflow-y-auto px-2 py-4">
+                    <a
+        href="http://127.0.0.1:8000/admin"
+                class="flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white"
+    >
+        <span class="flex items-center gap-3">
+                            <svg class="h-5 w-5 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+</svg>
+                        Dashboard
+        </span>
+
+            </a>
+                    <a
+        href="http://127.0.0.1:8000/admin/pages"
+                class="flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white"
+    >
+        <span class="flex items-center gap-3">
+                            <svg class="h-5 w-5 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+</svg>
+                        Pages
+        </span>
+
+            </a>
+                    <a
+        href="http://127.0.0.1:8000/admin/menus"
+                class="flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white"
+    >
+        <span class="flex items-center gap-3">
+                            <svg class="h-5 w-5 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5" />
+</svg>
+                        Menu Builder
+        </span>
+
+            </a>
+                    <a
+        href="http://127.0.0.1:8000/admin/banners"
+                class="flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white"
+    >
+        <span class="flex items-center gap-3">
+                            <svg class="h-5 w-5 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M12 12m-9 0a9 9 0 1018 0 9 9 0 10-18 0" />
+</svg>
+                        Banners
+        </span>
+
+            </a>
+                    <a
+        href="http://127.0.0.1:8000/admin/media"
+                class="flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white"
+    >
+        <span class="flex items-center gap-3">
+                            <svg class="h-5 w-5 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3 4.5h18v15H3v-15zm10.5 6.75a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+</svg>
+                        Media Library
+        </span>
+
+            </a>
+                    <a
+        href="http://127.0.0.1:8000/admin/galleries"
+                class="flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white"
+    >
+        <span class="flex items-center gap-3">
+                            <svg class="h-5 w-5 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+</svg>
+                        Galleries
+        </span>
+
+            </a>
+                    <div x-data="{ open: false }">
+        <button
+            type="button"
+            @click="open = ! open"
+            class="flex w-full cursor-pointer items-center justify-between rounded-md px-3 py-2 text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white"
+        >
+            <span class="flex items-center gap-3">
+                <svg class="h-5 w-5 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+</svg>
+                Projects
+            </span>
+
+            <svg class="h-5 w-5 h-4 w-4 shrink-0 transition-transform duration-150" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" x-bind:class="{ 'rotate-180': open }">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+</svg>
+        </button>
+
+        <div x-show="open" x-transition class="mt-1 space-y-1 pl-8"  style="display: none;" >
+                            <a
+        href="http://127.0.0.1:8000/admin/projects"
+                class="flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white"
+    >
+        <span class="flex items-center gap-3">
+                        All Projects
+        </span>
+
+            </a>
+                            <a
+        href="http://127.0.0.1:8000/admin/project-categories"
+                class="flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white"
+    >
+        <span class="flex items-center gap-3">
+                        Categories
+        </span>
+
+            </a>
+                    </div>
+    </div>
+                    <div x-data="{ open: false }">
+        <button
+            type="button"
+            @click="open = ! open"
+            class="flex w-full cursor-pointer items-center justify-between rounded-md px-3 py-2 text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white"
+        >
+            <span class="flex items-center gap-3">
+                <svg class="h-5 w-5 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+</svg>
+                Team
+            </span>
+
+            <svg class="h-5 w-5 h-4 w-4 shrink-0 transition-transform duration-150" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" x-bind:class="{ 'rotate-180': open }">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+</svg>
+        </button>
+
+        <div x-show="open" x-transition class="mt-1 space-y-1 pl-8"  style="display: none;" >
+                            <a
+        href="http://127.0.0.1:8000/admin/team"
+                class="flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white"
+    >
+        <span class="flex items-center gap-3">
+                        All Members
+        </span>
+
+            </a>
+                            <a
+        href="http://127.0.0.1:8000/admin/team-categories"
+                class="flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white"
+    >
+        <span class="flex items-center gap-3">
+                        Categories
+        </span>
+
+            </a>
+                    </div>
+    </div>
+                    <div x-data="{ open: false }">
+        <button
+            type="button"
+            @click="open = ! open"
+            class="flex w-full cursor-pointer items-center justify-between rounded-md px-3 py-2 text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white"
+        >
+            <span class="flex items-center gap-3">
+                <svg class="h-5 w-5 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+</svg>
+                News
+            </span>
+
+            <svg class="h-5 w-5 h-4 w-4 shrink-0 transition-transform duration-150" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" x-bind:class="{ 'rotate-180': open }">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+</svg>
+        </button>
+
+        <div x-show="open" x-transition class="mt-1 space-y-1 pl-8"  style="display: none;" >
+                            <a
+        href="http://127.0.0.1:8000/admin/news"
+                class="flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white"
+    >
+        <span class="flex items-center gap-3">
+                        All Posts
+        </span>
+
+            </a>
+                            <a
+        href="http://127.0.0.1:8000/admin/news-categories"
+                class="flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white"
+    >
+        <span class="flex items-center gap-3">
+                        Categories
+        </span>
+
+            </a>
+                    </div>
+    </div>
+                    <a
+        href="http://127.0.0.1:8000/admin/stories"
+                class="flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white"
+    >
+        <span class="flex items-center gap-3">
+                            <svg class="h-5 w-5 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+</svg>
+                        Success Stories
+        </span>
+
+            </a>
+                    <a
+        href="http://127.0.0.1:8000/admin/certificates"
+                class="flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white"
+    >
+        <span class="flex items-center gap-3">
+                            <svg class="h-5 w-5 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+</svg>
+                        Certificates
+        </span>
+
+            </a>
+                    <a
+        href="http://127.0.0.1:8000/admin/donations"
+                class="flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors bg-indigo-600 text-white"
+    >
+        <span class="flex items-center gap-3">
+                            <svg class="h-5 w-5 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+</svg>
+                        Donations
+        </span>
+
+            </a>
+                    <a
+        href="http://127.0.0.1:8000/admin/contact"
+                class="flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white"
+    >
+        <span class="flex items-center gap-3">
+                            <svg class="h-5 w-5 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h1.5a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293a12.035 12.035 0 01-5.223-5.223l1.293-.97c.363-.271.527-.734.417-1.173L9.5 5.852a1.125 1.125 0 00-1.091-.852H7.036A2.25 2.25 0 004.786 7.25v-.5z" />
+</svg>
+                        Inbox
+        </span>
+
+            </a>
+                    <div x-data="{ open: false }">
+        <button
+            type="button"
+            @click="open = ! open"
+            class="flex w-full cursor-pointer items-center justify-between rounded-md px-3 py-2 text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white"
+        >
+            <span class="flex items-center gap-3">
+                <svg class="h-5 w-5 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.106A12.318 12.318 0 008.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M15 19.128M4.5 8.25a4.125 4.125 0 118.25 0 4.125 4.125 0 01-8.25 0zM19.5 8.625a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+</svg>
+                Access Control
+            </span>
+
+            <svg class="h-5 w-5 h-4 w-4 shrink-0 transition-transform duration-150" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" x-bind:class="{ 'rotate-180': open }">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+</svg>
+        </button>
+
+        <div x-show="open" x-transition class="mt-1 space-y-1 pl-8"  style="display: none;" >
+                            <a
+        href="http://127.0.0.1:8000/admin/users"
+                class="flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white"
+    >
+        <span class="flex items-center gap-3">
+                        Users
+        </span>
+
+            </a>
+                            <a
+        href="http://127.0.0.1:8000/admin/roles"
+                class="flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white"
+    >
+        <span class="flex items-center gap-3">
+                        Roles
+        </span>
+
+            </a>
+                            <a
+        href="http://127.0.0.1:8000/admin/permissions"
+                class="flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white"
+    >
+        <span class="flex items-center gap-3">
+                        Permissions
+        </span>
+
+            </a>
+                            <a
+        href="http://127.0.0.1:8000/admin/activity"
+                class="flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white"
+    >
+        <span class="flex items-center gap-3">
+                        Activity Log
+        </span>
+
+            </a>
+                    </div>
+    </div>
+                    <a
+        href="http://127.0.0.1:8000/admin/seo"
+                class="flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white"
+    >
+        <span class="flex items-center gap-3">
+                            <svg class="h-5 w-5 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18zM3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 010 18 15 15 0 010-18z" />
+</svg>
+                        SEO
+        </span>
+
+            </a>
+                    <a
+        href="http://127.0.0.1:8000/admin/settings"
+                class="flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors text-gray-300 hover:bg-gray-800 hover:text-white"
+    >
+        <span class="flex items-center gap-3">
+                            <svg class="h-5 w-5 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.28zM15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+</svg>
+                        Settings
+        </span>
+
+            </a>
+            </nav>
+</aside>
+
+            <!-- Mobile sidebar overlay -->
+            <div
+                x-show="sidebarOpen"
+                x-transition.opacity
+                class="fixed inset-0 z-30 bg-gray-900/50 lg:hidden"
+                @click="sidebarOpen = false"
+                style="display: none;"
+            ></div>
+
+            <div class="flex min-h-screen flex-col lg:pl-64">
+                <header class="sticky top-0 z-30 flex h-16 shrink-0 items-center gap-4 border-b border-gray-200 bg-white px-4 sm:px-6">
+    <button type="button" class="text-gray-500 hover:text-gray-700 lg:hidden" @click="sidebarOpen = true">
+        <span class="sr-only">Open sidebar</span>
+        <svg class="h-5 w-5 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5" />
+</svg>
+    </button>
+
+    <div class="min-w-0 flex-1">
+                    <h1 class="truncate text-lg font-semibold text-gray-900">Edit Donation</h1>
+            </div>
+
+    <div class="flex items-center gap-4">
+        <button type="button" class="relative text-gray-400 hover:text-gray-600">
+            <span class="sr-only">Notifications</span>
+            <svg class="h-5 w-5 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+</svg>
+        </button>
+
+        <div class="relative" x-data="{ open: false }" @click.outside="open = false" @close.stop="open = false">
+    <div @click="open = ! open">
+        <button type="button" class="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-gray-900 focus:outline-hidden">
+                    <svg class="h-5 w-5 h-7 w-7 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+</svg>
+                    <span class="hidden sm:inline">Super Admin</span>
+                    <svg class="h-5 w-5 h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+</svg>
+                </button>
+    </div>
+
+    <div x-show="open"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 scale-95"
+            x-transition:enter-end="opacity-100 scale-100"
+            x-transition:leave="transition ease-in duration-75"
+            x-transition:leave-start="opacity-100 scale-100"
+            x-transition:leave-end="opacity-0 scale-95"
+            class="absolute z-50 mt-2 w-48 rounded-md shadow-lg ltr:origin-top-right rtl:origin-top-left inset-e-0"
+            style="display: none;"
+            @click="open = false">
+        <div class="rounded-md ring-1 ring-black ring-opacity-5 py-1 bg-white">
+            <a class="block w-full px-4 py-2 text-start text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 transition duration-150 ease-in-out" href="http://127.0.0.1:8000/profile">Profile</a>
+
+                <form method="POST" action="http://127.0.0.1:8000/logout">
+                    <input type="hidden" name="_token" value="g87H9q3r4gGNYZWjDXH4eBZ165dMaV9unyFchd6U" autocomplete="off">
+                    <a class="block w-full px-4 py-2 text-start text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 transition duration-150 ease-in-out" href="http://127.0.0.1:8000/logout" onclick="event.preventDefault(); this.closest('form').submit();">Log Out</a>
+                </form>
+        </div>
+    </div>
+</div>
+    </div>
+</header>
+
+                <main class="flex-1 p-4 sm:p-6 lg:p-8">
+                                            <nav class="mb-4" aria-label="Breadcrumb">
+    <ol class="flex flex-wrap items-center gap-1 text-sm text-gray-500">
+        <li>
+            <a href="http://127.0.0.1:8000/admin" class="inline-flex items-center hover:text-gray-700">
+                <svg class="h-5 w-5 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75" />
+</svg>
+                <span class="sr-only">Dashboard</span>
+            </a>
+        </li>
+
+                    <li class="flex items-center gap-1">
+                <svg class="h-5 w-5 h-4 w-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+</svg>
+
+                                    <a href="http://127.0.0.1:8000/admin/donations" class="hover:text-gray-700">Donations</a>
+                            </li>
+                    <li class="flex items-center gap-1">
+                <svg class="h-5 w-5 h-4 w-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+</svg>
+
+                                    <span class="font-medium text-gray-700">QA Test Donor</span>
+                            </li>
+            </ol>
+</nav>
+                    
+                    
+                                            <div class="mb-6">
+                            <h2 class="text-xl font-semibold text-gray-900">Edit Donation</h2>
+                        </div>
+                    
+                    <form method="POST" action="http://127.0.0.1:8000/admin/donations/1">
+        <input type="hidden" name="_token" value="g87H9q3r4gGNYZWjDXH4eBZ165dMaV9unyFchd6U" autocomplete="off">        <input type="hidden" name="_method" value="PUT">        <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+    <div class="space-y-6 lg:col-span-2">
+        <div class="rounded-lg bg-white shadow-sm ring-1 ring-black/5">
+    
+    <div class="p-4 sm:p-6">
+        <div class="space-y-4">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                        <label class="block font-medium text-sm text-gray-700" for="donor_name">
+    Donor Name
+</label>
+                        <input  class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-xs mt-1 block w-full" id="donor_name" name="donor_name" type="text" value="QA Test Donor" required="required" autofocus="autofocus">
+                                            </div>
+
+                    <div>
+                        <label class="block font-medium text-sm text-gray-700" for="donor_email">
+    Donor Email
+</label>
+                        <input  class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-xs mt-1 block w-full" id="donor_email" name="donor_email" type="email" value="qa-test-donor@example.com">
+                        <p class="mt-1 text-xs text-gray-500">Optional - the receipt is only emailed if this is filled in.</p>
+                                            </div>
+                </div>
+
+                <div>
+                    <label class="block font-medium text-sm text-gray-700" for="notes">
+    Internal Notes
+</label>
+                    <textarea id="notes" name="notes" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+                    <p class="mt-1 text-xs text-gray-500">For admin reference only - never shown to the donor.</p>
+                                    </div>
+            </div>
+    </div>
+
+    </div>
+
+                    <div class="rounded-lg bg-white shadow-sm ring-1 ring-black/5">
+            <div class="flex items-center justify-between border-b border-gray-100 px-4 py-4 sm:px-6">
+                            <h3 class="text-base font-semibold text-gray-900">Receipt</h3>
+            
+                    </div>
+    
+    <div class="p-4 sm:p-6">
+        <div class="flex items-center justify-between gap-4">
+                    <div>
+                        <p class="text-sm text-gray-700">
+                            <span class="font-medium text-gray-900">Receipt Number:</span> RCPT-2026-00001
+                        </p>
+                        <p class="mt-1 text-sm text-gray-500">
+                                                            Sent Aug 15, 2026 7:57 PM
+                                                    </p>
+                    </div>
+
+                                            <form method="POST" action="http://127.0.0.1:8000/admin/donations/1/resend-receipt">
+                            <input type="hidden" name="_token" value="g87H9q3r4gGNYZWjDXH4eBZ165dMaV9unyFchd6U" autocomplete="off">                            <button type="submit" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-xs hover:bg-gray-50 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150 cursor-pointer disabled:cursor-not-allowed">
+    Resend Receipt
+</button>
+                        </form>
+                                    </div>
+    </div>
+
+    </div>
+    </div>
+
+    <div class="space-y-6">
+        <div class="rounded-lg bg-white shadow-sm ring-1 ring-black/5">
+            <div class="flex items-center justify-between border-b border-gray-100 px-4 py-4 sm:px-6">
+                            <h3 class="text-base font-semibold text-gray-900">Donation Details</h3>
+            
+                    </div>
+    
+    <div class="p-4 sm:p-6">
+        <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-medium text-sm text-gray-700" for="amount">
+    Amount
+</label>
+                        <input  class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-xs mt-1 block w-full" id="amount" name="amount" type="number" step="0.01" min="0.01" value="250.75" required="required">
+                                            </div>
+
+                    <div>
+                        <label class="block font-medium text-sm text-gray-700" for="currency">
+    Currency
+</label>
+                        <select id="currency" name="currency" required class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
+                                                            <option value="BDT" selected>BDT (৳)</option>
+                                                            <option value="USD" >USD ($)</option>
+                                                            <option value="EUR" >EUR (€)</option>
+                                                            <option value="GBP" >GBP (£)</option>
+                                                    </select>
+                                            </div>
+                </div>
+
+                <div>
+                    <label class="block font-medium text-sm text-gray-700" for="method">
+    Payment Method
+</label>
+                    <select id="method" name="method" required class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
+                                                    <option value="bank_transfer" selected>Bank Transfer</option>
+                                                    <option value="mobile_banking" >Mobile Banking (bKash/Nagad/Rocket)</option>
+                                                    <option value="cash" >Cash</option>
+                                                    <option value="card" >Card</option>
+                                                    <option value="other" >Other</option>
+                                            </select>
+                                    </div>
+
+                <div>
+                    <label class="block font-medium text-sm text-gray-700" for="donated_at">
+    Donation Date
+</label>
+                    <input  class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-xs mt-1 block w-full" id="donated_at" name="donated_at" type="date" value="2026-08-15" required="required">
+                                    </div>
+
+                <div>
+                    <label class="block font-medium text-sm text-gray-700" for="project_id">
+    Related Project
+</label>
+                    <select id="project_id" name="project_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
+                        <option value="">— None —</option>
+                                                    <option value="3" >Late Mazad Mollah Eye Hospital</option>
+                                                    <option value="6" >RSUF Emergency Relief Activities</option>
+                                                    <option value="5" >RSUF Old Care Project</option>
+                                                    <option value="2" >RSUF Scholarship Program</option>
+                                                    <option value="1" >Rahmatunnesa Skill Training Project (RSTP)</option>
+                                                    <option value="4" >Safe Drinking Water Project</option>
+                                            </select>
+                    <p class="mt-1 text-xs text-gray-500">Optional. Which project/campaign this donation supports.</p>
+                                    </div>
+
+                <div>
+                    <label class="block font-medium text-sm text-gray-700" for="status">
+    Status
+</label>
+                    <select id="status" name="status" required class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
+                        <option value="completed" selected>Completed</option>
+                        <option value="refunded" >Refunded</option>
+                    </select>
+                                    </div>
+            </div>
+    </div>
+
+    </div>
+    </div>
+</div>
+
+<div class="mt-6 flex justify-end gap-3 border-t border-gray-200 pt-6">
+    <button type="button" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-xs hover:bg-gray-50 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150 cursor-pointer disabled:cursor-not-allowed" onclick="window.location='http://127.0.0.1:8000/admin/donations'">
+    Cancel
+</button>
+    <button type="submit" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 cursor-pointer disabled:cursor-not-allowed">
+    Update Donation
+</button>
+</div>
+    </form>
+                </main>
+            </div>
+        </div>
+    </body>
+</html>

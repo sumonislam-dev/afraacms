@@ -92,6 +92,12 @@ return [
         'permission' => 'certificates.view',
     ],
     [
+        'label' => 'Donations',
+        'icon' => 'currency-dollar',
+        'route' => 'admin.donations.index',
+        'permission' => 'donations.view',
+    ],
+    [
         'label' => 'Inbox',
         'icon' => 'phone',
         'route' => 'admin.contact.index',
