@@ -41,6 +41,7 @@ return [
         'team' => ['view', 'create', 'edit', 'delete'],
         'news' => ['view', 'create', 'edit', 'delete'],
         'stories' => ['view', 'create', 'edit', 'delete'],
+        'certificates' => ['view', 'create', 'edit', 'delete'],
         'contact' => ['view', 'edit', 'delete'],
         'seo' => ['view', 'edit'],
     ],
@@ -57,7 +58,7 @@ return [
     */
 
     'editor_modules' => [
-        'dashboard', 'media', 'menus', 'pages', 'sections', 'banners', 'projects', 'gallery', 'team', 'news', 'stories', 'contact', 'seo',
+        'dashboard', 'media', 'menus', 'pages', 'sections', 'banners', 'projects', 'gallery', 'team', 'news', 'stories', 'certificates', 'contact', 'seo',
     ],
 
     /*

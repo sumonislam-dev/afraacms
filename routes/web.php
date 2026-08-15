@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CertificateVerificationController;
 use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\HomeController;
@@ -45,6 +46,10 @@ Route::get('/stories/{slug}', [StoryController::class, 'show'])
 Route::post('/contact', [ContactMessageController::class, 'store'])
     ->middleware('throttle:5,1')
     ->name('contact.store');
+
+Route::get('/verify', [CertificateVerificationController::class, 'index'])
+    ->middleware('throttle:20,1')
+    ->name('verify');
 
 Route::get('/dashboard', function () {
     return redirect()->route('admin.dashboard');

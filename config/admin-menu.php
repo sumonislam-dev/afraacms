@@ -86,6 +86,12 @@ return [
         'permission' => 'stories.view',
     ],
     [
+        'label' => 'Certificates',
+        'icon' => 'shield-check',
+        'route' => 'admin.certificates.index',
+        'permission' => 'certificates.view',
+    ],
+    [
         'label' => 'Inbox',
         'icon' => 'phone',
         'route' => 'admin.contact.index',

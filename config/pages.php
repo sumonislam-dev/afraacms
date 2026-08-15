@@ -38,6 +38,6 @@ return [
     'reserved_slugs' => [
         'admin', 'login', 'register', 'logout', 'password',
         'profile', 'dashboard', 'verify-email', 'confirm-password',
-        'up', 'storage',
+        'up', 'storage', 'verify',
     ],
 ];

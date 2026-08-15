@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\CertificateController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GalleryController;
@@ -114,6 +115,12 @@ Route::middleware(['auth', 'verified'])
         Route::resource('contact', ContactController::class)
             ->only(['index', 'show', 'destroy'])
             ->parameters(['contact' => 'contactMessage']);
+
+        Route::resource('certificates', CertificateController::class)->except('show');
+        Route::get('certificates-trash', [CertificateController::class, 'trash'])->name('certificates.trash');
+        Route::post('certificates/{certificate}/restore', [CertificateController::class, 'restore'])->name('certificates.restore')->withTrashed();
+        Route::delete('certificates/{certificate}/force', [CertificateController::class, 'forceDelete'])->name('certificates.force-delete')->withTrashed();
+        Route::get('certificates/{certificate}/qr', [CertificateController::class, 'qr'])->name('certificates.qr');
 
         Route::prefix('pages/{page}')->name('pages.')->group(function () {
             Route::get('sections', [SectionController::class, 'index'])->name('sections.index');
