@@ -5,7 +5,7 @@
     :canonical="$project['seo']['canonical_url'] ?? null"
     :robots="$project['seo']['robots'] ?? null"
 >
-    <x-banner type="page" :page-title="$project['title']" />
+    <x-banner type="page" :override="['image_url' => $project['cover_image_url'] ?? null]" :page-title="$project['title']" />
 
     <div class="mx-auto max-w-4xl px-4 py-16 sm:px-6">
         @if ($project['cover_image_url'])

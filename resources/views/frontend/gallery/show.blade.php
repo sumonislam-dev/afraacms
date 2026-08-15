@@ -5,7 +5,7 @@
     :canonical="$album['seo']['canonical_url'] ?? null"
     :robots="$album['seo']['robots'] ?? null"
 >
-    <x-banner type="page" :page-title="$album['title']" />
+    <x-banner type="page" :override="['image_url' => $album['cover_image_url'] ?? null]" :page-title="$album['title']" />
 
     <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
         <div class="text-center">

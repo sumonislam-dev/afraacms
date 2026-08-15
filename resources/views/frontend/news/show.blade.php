@@ -5,7 +5,7 @@
     :canonical="$post['seo']['canonical_url'] ?? null"
     :robots="$post['seo']['robots'] ?? null"
 >
-    <x-banner type="page" :page-title="$post['title']" />
+    <x-banner type="page" :override="['image_url' => $post['cover_image_url'] ?? null]" :page-title="$post['title']" />
 
     <div class="mx-auto max-w-4xl px-4 py-16 sm:px-6">
         @if ($post['cover_image_url'])
