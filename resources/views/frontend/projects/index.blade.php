@@ -1,5 +1,23 @@
-<x-frontend-layout :title="__('Projects')">
-    <x-banner type="page" :page-title="__('Projects')" />
+<x-frontend-layout
+    :title="$cmsPage['seo']['title'] ?? __('Projects')"
+    :description="$cmsPage['seo']['description'] ?? null"
+    :canonical="$cmsPage['seo']['canonical_url'] ?? null"
+    :robots="$cmsPage['seo']['robots'] ?? null"
+>
+    @php
+        // Same rule as the generic Page template: a Hero section already
+        // carries its own big title, so the page-header banner skips its
+        // title in that case to avoid showing it twice.
+        $startsWithHero = ($cmsPage['sections'][0]['type'] ?? null) === 'hero';
+    @endphp
+
+    <x-banner
+        type="page"
+        :override="['title' => $cmsPage['banner_eyebrow'] ?? null, 'image_url' => $cmsPage['banner_image_url'] ?? null]"
+        :page-title="$startsWithHero ? null : ($cmsPage['title'] ?? __('Projects'))"
+    />
+
+    <x-sections :sections="$cmsPage['sections'] ?? []" />
 
     <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         @if ($categories->isNotEmpty())

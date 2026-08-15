@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\CMS\Services\SettingService;
 use App\Models\Setting;
 use Illuminate\Database\Seeder;
 
@@ -37,6 +38,13 @@ class SettingsSeeder extends Seeder
         foreach (config('seo.fields', []) as $fieldKey => $field) {
             $this->seedField('sitemap', $fieldKey, $field);
         }
+
+        // Settings are cached forever (see SettingService) - on any
+        // environment where that cache is already warm (e.g. re-running
+        // this seeder to backfill a newly-added config field on an existing
+        // install), inserting rows directly like this would otherwise
+        // silently not take effect until something else happened to bust it.
+        app(SettingService::class)->forget();
     }
 
     private function seedField(string $group, string $key, array $field): void

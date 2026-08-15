@@ -27,11 +27,17 @@ return [
     | someone save a page under one of these slugs would make it permanently
     | unreachable with no explanation, so it's rejected at validation time.
     |
+    | "gallery", "projects", "news" and "stories" are deliberately NOT
+    | reserved: each has its own dedicated controller/route that always
+    | takes priority over this catch-all, but the Page record living at
+    | that slug is still real and editable - it supplies that listing
+    | page's banner image/eyebrow/SEO override (see NewsController etc.).
+    |
     */
 
     'reserved_slugs' => [
         'admin', 'login', 'register', 'logout', 'password',
         'profile', 'dashboard', 'verify-email', 'confirm-password',
-        'up', 'storage', 'gallery', 'projects',
+        'up', 'storage',
     ],
 ];

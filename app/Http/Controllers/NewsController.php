@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\CMS\Services\NewsService;
+use App\CMS\Services\PageService;
 use App\Models\NewsCategory;
 use Illuminate\View\View;
 
 class NewsController extends Controller
 {
-    public function __construct(private readonly NewsService $news)
-    {
+    public function __construct(
+        private readonly NewsService $news,
+        private readonly PageService $pages,
+    ) {
     }
 
     /**
@@ -27,7 +30,12 @@ class NewsController extends Controller
             ));
         }
 
-        return view('frontend.news.index', compact('posts', 'categories'));
+        // The "news" slug's Page record supplies this listing's banner
+        // image/eyebrow/SEO override, if an admin has set one - the posts
+        // themselves are still rendered by NewsService, not Page sections.
+        $cmsPage = $this->pages->findPublished('news');
+
+        return view('frontend.news.index', compact('posts', 'categories', 'cmsPage'));
     }
 
     /**

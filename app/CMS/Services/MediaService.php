@@ -2,6 +2,7 @@
 
 namespace App\CMS\Services;
 
+use App\CMS\Cache\CmsCacheManager;
 use App\Models\MediaItem;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -11,6 +12,10 @@ use Intervention\Image\ImageManager;
 
 class MediaService
 {
+    public function __construct(private readonly CmsCacheManager $cache)
+    {
+    }
+
     /**
      * Upload a new file into the media library.
      */
@@ -39,6 +44,12 @@ class MediaService
             ->withCustomProperties($this->dimensions($file))
             ->toMediaCollection('file');
 
+        // Any content type (news, pages, galleries, banners...) may have
+        // cached this item's resolved URL, and there's no per-item tracking
+        // of who references it - clear every module's cache rather than
+        // leave some of them serving the file this item used to have.
+        $this->cache->clear();
+
         return $item->fresh();
     }
 
@@ -58,6 +69,8 @@ class MediaService
     public function delete(MediaItem $item): void
     {
         $item->delete();
+
+        $this->cache->clear();
     }
 
     /**

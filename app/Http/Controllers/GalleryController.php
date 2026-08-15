@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\CMS\Services\GalleryService;
+use App\CMS\Services\PageService;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\View\View;
 
 class GalleryController extends Controller
 {
-    public function __construct(private readonly GalleryService $galleries)
-    {
+    public function __construct(
+        private readonly GalleryService $galleries,
+        private readonly PageService $pages,
+    ) {
     }
 
     /**
@@ -18,16 +21,21 @@ class GalleryController extends Controller
      */
     public function index(): View
     {
+        // The "gallery" slug's Page record supplies this listing's banner
+        // image/eyebrow/SEO override, if an admin has set one.
+        $cmsPage = $this->pages->findPublished('gallery');
+
         if (setting('gallery_display_mode', 'albums') === 'flat') {
             $paginator = $this->paginate($this->galleries->allItemsFlat());
 
             return view('frontend.gallery.index', [
                 'items' => $paginator->items(),
                 'paginator' => $paginator,
+                'cmsPage' => $cmsPage,
             ]);
         }
 
-        return view('frontend.gallery.index', ['albums' => $this->galleries->allPublic()]);
+        return view('frontend.gallery.index', ['albums' => $this->galleries->allPublic(), 'cmsPage' => $cmsPage]);
     }
 
     /**

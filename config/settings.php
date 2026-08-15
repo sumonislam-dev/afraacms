@@ -132,6 +132,19 @@ return [
             ],
         ],
 
+        'news' => [
+            'label' => 'News',
+            'icon' => 'document-text',
+            'fields' => [
+                'news_section_count' => [
+                    'label' => 'Latest News Count',
+                    'type' => 'number',
+                    'default' => 8,
+                    'description' => 'How many recent posts the "Latest News" section shows when added to a page (e.g. the homepage), before its "View All News" link to the full /news archive.',
+                ],
+            ],
+        ],
+
         'developer' => [
             'label' => 'Developer',
             'icon' => 'link',

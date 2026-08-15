@@ -1,5 +1,5 @@
 @php
-    $posts = collect(app(\App\CMS\Services\NewsService::class)->all())->take(6);
+    $posts = collect(app(\App\CMS\Services\NewsService::class)->all())->take((int) setting('news_section_count', 8));
 @endphp
 
 @if ($posts->isNotEmpty())

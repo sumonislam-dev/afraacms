@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CMS\Services\PageService;
 use App\CMS\Services\ProjectService;
 use App\CMS\Services\StoryService;
 use App\Models\ProjectCategory;
@@ -12,6 +13,7 @@ class ProjectController extends Controller
     public function __construct(
         private readonly ProjectService $projects,
         private readonly StoryService $stories,
+        private readonly PageService $pages,
     ) {
     }
 
@@ -30,7 +32,11 @@ class ProjectController extends Controller
             ));
         }
 
-        return view('frontend.projects.index', compact('projects', 'categories'));
+        // The "projects" slug's Page record supplies this listing's banner
+        // image/eyebrow/SEO override, if an admin has set one.
+        $cmsPage = $this->pages->findPublished('projects');
+
+        return view('frontend.projects.index', compact('projects', 'categories', 'cmsPage'));
     }
 
     /**

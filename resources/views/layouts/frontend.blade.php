@@ -24,11 +24,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-body text-ink-900 antialiased" x-data="{ mobileMenuOpen: false }">
-        <header
-            class="{{ $isHome
-                ? 'fixed top-0 inset-x-0 z-50 bg-ink-900/95 backdrop-blur supports-backdrop-filter:bg-ink-900/80 shadow-lg shadow-black/10'
-                : 'bg-ink-900 shadow-lg shadow-black/10' }}"
-        >
+        <header class="fixed top-0 inset-x-0 z-50 bg-ink-900/95 backdrop-blur supports-backdrop-filter:bg-ink-900/80 shadow-lg shadow-black/10">
             <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="flex h-20 items-center justify-between">
                     <a href="{{ url('/') }}" class="flex shrink-0 items-center gap-3">
@@ -60,7 +56,11 @@
             </nav>
         </header>
 
-        <main>
+        {{-- The homepage's own Hero section is full-height and meant to sit
+             behind the transparent-ish fixed header; every other page's
+             first section (the page banner) is much shorter and needs the
+             header's height offset so it isn't hidden underneath it. --}}
+        <main class="{{ $isHome ? '' : 'pt-20' }}">
             {{ $slot }}
         </main>
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CMS\Services\PageService;
 use App\CMS\Services\ProjectService;
 use App\CMS\Services\StoryService;
 use Illuminate\View\View;
@@ -11,6 +12,7 @@ class StoryController extends Controller
     public function __construct(
         private readonly StoryService $stories,
         private readonly ProjectService $projects,
+        private readonly PageService $pages,
     ) {
     }
 
@@ -31,7 +33,11 @@ class StoryController extends Controller
             ));
         }
 
-        return view('frontend.stories.index', compact('stories', 'projects'));
+        // The "stories" slug's Page record supplies this listing's banner
+        // image/eyebrow/SEO override, if an admin has set one.
+        $cmsPage = $this->pages->findPublished('stories');
+
+        return view('frontend.stories.index', compact('stories', 'projects', 'cmsPage'));
     }
 
     /**
