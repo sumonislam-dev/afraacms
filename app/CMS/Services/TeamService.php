@@ -22,7 +22,7 @@ class TeamService
      * down to __PHP_Incomplete_Class on read, so only arrays/scalars may be
      * cached here (see PageService/ProjectService for the same pattern).
      *
-     * @return array<int, array{id: int, name: string, role: ?string, bio: ?string, photo_url: ?string, link: ?string, category_id: ?int, category: ?array}>
+     * @return array<int, array{id: int, name: string, role: ?string, country: ?string, service_period: ?string, bio: ?string, photo_url: ?string, link: ?string, category_id: ?int, category: ?array}>
      */
     public function all(): array
     {
@@ -35,6 +35,8 @@ class TeamService
                 'id' => $member->id,
                 'name' => $member->name,
                 'role' => $member->role,
+                'country' => $member->country,
+                'service_period' => $member->service_period,
                 'bio' => $member->bio,
                 'photo_url' => $member->photo_url,
                 'link' => $member->link,

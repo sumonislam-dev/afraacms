@@ -19,6 +19,21 @@
                     <x-input-error class="mt-2" :messages="$errors->get('role')" />
                 </div>
 
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                        <x-input-label for="country" :value="__('Country (optional)')" />
+                        <x-text-input id="country" name="country" type="text" class="mt-1 block w-full" :value="old('country', $member->country ?? '')" placeholder="e.g. Bangladesh" />
+                        <x-input-error class="mt-2" :messages="$errors->get('country')" />
+                    </div>
+
+                    <div>
+                        <x-input-label for="service_period" :value="__('Service Period (optional)')" />
+                        <x-text-input id="service_period" name="service_period" type="text" class="mt-1 block w-full" :value="old('service_period', $member->service_period ?? '')" placeholder="e.g. 2018 – 2022" />
+                        <p class="mt-1 text-xs text-gray-500">{{ __('For volunteers - shown alongside country if either is set.') }}</p>
+                        <x-input-error class="mt-2" :messages="$errors->get('service_period')" />
+                    </div>
+                </div>
+
                 <div>
                     <x-input-label for="bio" :value="__('Bio')" />
                     <x-textarea id="bio" name="bio" class="mt-1 block w-full" rows="6">{{ old('bio', $member->bio ?? '') }}</x-textarea>

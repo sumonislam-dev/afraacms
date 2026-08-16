@@ -16,6 +16,7 @@
     :items="$members->map(fn ($member) => [
         'title' => $member['name'],
         'subtitle' => $member['role'],
+        'meta' => implode(' · ', array_filter([$member['country'] ?? null, $member['service_period'] ?? null])) ?: null,
         'body' => $member['bio'],
         'image_url' => $member['photo_url'],
         'url' => $member['link'],

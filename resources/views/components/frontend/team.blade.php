@@ -48,6 +48,10 @@
                         <p class="text-sm font-medium text-brand-600">{{ $item['subtitle'] }}</p>
                     @endif
 
+                    @if ($item['meta'] ?? null)
+                        <p class="mt-1 text-xs text-gray-500">{{ $item['meta'] }}</p>
+                    @endif
+
                     @if ($item['body'] ?? null)
                         <p class="mt-2 line-clamp-3 text-sm leading-relaxed text-gray-600">{{ $item['body'] }}</p>
                     @endif
@@ -77,6 +81,7 @@
 
                 <h3 x-show="items[index].title" x-text="items[index].title" class="mt-5 text-xl font-semibold text-gray-900"></h3>
                 <p x-show="items[index].subtitle" x-text="items[index].subtitle" class="text-sm font-medium text-brand-600"></p>
+                <p x-show="items[index].meta" x-text="items[index].meta" class="mt-1 text-xs text-gray-500"></p>
                 <p x-show="items[index].body" x-text="items[index].body" class="mx-auto mt-4 max-w-lg whitespace-pre-line text-sm leading-relaxed text-gray-600"></p>
 
                 <a

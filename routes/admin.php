@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\CertificateController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\DonationController;
+use App\Http\Controllers\Admin\FeaturedVisitorController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\GalleryItemController;
@@ -123,6 +124,13 @@ Route::middleware(['auth', 'verified'])
             ->parameters(['visitor-book' => 'visitorBookEntry']);
         Route::post('visitor-book/{visitorBookEntry}/approve', [VisitorBookEntryController::class, 'approve'])->name('visitor-book.approve');
         Route::post('visitor-book/{visitorBookEntry}/reject', [VisitorBookEntryController::class, 'reject'])->name('visitor-book.reject');
+
+        Route::resource('featured-visitors', FeaturedVisitorController::class)
+            ->except('show')
+            ->parameters(['featured-visitors' => 'featuredVisitor']);
+        Route::get('featured-visitors-trash', [FeaturedVisitorController::class, 'trash'])->name('featured-visitors.trash');
+        Route::post('featured-visitors/{featuredVisitor}/restore', [FeaturedVisitorController::class, 'restore'])->name('featured-visitors.restore')->withTrashed();
+        Route::delete('featured-visitors/{featuredVisitor}/force', [FeaturedVisitorController::class, 'forceDelete'])->name('featured-visitors.force-delete')->withTrashed();
 
         Route::resource('certificates', CertificateController::class)->except('show');
         Route::get('certificates-trash', [CertificateController::class, 'trash'])->name('certificates.trash');

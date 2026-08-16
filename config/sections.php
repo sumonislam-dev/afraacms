@@ -117,5 +117,10 @@ return [
             'fields' => ['heading', 'subheading'],
             'has_items' => false,
         ],
+        'featured_visitors' => [
+            'label' => 'Featured Visitors',
+            'fields' => ['heading', 'subheading'],
+            'has_items' => false,
+        ],
     ],
 ];

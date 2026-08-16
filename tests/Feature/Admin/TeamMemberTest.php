@@ -89,6 +89,24 @@ class TeamMemberTest extends TestCase
             ->assertSessionHasErrors('category_id');
     }
 
+    public function test_editor_can_add_a_volunteer_with_country_and_service_period(): void
+    {
+        $editor = $this->editor();
+
+        $response = $this->actingAs($editor)->post(route('admin.team.store'), [
+            'name' => 'A Volunteer',
+            'country' => 'Canada',
+            'service_period' => '2018 – 2020',
+        ]);
+
+        $response->assertRedirect(route('admin.team.index'));
+        $this->assertDatabaseHas('team_members', [
+            'name' => 'A Volunteer',
+            'country' => 'Canada',
+            'service_period' => '2018 – 2020',
+        ]);
+    }
+
     public function test_editor_can_update_a_team_member(): void
     {
         $editor = $this->editor();

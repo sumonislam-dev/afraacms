@@ -98,6 +98,12 @@ return [
         'permission' => 'donations.view',
     ],
     [
+        'label' => 'Featured Visitors',
+        'icon' => 'arrow-top-right-on-square',
+        'route' => 'admin.featured-visitors.index',
+        'permission' => 'featured_visitors.view',
+    ],
+    [
         'label' => 'Visitor Book',
         'icon' => 'eye',
         'route' => 'admin.visitor-book.index',

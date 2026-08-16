@@ -2,17 +2,18 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Models\FeaturedVisitor;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateTeamMemberRequest extends FormRequest
+class StoreFeaturedVisitorRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return $this->user()->can('update', $this->route('team'));
+        return $this->user()->can('create', FeaturedVisitor::class);
     }
 
     /**
@@ -23,14 +24,11 @@ class UpdateTeamMemberRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category_id' => ['nullable', 'integer', Rule::exists('team_categories', 'id')],
             'name' => ['required', 'string', 'max:255'],
-            'role' => ['nullable', 'string', 'max:255'],
-            'country' => ['nullable', 'string', 'max:255'],
-            'service_period' => ['nullable', 'string', 'max:255'],
+            'organization' => ['nullable', 'string', 'max:255'],
+            'country' => ['required', 'string', 'max:255'],
+            'visited_at' => ['required', 'date'],
             'photo' => ['nullable', 'integer', Rule::exists('media_items', 'id')],
-            'bio' => ['nullable', 'string'],
-            'link' => ['nullable', 'string', 'max:2048'],
             'is_active' => ['sometimes', 'boolean'],
             'sort_order' => ['nullable', 'integer'],
         ];

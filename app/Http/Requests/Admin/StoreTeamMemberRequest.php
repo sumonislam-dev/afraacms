@@ -27,6 +27,8 @@ class StoreTeamMemberRequest extends FormRequest
             'category_id' => ['nullable', 'integer', Rule::exists('team_categories', 'id')],
             'name' => ['required', 'string', 'max:255'],
             'role' => ['nullable', 'string', 'max:255'],
+            'country' => ['nullable', 'string', 'max:255'],
+            'service_period' => ['nullable', 'string', 'max:255'],
             'photo' => ['nullable', 'integer', Rule::exists('media_items', 'id')],
             'bio' => ['nullable', 'string'],
             'link' => ['nullable', 'string', 'max:2048'],

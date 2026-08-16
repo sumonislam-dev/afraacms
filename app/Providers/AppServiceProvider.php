@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\CMS\Cache\CmsCacheManager;
 use App\CMS\Services\BannerService;
+use App\CMS\Services\FeaturedVisitorService;
 use App\CMS\Services\GalleryService;
 use App\CMS\Services\MenuService;
 use App\CMS\Services\PageService;
@@ -38,6 +39,7 @@ class AppServiceProvider extends ServiceProvider
         $cache->register('galleries', fn () => $this->app->make(GalleryService::class)->forget());
         $cache->register('projects', fn () => $this->app->make(ProjectService::class)->forget());
         $cache->register('team', fn () => $this->app->make(TeamService::class)->forget());
+        $cache->register('featured_visitors', fn () => $this->app->make(FeaturedVisitorService::class)->forget());
         $cache->register('news', fn () => $this->app->make(NewsService::class)->forget());
         $cache->register('stories', fn () => $this->app->make(StoryService::class)->forget());
 
