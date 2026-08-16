@@ -43,6 +43,7 @@ return [
         'stories' => ['view', 'create', 'edit', 'delete'],
         'certificates' => ['view', 'create', 'edit', 'delete'],
         'donations' => ['view', 'create', 'edit', 'delete'],
+        'visitor_book' => ['view', 'edit', 'delete'],
         'contact' => ['view', 'edit', 'delete'],
         'seo' => ['view', 'edit'],
     ],
@@ -59,7 +60,7 @@ return [
     */
 
     'editor_modules' => [
-        'dashboard', 'media', 'menus', 'pages', 'sections', 'banners', 'projects', 'gallery', 'team', 'news', 'stories', 'certificates', 'donations', 'contact', 'seo',
+        'dashboard', 'media', 'menus', 'pages', 'sections', 'banners', 'projects', 'gallery', 'team', 'news', 'stories', 'certificates', 'donations', 'visitor_book', 'contact', 'seo',
     ],
 
     /*

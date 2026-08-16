@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\CMS\Services\PageService;
 use App\CMS\Services\ProjectService;
 use App\CMS\Services\StoryService;
+use App\CMS\Services\VisitorBookService;
 use App\Models\ProjectCategory;
 use Illuminate\View\View;
 
@@ -14,6 +15,7 @@ class ProjectController extends Controller
         private readonly ProjectService $projects,
         private readonly StoryService $stories,
         private readonly PageService $pages,
+        private readonly VisitorBookService $visitorBook,
     ) {
     }
 
@@ -53,6 +55,8 @@ class ProjectController extends Controller
             ->values()
             ->all();
 
-        return view('frontend.projects.show', compact('project', 'stories'));
+        $visitorBookEntries = $this->visitorBook->approvedForProjectSlug($slug);
+
+        return view('frontend.projects.show', compact('project', 'stories', 'visitorBookEntries'));
     }
 }

@@ -48,6 +48,30 @@
             </div>
         @endif
 
+        <div class="mt-16 border-t border-gray-100 pt-12">
+            <h2 class="text-center font-display text-2xl font-bold text-ink-900">{{ __('Visitor Book') }}</h2>
+            <p class="mt-2 text-center text-sm text-gray-500">{{ __('Visited this project? Share your opinion below.') }}</p>
+
+            @if (! empty($visitorBookEntries))
+                <div class="mx-auto mt-8 max-w-xl space-y-4">
+                    @foreach ($visitorBookEntries as $entry)
+                        <div class="rounded-lg bg-gray-50 p-4">
+                            <p class="text-sm text-gray-700">{{ $entry->opinion }}</p>
+                            <p class="mt-2 text-xs font-medium text-gray-500">{{ $entry->visitor_name }} &middot; {{ $entry->created_at->format('M j, Y') }}</p>
+                        </div>
+                    @endforeach
+                </div>
+
+                <p class="mt-4 text-center text-sm">
+                    <a href="{{ route('visitor-book.index') }}" class="font-medium text-brand-600 hover:text-brand-500">{{ __('View the full Visitor Book') }} &rarr;</a>
+                </p>
+            @endif
+
+            <div class="mt-8">
+                <x-frontend.visitor-book-form :project-slug="$project['slug']" />
+            </div>
+        </div>
+
         <div class="mt-10 text-center">
             <a href="{{ route('projects.index') }}" class="text-sm font-medium text-brand-600 hover:text-brand-500">&larr; {{ __('Back to Projects') }}</a>
         </div>

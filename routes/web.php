@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\StoryController;
+use App\Http\Controllers\VisitorBookController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -32,6 +33,12 @@ Route::get('/projects', [ProjectController::class, 'index'])->name('projects.ind
 Route::get('/projects/{slug}', [ProjectController::class, 'show'])
     ->where('slug', '[a-z0-9-]+')
     ->name('projects.show');
+Route::post('/projects/{slug}/visitor-book', [VisitorBookController::class, 'store'])
+    ->where('slug', '[a-z0-9-]+')
+    ->middleware('throttle:5,1')
+    ->name('projects.visitor-book.store');
+
+Route::get('/visitor-book', [VisitorBookController::class, 'index'])->name('visitor-book.index');
 
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{slug}', [NewsController::class, 'show'])

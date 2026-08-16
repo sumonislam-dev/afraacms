@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\StoryController;
 use App\Http\Controllers\Admin\TeamCategoryController;
 use App\Http\Controllers\Admin\TeamMemberController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\VisitorBookEntryController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified'])
@@ -116,6 +117,12 @@ Route::middleware(['auth', 'verified'])
         Route::resource('contact', ContactController::class)
             ->only(['index', 'show', 'destroy'])
             ->parameters(['contact' => 'contactMessage']);
+
+        Route::resource('visitor-book', VisitorBookEntryController::class)
+            ->only(['index', 'show', 'destroy'])
+            ->parameters(['visitor-book' => 'visitorBookEntry']);
+        Route::post('visitor-book/{visitorBookEntry}/approve', [VisitorBookEntryController::class, 'approve'])->name('visitor-book.approve');
+        Route::post('visitor-book/{visitorBookEntry}/reject', [VisitorBookEntryController::class, 'reject'])->name('visitor-book.reject');
 
         Route::resource('certificates', CertificateController::class)->except('show');
         Route::get('certificates-trash', [CertificateController::class, 'trash'])->name('certificates.trash');
