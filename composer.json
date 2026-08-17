@@ -35,7 +35,8 @@
             "app/CMS/Helpers/settings.php",
             "app/CMS/Helpers/media.php",
             "app/CMS/Helpers/menu.php",
-            "app/CMS/Helpers/banner.php"
+            "app/CMS/Helpers/banner.php",
+            "app/CMS/Helpers/theme.php"
         ]
     },
     "autoload-dev": {

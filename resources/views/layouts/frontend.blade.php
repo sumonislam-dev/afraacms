@@ -17,11 +17,38 @@
             <link rel="icon" href="{{ media_url(setting('favicon')) }}">
         @endif
 
+        @php
+            // Theme customization: one brand color + two font pickers in
+            // Settings > Branding drive every client site's look, without a
+            // per-client Tailwind rebuild. See config/fonts.php and
+            // app/CMS/Helpers/theme.php for how these resolve.
+            $headingFont = config('fonts.heading.'.setting('heading_font', 'merriweather'), config('fonts.heading.merriweather'));
+            $bodyFont = config('fonts.body.'.setting('body_font', 'inter'), config('fonts.body.inter'));
+            $brandShades = theme_color_shades(setting('brand_color', '#f96d00'));
+        @endphp
+
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,400&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family={{ $headingFont['google'] }}&family={{ $bodyFont['google'] }}&display=swap" rel="stylesheet">
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        {{-- Overrides Tailwind's compiled --font-*/--color-brand-* custom
+             properties at request time - must come after @vite above so it
+             wins the cascade. Raw (unescaped) output is intentional: this is
+             all server-controlled data (config/fonts.php entries and hex
+             codes computed by theme_color_shades()), never user input, and
+             Blade's default {{ }} HTML-escaping would corrupt the quotes in
+             a font-family value sitting inside a <style> block. --}}
+        <style>
+            :root {
+                --font-display: {!! $headingFont['family'] !!};
+                --font-body: {!! $bodyFont['family'] !!};
+                @foreach ($brandShades as $shade => $color)
+                    --color-brand-{{ $shade }}: {!! $color !!};
+                @endforeach
+            }
+        </style>
     </head>
     <body class="font-body text-ink-900 antialiased" x-data="{ mobileMenuOpen: false }">
         <header class="fixed top-0 inset-x-0 z-50 bg-ink-900/95 backdrop-blur supports-backdrop-filter:bg-ink-900/80 shadow-lg shadow-black/10">

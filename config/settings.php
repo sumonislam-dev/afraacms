@@ -38,7 +38,26 @@ return [
                 'logo' => ['label' => 'Logo', 'type' => 'image', 'default' => ''],
                 'dark_logo' => ['label' => 'Dark Logo', 'type' => 'image', 'default' => '', 'description' => 'Used on dark backgrounds.'],
                 'favicon' => ['label' => 'Favicon', 'type' => 'image', 'default' => ''],
-                'brand_color' => ['label' => 'Brand Color', 'type' => 'color', 'default' => '#4f46e5'],
+                'brand_color' => [
+                    'label' => 'Brand Color',
+                    'type' => 'color',
+                    'default' => '#f96d00',
+                    'description' => 'The public site\'s single accent color - every shade of it (buttons, links, active nav state, card accents) is derived automatically from this one value.',
+                ],
+                'heading_font' => [
+                    'label' => 'Heading Font',
+                    'type' => 'select',
+                    'options' => collect(config('fonts.heading'))->map(fn ($font) => $font['label'])->all(),
+                    'default' => 'merriweather',
+                    'description' => 'Used for the public site\'s headings.',
+                ],
+                'body_font' => [
+                    'label' => 'Body Font',
+                    'type' => 'select',
+                    'options' => collect(config('fonts.body'))->map(fn ($font) => $font['label'])->all(),
+                    'default' => 'inter',
+                    'description' => 'Used for the public site\'s body text.',
+                ],
             ],
         ],
 
