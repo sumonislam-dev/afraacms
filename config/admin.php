@@ -18,4 +18,16 @@ return [
         'email' => env('SUPER_ADMIN_EMAIL', 'superadmin@afraacms.test'),
         'password' => env('SUPER_ADMIN_PASSWORD', 'password'),
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | AfraaCMS Version
+    |--------------------------------------------------------------------------
+    |
+    | Displayed in the admin sidebar footer alongside the AfraaWorld credit.
+    | Single source of truth - bump this here on release, nowhere else.
+    |
+    */
+
+    'version' => '1.0.0',
 ];

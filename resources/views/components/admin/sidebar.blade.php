@@ -45,4 +45,12 @@
             <x-admin.sidebar-menu-item :item="$item" />
         @endforeach
     </nav>
+
+    <div class="shrink-0 border-t border-gray-800 px-4 py-3 text-xs text-gray-500">
+        <p>AfraaCMS v{{ config('admin.version') }}</p>
+        <p class="mt-0.5">
+            {{ __('Powered by') }}
+            <a href="https://afraaworld.com" target="_blank" rel="noopener" class="font-medium text-gray-400 hover:text-white">AfraaWorld</a>
+        </p>
+    </div>
 </aside>
