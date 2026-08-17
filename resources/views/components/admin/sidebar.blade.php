@@ -31,7 +31,7 @@
 >
     <div class="flex h-16 shrink-0 items-center justify-between border-b border-gray-800 px-4">
         <a href="{{ Route::has('admin.dashboard') ? route('admin.dashboard') : '#' }}" class="text-lg font-semibold tracking-tight text-white">
-            {{ config('app.name', 'AfraaCMS') }}
+            AfraaCMS
         </a>
 
         <button type="button" class="text-gray-400 hover:text-white lg:hidden" @click="sidebarOpen = false">

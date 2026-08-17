@@ -5,7 +5,17 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ isset($title) ? $title.' - ' : '' }}{{ config('app.name', 'AfraaCMS') }} Admin</title>
+        <title>{{ isset($title) ? $title.' - ' : '' }}AfraaCMS Admin</title>
+
+        {{-- Hardcoded rather than config('app.name'): that value is each
+             client's own APP_NAME (see resources/views/layouts/frontend.blade.php,
+             which prefers setting('site_name') over it for the same reason).
+             The backend is AfraaCMS's own product chrome, not a client's, so
+             its title/favicon must never change with a client's .env or
+             settings - only layouts/guest.blade.php (login) shares this
+             same fixed branding; the frontend layout is the only one that's
+             ever client-branded. --}}
+        <link rel="icon" type="image/png" href="{{ asset('backend/favicon.png') }}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
