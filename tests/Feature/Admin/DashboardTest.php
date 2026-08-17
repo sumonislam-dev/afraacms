@@ -4,6 +4,7 @@ namespace Tests\Feature\Admin;
 
 use App\Models\ContactMessage;
 use App\Models\Page;
+use App\Models\VisitorBookEntry;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Concerns\CreatesAdminUsers;
 use Tests\TestCase;
@@ -22,6 +23,11 @@ class DashboardTest extends TestCase
         $response->assertOk();
         $response->assertSee('Pages');
         $response->assertSee('Projects');
+        $response->assertSee('Donations');
+        $response->assertSee('Visitor Book');
+        $response->assertSee('Enrollments');
+        $response->assertSee('Certificates');
+        $response->assertSee('News');
         $response->assertSee('Users');
         $response->assertSee('Roles');
         $response->assertSee('Recent Activity');
@@ -50,5 +56,16 @@ class DashboardTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('1 unread');
+    }
+
+    public function test_pending_visitor_book_entries_are_flagged_on_the_dashboard(): void
+    {
+        $admin = $this->superAdmin();
+        VisitorBookEntry::factory()->create(['status' => 'pending']);
+
+        $response = $this->actingAs($admin)->get(route('admin.dashboard'));
+
+        $response->assertOk();
+        $response->assertSee('1 pending approval');
     }
 }

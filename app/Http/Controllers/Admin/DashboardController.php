@@ -4,16 +4,21 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
+use App\Models\Certificate;
 use App\Models\ContactMessage;
+use App\Models\Donation;
+use App\Models\Enrollment;
 use App\Models\Gallery;
 use App\Models\GalleryItem;
 use App\Models\Menu;
 use App\Models\MenuItem;
+use App\Models\NewsPost;
 use App\Models\Page;
 use App\Models\Project;
 use App\Models\Role;
 use App\Models\SectionItem;
 use App\Models\User;
+use App\Models\VisitorBookEntry;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\View\View;
 use Spatie\Activitylog\Models\Activity;
@@ -77,6 +82,47 @@ class DashboardController extends Controller
                 'icon' => 'phone',
                 'route' => 'admin.contact.index',
                 'alert' => ContactMessage::unread()->exists(),
+            ],
+            [
+                'permission' => 'donations.view',
+                'label' => __('Donations'),
+                'value' => Donation::count(),
+                'sub' => __(':n completed', ['n' => Donation::completed()->count()]),
+                'icon' => 'currency-dollar',
+                'route' => 'admin.donations.index',
+            ],
+            [
+                'permission' => 'visitor_book.view',
+                'label' => __('Visitor Book'),
+                'value' => VisitorBookEntry::count(),
+                'sub' => __(':n pending approval', ['n' => VisitorBookEntry::pending()->count()]),
+                'icon' => 'pencil',
+                'route' => 'admin.visitor-book.index',
+                'alert' => VisitorBookEntry::pending()->exists(),
+            ],
+            [
+                'permission' => 'enrollments.view',
+                'label' => __('Enrollments'),
+                'value' => Enrollment::count(),
+                'sub' => __(':n certificates issued', ['n' => Enrollment::certificateValid()->count()]),
+                'icon' => 'check-circle',
+                'route' => 'admin.enrollments.index',
+            ],
+            [
+                'permission' => 'certificates.view',
+                'label' => __('Certificates'),
+                'value' => Certificate::count(),
+                'sub' => __(':n valid', ['n' => Certificate::valid()->count()]),
+                'icon' => 'shield-check',
+                'route' => 'admin.certificates.index',
+            ],
+            [
+                'permission' => 'news.view',
+                'label' => __('News'),
+                'value' => NewsPost::count(),
+                'sub' => __(':n published', ['n' => NewsPost::published()->count()]),
+                'icon' => 'bell',
+                'route' => 'admin.news.index',
             ],
             [
                 'permission' => 'users.view',
