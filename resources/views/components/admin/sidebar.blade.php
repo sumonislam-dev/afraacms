@@ -30,11 +30,16 @@
     :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
 >
     <div class="flex h-16 shrink-0 items-center justify-between border-b border-gray-800 px-4">
-        <a href="{{ Route::has('admin.dashboard') ? route('admin.dashboard') : '#' }}" class="text-lg font-semibold tracking-tight text-white">
-            AfraaCMS
+        {{-- "AfraaCMS" is the fixed product identity (see layouts/admin.blade.php's
+             comment on why this never changes); the client's own site name sits
+             underneath, small and muted, purely so an admin managing several
+             client backends can tell at a glance which one they're in. --}}
+        <a href="{{ Route::has('admin.dashboard') ? route('admin.dashboard') : '#' }}" class="min-w-0">
+            <p class="text-lg font-semibold leading-tight tracking-tight text-white">AfraaCMS</p>
+            <p class="truncate text-xs text-gray-400">{{ setting('site_name', config('app.name', 'AfraaCMS')) }}</p>
         </a>
 
-        <button type="button" class="text-gray-400 hover:text-white lg:hidden" @click="sidebarOpen = false">
+        <button type="button" class="shrink-0 text-gray-400 hover:text-white lg:hidden" @click="sidebarOpen = false">
             <span class="sr-only">Close sidebar</span>
             <x-admin.icon name="x-mark" class="h-6 w-6" />
         </button>
