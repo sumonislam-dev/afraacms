@@ -17,6 +17,7 @@ class CertificateTest extends TestCase
         $certificate = Certificate::factory()->create();
 
         $this->get(route('admin.certificates.index'))->assertRedirect(route('login'));
+        $this->get(route('admin.certificates.show', $certificate))->assertRedirect(route('login'));
         $this->get(route('admin.certificates.edit', $certificate))->assertRedirect(route('login'));
     }
 
@@ -133,5 +134,38 @@ class CertificateTest extends TestCase
 
         $response->assertOk();
         $this->assertSame('image/png', $response->headers->get('Content-Type'));
+    }
+
+    public function test_the_certificate_show_page_displays_the_certificate(): void
+    {
+        $editor = $this->editor();
+        $certificate = Certificate::factory()->create(['recipient_name' => 'Jane Doe']);
+
+        $this->actingAs($editor)
+            ->get(route('admin.certificates.show', $certificate))
+            ->assertOk()
+            ->assertSee('Jane Doe')
+            ->assertSee($certificate->certificate_number);
+    }
+
+    public function test_the_certificate_show_page_displays_a_revoked_certificate(): void
+    {
+        $editor = $this->editor();
+        $certificate = Certificate::factory()->create(['status' => 'revoked']);
+
+        $this->actingAs($editor)
+            ->get(route('admin.certificates.show', $certificate))
+            ->assertOk()
+            ->assertSee('Revoked');
+    }
+
+    public function test_a_user_without_permissions_cannot_view_a_certificate(): void
+    {
+        $user = $this->userWithoutPermissions();
+        $certificate = Certificate::factory()->create();
+
+        $this->actingAs($user)
+            ->get(route('admin.certificates.show', $certificate))
+            ->assertForbidden();
     }
 }

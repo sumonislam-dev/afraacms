@@ -55,6 +55,10 @@
                         <div class="flex items-center justify-end gap-3">
                             <a href="{{ route('verify', ['code' => $certificate->verification_code]) }}" target="_blank" rel="noopener" class="text-sm font-medium text-gray-500 hover:text-gray-700">{{ __('Verify') }}</a>
 
+                            @can('view', $certificate)
+                                <a href="{{ route('admin.certificates.show', $certificate) }}" class="text-sm font-medium text-gray-500 hover:text-gray-700">{{ __('View') }}</a>
+                            @endcan
+
                             @can('update', $certificate)
                                 <a href="{{ route('admin.certificates.edit', $certificate) }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-900">{{ __('Edit') }}</a>
                             @endcan

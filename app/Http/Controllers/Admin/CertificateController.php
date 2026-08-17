@@ -39,6 +39,16 @@ class CertificateController extends Controller
     }
 
     /**
+     * Display the given certificate, including its verification QR code.
+     */
+    public function show(Certificate $certificate): View
+    {
+        $certificate->loadMissing('project');
+
+        return view('admin.certificates.show', compact('certificate'));
+    }
+
+    /**
      * Show the form for creating a new certificate.
      */
     public function create(): View

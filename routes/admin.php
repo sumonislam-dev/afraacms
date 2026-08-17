@@ -135,7 +135,7 @@ Route::middleware(['auth', 'verified'])
         Route::post('featured-visitors/{featuredVisitor}/restore', [FeaturedVisitorController::class, 'restore'])->name('featured-visitors.restore')->withTrashed();
         Route::delete('featured-visitors/{featuredVisitor}/force', [FeaturedVisitorController::class, 'forceDelete'])->name('featured-visitors.force-delete')->withTrashed();
 
-        Route::resource('certificates', CertificateController::class)->except('show');
+        Route::resource('certificates', CertificateController::class);
         Route::get('certificates-trash', [CertificateController::class, 'trash'])->name('certificates.trash');
         Route::post('certificates/{certificate}/restore', [CertificateController::class, 'restore'])->name('certificates.restore')->withTrashed();
         Route::delete('certificates/{certificate}/force', [CertificateController::class, 'forceDelete'])->name('certificates.force-delete')->withTrashed();
