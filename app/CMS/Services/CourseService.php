@@ -2,44 +2,16 @@
 
 namespace App\CMS\Services;
 
+use App\CMS\Services\Concerns\PerformsBasicCrud;
 use App\Models\Course;
 
 class CourseService
 {
-    /**
-     * Create a new course.
-     */
-    public function create(array $data): Course
+    use PerformsBasicCrud;
+
+    protected function modelClass(): string
     {
-        return Course::create($data);
-    }
-
-    /**
-     * Update an existing course.
-     */
-    public function update(Course $course, array $data): Course
-    {
-        $course->update($data);
-
-        return $course;
-    }
-
-    /**
-     * Delete a course.
-     */
-    public function delete(Course $course): void
-    {
-        $course->delete();
-    }
-
-    /**
-     * Restore a soft-deleted course.
-     */
-    public function restore(Course $course): Course
-    {
-        $course->restore();
-
-        return $course;
+        return Course::class;
     }
 
     /**

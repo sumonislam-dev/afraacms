@@ -1,9 +1,9 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "afraacms/afraacms",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "description": "AfraaCMS - a Laravel-based content management system.",
+    "keywords": ["laravel", "cms", "afraacms"],
     "license": "MIT",
     "require": {
         "php": "^8.3",

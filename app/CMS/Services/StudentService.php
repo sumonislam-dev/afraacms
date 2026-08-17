@@ -2,44 +2,16 @@
 
 namespace App\CMS\Services;
 
+use App\CMS\Services\Concerns\PerformsBasicCrud;
 use App\Models\Student;
 
 class StudentService
 {
-    /**
-     * Create a new student.
-     */
-    public function create(array $data): Student
+    use PerformsBasicCrud;
+
+    protected function modelClass(): string
     {
-        return Student::create($data);
-    }
-
-    /**
-     * Update an existing student.
-     */
-    public function update(Student $student, array $data): Student
-    {
-        $student->update($data);
-
-        return $student;
-    }
-
-    /**
-     * Delete a student.
-     */
-    public function delete(Student $student): void
-    {
-        $student->delete();
-    }
-
-    /**
-     * Restore a soft-deleted student.
-     */
-    public function restore(Student $student): Student
-    {
-        $student->restore();
-
-        return $student;
+        return Student::class;
     }
 
     /**
