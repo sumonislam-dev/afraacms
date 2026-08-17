@@ -26,7 +26,12 @@ class StoreRoleRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255', Rule::unique('roles', 'name')->where('guard_name', 'web')],
             'permissions' => ['array'],
-            'permissions.*' => ['string', Rule::exists('permissions', 'name')],
+            // Restricted to permissions the acting user already holds, not
+            // merely "any permission that exists" - otherwise a non-Super
+            // Admin with roles.create could build a new role with every
+            // permission (including ones they don't have) and hand it to
+            // anyone, bypassing every Super-Admin-only restriction.
+            'permissions.*' => ['string', Rule::in($this->user()->getAllPermissions()->pluck('name'))],
         ];
     }
 }

@@ -22,12 +22,32 @@ trait CreatesAdminUsers
         return $user;
     }
 
+    protected function admin(): User
+    {
+        $this->seed(RolesAndPermissionsSeeder::class);
+
+        $user = User::factory()->create();
+        $user->assignRole('Admin');
+
+        return $user;
+    }
+
     protected function editor(): User
     {
         $this->seed(RolesAndPermissionsSeeder::class);
 
         $user = User::factory()->create();
         $user->assignRole('Editor');
+
+        return $user;
+    }
+
+    protected function viewer(): User
+    {
+        $this->seed(RolesAndPermissionsSeeder::class);
+
+        $user = User::factory()->create();
+        $user->assignRole('Viewer');
 
         return $user;
     }

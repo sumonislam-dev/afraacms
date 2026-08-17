@@ -9,7 +9,7 @@
 | (permission "seo.*") rather than the generic Settings screen
 | (permission "settings.*") - see config/settings.php's "seo" group for the
 | more basic default meta title/description/og_image fields, and
-| config/permissions.php's comment on why these are split.
+| config/permission_modules.php's comment on why these are split.
 |
 | Backed by the same `settings` table/Setting model as config/settings.php
 | (SettingsSeeder seeds both), so setting('robots_txt') etc. work exactly

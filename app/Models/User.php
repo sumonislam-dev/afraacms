@@ -50,4 +50,16 @@ class User extends Authenticatable
     {
         return $query->where('is_active', true);
     }
+
+    /**
+     * Whether this user is the only currently-active Super Admin - used to
+     * block actions (delete, deactivate, reassign away from the role) that
+     * would leave the system with no one able to manage top-level access.
+     */
+    public function isLastActiveSuperAdmin(): bool
+    {
+        return $this->is_active
+            && $this->hasRole('Super Admin')
+            && static::role('Super Admin')->where('is_active', true)->count() === 1;
+    }
 }

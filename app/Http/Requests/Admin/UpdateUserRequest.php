@@ -39,14 +39,23 @@ class UpdateUserRequest extends FormRequest
     /**
      * Configure the validator instance.
      *
-     * A non-Super Admin cannot grant the Super Admin role to anyone,
-     * to prevent privilege escalation.
+     * A non-Super Admin cannot grant the Super Admin role to anyone, to
+     * prevent privilege escalation. Separately, the last currently-active
+     * Super Admin can't be reassigned away from that role by anyone -
+     * including another Super Admin - so the system can never end up with
+     * nobody able to manage top-level access.
      */
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator) {
             if ($this->input('role') === 'Super Admin' && ! $this->user()->hasRole('Super Admin')) {
                 $validator->errors()->add('role', __('Only a Super Admin can assign the Super Admin role.'));
+            }
+
+            $targetUser = $this->route('user');
+
+            if ($targetUser?->isLastActiveSuperAdmin() && $this->input('role') !== 'Super Admin') {
+                $validator->errors()->add('role', __('Cannot change the role of the last active Super Admin.'));
             }
         });
     }

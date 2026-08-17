@@ -92,7 +92,9 @@ class UserController extends Controller
     {
         $this->authorize('update', $user);
 
-        $this->users->toggleActive($user);
+        if (! $this->users->toggleActive($user)) {
+            return back()->with('error', __('Cannot deactivate the last active Super Admin.'));
+        }
 
         return redirect()->route('admin.users.index')->with('success', __('User status updated successfully.'));
     }

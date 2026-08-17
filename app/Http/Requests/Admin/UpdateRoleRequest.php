@@ -28,7 +28,12 @@ class UpdateRoleRequest extends FormRequest
                 Rule::unique('roles', 'name')->where('guard_name', 'web')->ignore($this->route('role')),
             ],
             'permissions' => ['array'],
-            'permissions.*' => ['string', Rule::exists('permissions', 'name')],
+            // Restricted to permissions the acting user already holds, not
+            // merely "any permission that exists" - otherwise a non-Super
+            // Admin with roles.edit could pad any role (including their
+            // own) with permissions they don't have, bypassing every
+            // Super-Admin-only restriction.
+            'permissions.*' => ['string', Rule::in($this->user()->getAllPermissions()->pluck('name'))],
         ];
     }
 }

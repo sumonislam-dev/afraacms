@@ -48,11 +48,18 @@ class UserService
 
     /**
      * Toggle a user's active status.
+     *
+     * Refuses to deactivate the last currently-active Super Admin, so the
+     * system can never end up with nobody able to manage top-level access.
      */
-    public function toggleActive(User $user): User
+    public function toggleActive(User $user): bool
     {
+        if ($user->is_active && $user->isLastActiveSuperAdmin()) {
+            return false;
+        }
+
         $user->update(['is_active' => ! $user->is_active]);
 
-        return $user;
+        return true;
     }
 }
