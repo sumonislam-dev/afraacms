@@ -58,6 +58,26 @@ class UserManagementTest extends TestCase
         $this->assertSame('Renamed User', $target->fresh()->name);
     }
 
+    public function test_super_admin_can_deactivate_a_user_via_the_edit_form(): void
+    {
+        // Regression test: the "Active" toggle used to be a bare checkbox
+        // with no hidden fallback input, so unchecking it submitted nothing
+        // at all and UserService::update() silently kept the old value.
+        $superAdmin = $this->superAdmin();
+        $target = User::factory()->create(['is_active' => true]);
+        $target->assignRole('Editor');
+
+        $response = $this->actingAs($superAdmin)->put(route('admin.users.update', $target), [
+            'name' => $target->name,
+            'email' => $target->email,
+            'role' => 'Editor',
+            'is_active' => '0',
+        ]);
+
+        $response->assertRedirect(route('admin.users.index'));
+        $this->assertFalse($target->fresh()->is_active);
+    }
+
     public function test_super_admin_can_delete_another_user(): void
     {
         $superAdmin = $this->superAdmin();

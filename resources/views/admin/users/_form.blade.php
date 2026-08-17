@@ -44,10 +44,11 @@
         <x-input-error class="mt-2" :messages="$errors->get('role')" />
     </div>
 
-    <div class="flex items-center gap-2">
-        <input id="is_active" name="is_active" type="checkbox" value="1" @checked(old('is_active', $user->is_active ?? true)) class="rounded-sm border-gray-300 text-indigo-600 shadow-xs focus:ring-indigo-500">
-        <x-input-label for="is_active" :value="__('Active')" class="mb-0" />
+    <div class="flex items-center justify-between rounded-md border border-gray-200 px-3 py-2 sm:max-w-xs">
+        <x-input-label :value="__('Active')" class="mb-0" />
+        <x-admin.toggle name="is_active" :checked="(bool) old('is_active', $user->is_active ?? true)" />
     </div>
+    <x-input-error class="mt-2" :messages="$errors->get('is_active')" />
 
     <x-slot name="actions">
         <x-secondary-button type="button" onclick="window.location='{{ route('admin.users.index') }}'">{{ __('Cancel') }}</x-secondary-button>
