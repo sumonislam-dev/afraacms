@@ -45,6 +45,9 @@ return [
         'donations' => ['view', 'create', 'edit', 'delete'],
         'visitor_book' => ['view', 'edit', 'delete'],
         'featured_visitors' => ['view', 'create', 'edit', 'delete'],
+        'students' => ['view', 'create', 'edit', 'delete'],
+        'courses' => ['view', 'create', 'edit', 'delete'],
+        'enrollments' => ['view', 'create', 'edit', 'delete'],
         'contact' => ['view', 'edit', 'delete'],
         'seo' => ['view', 'edit'],
     ],
@@ -61,7 +64,7 @@ return [
     */
 
     'editor_modules' => [
-        'dashboard', 'media', 'menus', 'pages', 'sections', 'banners', 'projects', 'gallery', 'team', 'news', 'stories', 'certificates', 'donations', 'visitor_book', 'featured_visitors', 'contact', 'seo',
+        'dashboard', 'media', 'menus', 'pages', 'sections', 'banners', 'projects', 'gallery', 'team', 'news', 'stories', 'certificates', 'donations', 'visitor_book', 'featured_visitors', 'students', 'courses', 'enrollments', 'contact', 'seo',
     ],
 
     /*

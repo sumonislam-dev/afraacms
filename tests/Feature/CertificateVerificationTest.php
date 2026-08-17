@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Certificate;
+use App\Models\Enrollment;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -45,6 +46,33 @@ class CertificateVerificationTest extends TestCase
     public function test_an_unknown_code_shows_not_found(): void
     {
         $response = $this->get(route('verify', ['code' => 'CERT-2026-99999']));
+
+        $response->assertOk()->assertSee('No certificate found');
+    }
+
+    public function test_an_issued_enrollment_certificate_can_be_verified(): void
+    {
+        $enrollment = Enrollment::factory()->certificateIssued()->create();
+
+        $response = $this->get(route('verify', ['code' => $enrollment->certificate_number]));
+
+        $response->assertOk()->assertSee('Valid Certificate')->assertSee($enrollment->student->name);
+    }
+
+    public function test_a_revoked_enrollment_certificate_shows_as_revoked(): void
+    {
+        $enrollment = Enrollment::factory()->certificateRevoked()->create();
+
+        $response = $this->get(route('verify', ['code' => $enrollment->verification_code]));
+
+        $response->assertOk()->assertSee('revoked')->assertDontSee('Valid Certificate');
+    }
+
+    public function test_an_enrollment_without_an_issued_certificate_cannot_be_verified(): void
+    {
+        $enrollment = Enrollment::factory()->passed()->create();
+
+        $response = $this->get(route('verify', ['code' => $enrollment->id]));
 
         $response->assertOk()->assertSee('No certificate found');
     }

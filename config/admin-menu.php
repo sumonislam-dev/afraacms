@@ -98,6 +98,15 @@ return [
         'permission' => 'donations.view',
     ],
     [
+        'label' => 'Training Certificates',
+        'icon' => 'shield-check',
+        'children' => [
+            ['label' => 'Enrollments', 'route' => 'admin.enrollments.index', 'permission' => 'enrollments.view'],
+            ['label' => 'Students', 'route' => 'admin.students.index', 'permission' => 'students.view'],
+            ['label' => 'Courses', 'route' => 'admin.courses.index', 'permission' => 'courses.view'],
+        ],
+    ],
+    [
         'label' => 'Featured Visitors',
         'icon' => 'arrow-top-right-on-square',
         'route' => 'admin.featured-visitors.index',

@@ -4,7 +4,9 @@ use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\CertificateController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\DonationController;
+use App\Http\Controllers\Admin\EnrollmentController;
 use App\Http\Controllers\Admin\FeaturedVisitorController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GalleryController;
@@ -24,6 +26,7 @@ use App\Http\Controllers\Admin\SectionItemController;
 use App\Http\Controllers\Admin\SeoController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\StoryController;
+use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\TeamCategoryController;
 use App\Http\Controllers\Admin\TeamMemberController;
 use App\Http\Controllers\Admin\UserController;
@@ -143,6 +146,24 @@ Route::middleware(['auth', 'verified'])
         Route::post('donations/{donation}/restore', [DonationController::class, 'restore'])->name('donations.restore')->withTrashed();
         Route::delete('donations/{donation}/force', [DonationController::class, 'forceDelete'])->name('donations.force-delete')->withTrashed();
         Route::post('donations/{donation}/resend-receipt', [DonationController::class, 'resendReceipt'])->name('donations.resend-receipt');
+
+        Route::resource('students', StudentController::class)->except('show');
+        Route::get('students-trash', [StudentController::class, 'trash'])->name('students.trash');
+        Route::post('students/{student}/restore', [StudentController::class, 'restore'])->name('students.restore')->withTrashed();
+        Route::delete('students/{student}/force', [StudentController::class, 'forceDelete'])->name('students.force-delete')->withTrashed();
+
+        Route::resource('courses', CourseController::class)->except('show');
+        Route::get('courses-trash', [CourseController::class, 'trash'])->name('courses.trash');
+        Route::post('courses/{course}/restore', [CourseController::class, 'restore'])->name('courses.restore')->withTrashed();
+        Route::delete('courses/{course}/force', [CourseController::class, 'forceDelete'])->name('courses.force-delete')->withTrashed();
+
+        Route::resource('enrollments', EnrollmentController::class);
+        Route::get('enrollments-trash', [EnrollmentController::class, 'trash'])->name('enrollments.trash');
+        Route::post('enrollments/{enrollment}/restore', [EnrollmentController::class, 'restore'])->name('enrollments.restore')->withTrashed();
+        Route::delete('enrollments/{enrollment}/force', [EnrollmentController::class, 'forceDelete'])->name('enrollments.force-delete')->withTrashed();
+        Route::post('enrollments/{enrollment}/issue-certificate', [EnrollmentController::class, 'issueCertificate'])->name('enrollments.issue-certificate');
+        Route::post('enrollments/{enrollment}/revoke-certificate', [EnrollmentController::class, 'revokeCertificate'])->name('enrollments.revoke-certificate');
+        Route::get('enrollments/{enrollment}/qr', [EnrollmentController::class, 'qr'])->name('enrollments.qr');
 
         Route::prefix('pages/{page}')->name('pages.')->group(function () {
             Route::get('sections', [SectionController::class, 'index'])->name('sections.index');

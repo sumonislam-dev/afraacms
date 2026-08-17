@@ -4,6 +4,6 @@
     </div>
 
     <div class="space-y-6">
-        {{ $sidebar }}
+        {{ $sidebar ?? '' }}
     </div>
 </div>

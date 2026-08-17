@@ -13,7 +13,9 @@ use App\CMS\Services\TeamService;
 use App\Models\Banner;
 use App\Models\Certificate;
 use App\Models\ContactMessage;
+use App\Models\Course;
 use App\Models\Donation;
+use App\Models\Enrollment;
 use App\Models\FeaturedVisitor;
 use App\Models\Gallery;
 use App\Models\NewsCategory;
@@ -22,6 +24,7 @@ use App\Models\Page;
 use App\Models\Project;
 use App\Models\ProjectCategory;
 use App\Models\Story;
+use App\Models\Student;
 use App\Models\TeamCategory;
 use App\Models\TeamMember;
 use App\Models\VisitorBookEntry;
@@ -131,6 +134,40 @@ class TestDataSeeder extends Seeder
 
         FeaturedVisitor::factory()->count(8)->create();
         FeaturedVisitor::factory()->create(['is_active' => false, 'name' => 'Hidden Test Visitor']);
+
+        $courses = Course::factory()->count(3)->create();
+        Course::factory()->inactive()->create(['course_name' => 'Discontinued Test Course']);
+
+        $students = Student::factory()->count(12)->create();
+
+        Enrollment::factory()
+            ->count(4)
+            ->state(fn () => ['student_id' => $students->random()->id, 'course_id' => $courses->random()->id])
+            ->create(); // pending
+
+        Enrollment::factory()
+            ->passed()
+            ->count(3)
+            ->state(fn () => ['student_id' => $students->random()->id, 'course_id' => $courses->random()->id])
+            ->create(); // passed, certificate not yet issued
+
+        Enrollment::factory()
+            ->failed()
+            ->count(2)
+            ->state(fn () => ['student_id' => $students->random()->id, 'course_id' => $courses->random()->id])
+            ->create();
+
+        Enrollment::factory()
+            ->certificateIssued()
+            ->count(5)
+            ->state(fn () => ['student_id' => $students->random()->id, 'course_id' => $courses->random()->id])
+            ->create();
+
+        Enrollment::factory()
+            ->certificateRevoked()
+            ->count(1)
+            ->state(fn () => ['student_id' => $students->random()->id, 'course_id' => $courses->random()->id])
+            ->create();
 
         // FeaturedVisitor rows alone are invisible on the public site - unlike
         // VisitorBookEntry (which auto-shows on its Project's page and on

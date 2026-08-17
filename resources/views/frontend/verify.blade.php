@@ -28,11 +28,37 @@
 
         @if ($identifier !== '')
             <div class="mt-10">
-                @if (! $certificate)
+                @if (! $certificate && ! $enrollment)
                     <div class="rounded-lg border border-gray-200 bg-gray-50 p-6 text-center">
                         <x-icon name="x-circle" class="mx-auto h-10 w-10 text-gray-400" />
                         <p class="mt-3 font-semibold text-gray-900">{{ __('No certificate found') }}</p>
                         <p class="mt-1 text-sm text-gray-500">{{ __('Double-check the certificate number and try again.') }}</p>
+                    </div>
+                @elseif ($enrollment && $enrollment->certificate_status === 'valid')
+                    <div class="rounded-lg border border-green-200 bg-green-50 p-6">
+                        <div class="flex items-center gap-2 text-green-700">
+                            <x-icon name="check-circle" class="h-6 w-6" />
+                            <p class="font-semibold">{{ __('Valid Certificate') }}</p>
+                        </div>
+
+                        <dl class="mt-4 space-y-2 text-sm text-gray-700">
+                            <div class="flex justify-between gap-4"><dt class="text-gray-500">{{ __('Recipient') }}</dt><dd class="font-medium text-gray-900">{{ $enrollment->student->name }}</dd></div>
+                            <div class="flex justify-between gap-4"><dt class="text-gray-500">{{ __('Course') }}</dt><dd class="font-medium text-gray-900">{{ $enrollment->course->course_name }}</dd></div>
+                            <div class="flex justify-between gap-4"><dt class="text-gray-500">{{ __('Session') }}</dt><dd class="font-medium text-gray-900">{{ $enrollment->session }}</dd></div>
+                            @if ($enrollment->grade)
+                                <div class="flex justify-between gap-4"><dt class="text-gray-500">{{ __('Grade') }}</dt><dd class="font-medium text-gray-900">{{ $enrollment->grade }}</dd></div>
+                            @endif
+                            @if ($enrollment->completion_date)
+                                <div class="flex justify-between gap-4"><dt class="text-gray-500">{{ __('Completed') }}</dt><dd class="font-medium text-gray-900">{{ $enrollment->completion_date->format('F j, Y') }}</dd></div>
+                            @endif
+                            <div class="flex justify-between gap-4"><dt class="text-gray-500">{{ __('Certificate #') }}</dt><dd class="font-mono font-medium text-gray-900">{{ $enrollment->certificate_number }}</dd></div>
+                        </dl>
+                    </div>
+                @elseif ($enrollment)
+                    <div class="rounded-lg border border-red-200 bg-red-50 p-6 text-center">
+                        <x-icon name="exclamation-triangle" class="mx-auto h-10 w-10 text-red-500" />
+                        <p class="mt-3 font-semibold text-red-700">{{ __('This certificate has been revoked') }}</p>
+                        <p class="mt-1 text-sm text-red-600">{{ __('It is no longer valid and should not be accepted.') }}</p>
                     </div>
                 @elseif ($certificate->status === 'valid')
                     <div class="rounded-lg border border-green-200 bg-green-50 p-6">
