@@ -6,7 +6,19 @@
     $dark = $dark ?? false;
 
     $currentUrl = rtrim(request()->url(), '/');
-    $isActiveUrl = fn (?string $url): bool => $url && rtrim($url, '/') === $currentUrl;
+    $siteRoot = rtrim(url('/'), '/');
+    // Exact match, or a sub-page of this item's link (e.g. "Success Stories"
+    // -> /stories stays highlighted while viewing /stories/{slug}) - except
+    // for the homepage link itself, which would otherwise match every page.
+    $isActiveUrl = function (?string $url) use ($currentUrl, $siteRoot): bool {
+        if (! $url) {
+            return false;
+        }
+
+        $url = rtrim($url, '/');
+
+        return $url === $currentUrl || ($url !== $siteRoot && str_starts_with($currentUrl, $url.'/'));
+    };
     // A dropdown parent is also marked active when the page you're on is
     // one of its children, so e.g. "Programs" stays highlighted while
     // viewing an individual program page under it.
