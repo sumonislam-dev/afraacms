@@ -12,9 +12,7 @@ class GalleryService
 {
     use CachesForFrontend;
 
-    public function __construct(private readonly ProjectService $projects)
-    {
-    }
+    public function __construct(private readonly ProjectService $projects) {}
 
     protected function cacheKey(): string
     {

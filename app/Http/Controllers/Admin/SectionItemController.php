@@ -13,9 +13,7 @@ use Illuminate\Http\RedirectResponse;
 
 class SectionItemController extends Controller
 {
-    public function __construct(private readonly SectionService $sections)
-    {
-    }
+    public function __construct(private readonly SectionService $sections) {}
 
     /**
      * Add a new item to the end of a section's repeatable list.

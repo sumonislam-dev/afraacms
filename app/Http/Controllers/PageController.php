@@ -7,9 +7,7 @@ use Illuminate\View\View;
 
 class PageController extends Controller
 {
-    public function __construct(private readonly PageService $pages)
-    {
-    }
+    public function __construct(private readonly PageService $pages) {}
 
     /**
      * Display a published page by its slug.

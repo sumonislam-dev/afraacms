@@ -13,8 +13,7 @@ class StoryController extends Controller
         private readonly StoryService $stories,
         private readonly ProjectService $projects,
         private readonly PageService $pages,
-    ) {
-    }
+    ) {}
 
     /**
      * Display every published story, optionally filtered by project.

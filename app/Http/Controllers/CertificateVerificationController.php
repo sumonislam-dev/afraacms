@@ -11,8 +11,7 @@ class CertificateVerificationController extends Controller
     public function __construct(
         private readonly CertificateService $certificates,
         private readonly EnrollmentService $enrollments,
-    ) {
-    }
+    ) {}
 
     /**
      * Show the public certificate lookup form, and the result if a

@@ -9,9 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class SectionService
 {
-    public function __construct(private readonly PageService $pages)
-    {
-    }
+    public function __construct(private readonly PageService $pages) {}
 
     /**
      * Add a new section to the end of a page.

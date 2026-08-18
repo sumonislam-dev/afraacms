@@ -12,9 +12,7 @@ use Intervention\Image\ImageManager;
 
 class MediaService
 {
-    public function __construct(private readonly CmsCacheManager $cache)
-    {
-    }
+    public function __construct(private readonly CmsCacheManager $cache) {}
 
     /**
      * Upload a new file into the media library.

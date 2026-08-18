@@ -13,9 +13,7 @@ class DonationReceipt extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public readonly Donation $donation)
-    {
-    }
+    public function __construct(public readonly Donation $donation) {}
 
     public function envelope(): Envelope
     {

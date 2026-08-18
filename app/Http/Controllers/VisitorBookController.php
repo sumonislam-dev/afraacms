@@ -14,8 +14,7 @@ class VisitorBookController extends Controller
     public function __construct(
         private readonly VisitorBookService $visitorBook,
         private readonly PageService $pages,
-    ) {
-    }
+    ) {}
 
     /**
      * Display every approved visitor book entry, across all projects.

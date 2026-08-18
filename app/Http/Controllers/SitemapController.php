@@ -17,8 +17,7 @@ class SitemapController extends Controller
         private readonly GalleryService $galleries,
         private readonly NewsService $news,
         private readonly StoryService $stories,
-    ) {
-    }
+    ) {}
 
     /**
      * Generate the public sitemap.xml, listing the homepage, every

@@ -8,9 +8,7 @@ use Illuminate\Http\RedirectResponse;
 
 class ContactMessageController extends Controller
 {
-    public function __construct(private readonly ContactService $contact)
-    {
-    }
+    public function __construct(private readonly ContactService $contact) {}
 
     /**
      * Store a newly submitted contact message.

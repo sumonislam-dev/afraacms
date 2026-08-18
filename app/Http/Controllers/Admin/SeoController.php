@@ -11,9 +11,7 @@ use Illuminate\View\View;
 
 class SeoController extends Controller
 {
-    public function __construct(private readonly SettingService $settings)
-    {
-    }
+    public function __construct(private readonly SettingService $settings) {}
 
     /**
      * Display the dedicated sitemap/robots SEO screen.

@@ -12,8 +12,7 @@ class GalleryController extends Controller
     public function __construct(
         private readonly GalleryService $galleries,
         private readonly PageService $pages,
-    ) {
-    }
+    ) {}
 
     /**
      * Display the gallery, either as an album list or a single flat grid of

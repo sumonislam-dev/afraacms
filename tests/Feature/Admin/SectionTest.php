@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Models\Gallery;
 use App\Models\Page;
 use App\Models\Section;
 use App\Models\TeamCategory;
@@ -119,7 +120,7 @@ class SectionTest extends TestCase
     {
         $editor = $this->editor();
         $page = Page::factory()->create();
-        $gallery = \App\Models\Gallery::create([
+        $gallery = Gallery::create([
             'title' => 'Test Album',
             'slug' => 'test-album',
             'is_active' => true,

@@ -7,9 +7,7 @@ use Illuminate\View\View;
 
 class HomeController extends Controller
 {
-    public function __construct(private readonly PageService $pages)
-    {
-    }
+    public function __construct(private readonly PageService $pages) {}
 
     /**
      * Display the site homepage: the admin-selected Page (settings.homepage_page_id)

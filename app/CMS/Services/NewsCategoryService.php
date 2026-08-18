@@ -6,9 +6,7 @@ use App\Models\NewsCategory;
 
 class NewsCategoryService
 {
-    public function __construct(private readonly NewsService $news)
-    {
-    }
+    public function __construct(private readonly NewsService $news) {}
 
     /**
      * Create a new category.

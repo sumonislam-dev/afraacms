@@ -6,7 +6,6 @@ use App\CMS\Services\Concerns\CachesForFrontend;
 use App\Models\Page;
 use App\Models\Section;
 use App\Models\SeoMeta;
-use Illuminate\Support\Collection;
 
 class PageService
 {

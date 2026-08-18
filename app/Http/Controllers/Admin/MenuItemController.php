@@ -14,9 +14,7 @@ use Illuminate\Http\RedirectResponse;
 
 class MenuItemController extends Controller
 {
-    public function __construct(private readonly MenuService $menus)
-    {
-    }
+    public function __construct(private readonly MenuService $menus) {}
 
     /**
      * Add a new top-level item to the given menu.

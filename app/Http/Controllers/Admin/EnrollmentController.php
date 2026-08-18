@@ -197,7 +197,7 @@ class EnrollmentController extends Controller
             backgroundColor: new Color(255, 255, 255),
         );
 
-        $result = (new PngWriter())->write($qrCode);
+        $result = (new PngWriter)->write($qrCode);
 
         return response($result->getString(), 200, [
             'Content-Type' => $result->getMimeType(),

@@ -6,9 +6,7 @@ use App\Models\TeamCategory;
 
 class TeamCategoryService
 {
-    public function __construct(private readonly TeamService $team)
-    {
-    }
+    public function __construct(private readonly TeamService $team) {}
 
     /**
      * Create a new category.

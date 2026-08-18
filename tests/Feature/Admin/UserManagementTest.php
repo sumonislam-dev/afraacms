@@ -4,6 +4,7 @@ namespace Tests\Feature\Admin;
 
 use App\Models\Role;
 use App\Models\User;
+use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Concerns\CreatesAdminUsers;
 use Tests\TestCase;
@@ -106,7 +107,7 @@ class UserManagementTest extends TestCase
     {
         // A role that can create users but is not itself "Super Admin" -
         // simulates a lower-privileged admin trying to self-escalate.
-        $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
+        $this->seed(RolesAndPermissionsSeeder::class);
         $limitedRole = Role::create(['name' => 'User Manager', 'guard_name' => 'web']);
         $limitedRole->givePermissionTo(['users.view', 'users.create', 'users.edit']);
 

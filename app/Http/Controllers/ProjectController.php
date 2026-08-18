@@ -16,8 +16,7 @@ class ProjectController extends Controller
         private readonly StoryService $stories,
         private readonly PageService $pages,
         private readonly VisitorBookService $visitorBook,
-    ) {
-    }
+    ) {}
 
     /**
      * Display every published project, optionally filtered by category.

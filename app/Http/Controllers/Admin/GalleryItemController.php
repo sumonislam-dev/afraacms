@@ -15,9 +15,7 @@ use Illuminate\Http\RedirectResponse;
 
 class GalleryItemController extends Controller
 {
-    public function __construct(private readonly GalleryService $galleries)
-    {
-    }
+    public function __construct(private readonly GalleryService $galleries) {}
 
     /**
      * Add a new photo/video to the end of an album's repeatable list.

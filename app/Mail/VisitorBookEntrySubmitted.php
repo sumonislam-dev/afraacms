@@ -13,9 +13,7 @@ class VisitorBookEntrySubmitted extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public readonly VisitorBookEntry $entry)
-    {
-    }
+    public function __construct(public readonly VisitorBookEntry $entry) {}
 
     public function envelope(): Envelope
     {

@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Menu;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Menu>
@@ -21,7 +22,7 @@ class MenuFactory extends Factory
 
         return [
             'name' => $name,
-            'slug' => \Illuminate\Support\Str::slug($name),
+            'slug' => Str::slug($name),
         ];
     }
 }

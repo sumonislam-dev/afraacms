@@ -6,9 +6,7 @@ use App\Models\ProjectCategory;
 
 class ProjectCategoryService
 {
-    public function __construct(private readonly ProjectService $projects)
-    {
-    }
+    public function __construct(private readonly ProjectService $projects) {}
 
     /**
      * Create a new category.

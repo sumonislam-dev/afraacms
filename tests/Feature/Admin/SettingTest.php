@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin;
 
+use App\CMS\Services\SettingService;
 use App\Models\Setting;
 use Database\Seeders\SettingsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -89,7 +90,7 @@ class SettingTest extends TestCase
         $superAdmin = $this->superAdmin();
         $this->seed(SettingsSeeder::class);
 
-        $settings = app(\App\CMS\Services\SettingService::class);
+        $settings = app(SettingService::class);
         $this->assertSame('AfraaCMS', $settings->get('site_name'));
 
         $this->actingAs($superAdmin)->put(route('admin.settings.update'), ['site_name' => 'Fresh Name']);

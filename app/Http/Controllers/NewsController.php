@@ -12,8 +12,7 @@ class NewsController extends Controller
     public function __construct(
         private readonly NewsService $news,
         private readonly PageService $pages,
-    ) {
-    }
+    ) {}
 
     /**
      * Display every published post, optionally filtered by category.

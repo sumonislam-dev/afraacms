@@ -4,6 +4,7 @@ namespace Tests\Feature\Admin;
 
 use App\Models\Role;
 use App\Models\User;
+use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Concerns\CreatesAdminUsers;
 use Tests\TestCase;
@@ -96,7 +97,7 @@ class RoleManagementTest extends TestCase
 
     public function test_only_a_super_admin_can_edit_the_super_admin_role(): void
     {
-        $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
+        $this->seed(RolesAndPermissionsSeeder::class);
         $limitedRole = Role::create(['name' => 'Role Manager', 'guard_name' => 'web']);
         $limitedRole->givePermissionTo(['roles.view', 'roles.edit']);
 
