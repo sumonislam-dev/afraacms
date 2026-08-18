@@ -1,29 +1,30 @@
 @php
     $recaptchaEnabled = app(\App\CMS\Services\ContactService::class)->recaptchaEnabled();
+    $isLight = ($section['layout'] ?? 'dark') === 'light';
 @endphp
 
-<section class="relative overflow-hidden bg-ink-900 py-20 sm:py-24">
+<section class="relative overflow-hidden py-20 sm:py-24 {{ $isLight ? 'bg-white' : 'bg-ink-900' }}">
     <div class="relative mx-auto grid max-w-7xl gap-14 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
         <div>
             @if ($section['subheading'])
-                <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-brand-400">{{ $section['subheading'] }}</p>
+                <p class="mb-3 text-sm font-semibold uppercase tracking-widest {{ $isLight ? 'text-brand-600' : 'text-brand-400' }}">{{ $section['subheading'] }}</p>
             @endif
 
             @if ($section['heading'])
-                <h2 class="mb-4 font-display text-3xl font-bold text-white sm:text-4xl">{{ $section['heading'] }}</h2>
+                <h2 class="mb-4 font-display text-3xl font-bold sm:text-4xl {{ $isLight ? 'text-ink-900' : 'text-white' }}">{{ $section['heading'] }}</h2>
             @endif
 
-            <ul class="space-y-3 text-sm text-white/80">
+            <ul class="space-y-3 text-sm {{ $isLight ? 'text-ink-900/70' : 'text-white/80' }}">
                 @if (setting('contact_address'))
                     <li class="flex items-start gap-3"><span class="mt-2 h-2 w-2 shrink-0 rounded-full bg-brand-500"></span>{{ setting('contact_address') }}</li>
                 @endif
 
                 @if (setting('contact_phone'))
-                    <li class="flex items-center gap-3"><span class="h-2 w-2 shrink-0 rounded-full bg-brand-500"></span><a href="tel:{{ preg_replace('/[^0-9+]/', '', setting('contact_phone')) }}" class="hover:text-white">{{ setting('contact_phone') }}</a></li>
+                    <li class="flex items-center gap-3"><span class="h-2 w-2 shrink-0 rounded-full bg-brand-500"></span><a href="tel:{{ preg_replace('/[^0-9+]/', '', setting('contact_phone')) }}" class="{{ $isLight ? 'hover:text-brand-600' : 'hover:text-white' }}">{{ setting('contact_phone') }}</a></li>
                 @endif
 
                 @if (setting('contact_email'))
-                    <li class="flex items-center gap-3"><span class="h-2 w-2 shrink-0 rounded-full bg-brand-500"></span><a href="mailto:{{ setting('contact_email') }}" class="hover:text-white">{{ setting('contact_email') }}</a></li>
+                    <li class="flex items-center gap-3"><span class="h-2 w-2 shrink-0 rounded-full bg-brand-500"></span><a href="mailto:{{ setting('contact_email') }}" class="{{ $isLight ? 'hover:text-brand-600' : 'hover:text-white' }}">{{ setting('contact_email') }}</a></li>
                 @endif
             </ul>
 
@@ -34,7 +35,7 @@
             @endif
         </div>
 
-        <div class="rounded-2xl bg-white p-8 shadow-2xl">
+        <div class="rounded-2xl bg-white p-8 shadow-2xl {{ $isLight ? 'ring-1 ring-black/5' : '' }}">
             @if (session('success'))
                 <div class="mb-6 flex items-start gap-3 rounded-md bg-green-50 p-4 text-sm font-medium text-green-800 ring-1 ring-inset ring-green-600/20">
                     <x-icon name="check-circle" class="h-5 w-5 shrink-0" />

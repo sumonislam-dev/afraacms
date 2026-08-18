@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\CMS\Services\BannerService;
 use App\CMS\Services\GalleryService;
 use App\CMS\Services\MenuService;
+use App\CMS\Services\NewsService;
 use App\CMS\Services\PageService;
 use App\CMS\Services\ProjectService;
 use App\CMS\Services\SettingService;
@@ -14,6 +15,8 @@ use App\Models\Banner;
 use App\Models\Gallery;
 use App\Models\MediaItem;
 use App\Models\Menu;
+use App\Models\NewsCategory;
+use App\Models\NewsPost;
 use App\Models\Page;
 use App\Models\Project;
 use App\Models\Setting;
@@ -28,8 +31,9 @@ use Intervention\Image\ImageManager;
 /**
  * Seeds real content for the RSUF client demo (rsuf_frontend/), replacing
  * PagesSeeder's bare placeholder pages with the actual site structure:
- * Home (hero + sections), About (anchor sub-sections), Get Involved, News,
- * Contact, a Gallery album, six Projects, and the header/footer menus.
+ * Home (hero + sections), About (anchor sub-sections), Get Involved, News
+ * (five real announcements), Contact, a Gallery album, six Projects, and
+ * the header/footer menus.
  *
  * Run standalone once, whenever the demo content needs (re)seeding:
  *   php artisan db:seed --class=RsufDemoSeeder
@@ -65,6 +69,7 @@ class RsufDemoSeeder extends Seeder
         $this->seedProjects();
         $this->seedStories();
         $this->seedTeam();
+        $this->seedNewsPosts();
         $this->seedMenus();
         $this->seedHomePage();
         $this->seedAboutPage();
@@ -87,6 +92,7 @@ class RsufDemoSeeder extends Seeder
         app(SettingService::class)->forget();
         app(TeamService::class)->forget();
         app(StoryService::class)->forget();
+        app(NewsService::class)->forget();
 
         $this->command?->info('RSUF demo content seeded.');
     }
@@ -144,6 +150,19 @@ class RsufDemoSeeder extends Seeder
         $story->save();
 
         return $story;
+    }
+
+    /**
+     * Same reasoning as upsertPage(): NewsPost also uses SoftDeletes.
+     */
+    private function upsertNewsPost(array $attributes, array $values): NewsPost
+    {
+        $post = NewsPost::withTrashed()->firstOrNew($attributes);
+        $post->fill($values);
+        $post->deleted_at = null;
+        $post->save();
+
+        return $post;
     }
 
     /**
@@ -413,6 +432,71 @@ class RsufDemoSeeder extends Seeder
         }
     }
 
+    /**
+     * Real announcements from the live site's News & Visitors page
+     * (rsufbd.com/news-and-visitors), migrated into dedicated NewsPost
+     * records so the News page shows actual RSUF activity instead of a
+     * "coming soon" placeholder.
+     */
+    private function seedNewsPosts(): void
+    {
+        $category = NewsCategory::firstOrCreate(['slug' => 'announcements'], ['name' => 'Announcements']);
+
+        $posts = [
+            [
+                'slug' => 'ramadan-food-iftar-distribution-2023',
+                'title' => 'RSUF Distributes Food & Iftar to 100 Families for Ramadan',
+                'excerpt' => 'RSUF distributed food and iftar items to 100 disadvantaged families during the holy month of Ramadan, with the Upazila Executive Officer in attendance.',
+                'content' => '<p>আরএসইউএফ কর্তৃক পবিত্র রমজান মাস উপলক্ষ্যে ১০০ টি অসহায় ও দরিদ্র পরিবারের মধ্যে খাদ্য ও ইফতার সামগ্রী বিতরণ করা হয়।</p>',
+                'published_at' => '2023-03-27',
+            ],
+            [
+                'slug' => 'b-koya-fire-relief-2023',
+                'title' => 'RSUF Provides Relief to Fire-Affected Families in B-Koya Village',
+                'excerpt' => 'Nine families affected by a fire in B-Koya village received food and iftar supplies, delivered personally by RSUF founder Md. Jahidul Islam.',
+                'content' => '<p>RSUF provided emergency assistance to nine families affected by a fire in B-Koya village. Founder Mohammad Jahidul Islam personally delivered food and iftar supplies to the affected households.</p>',
+                'published_at' => '2023-03-27',
+            ],
+            [
+                'slug' => 'computer-skills-ntvqf-assessment-2023',
+                'title' => 'NTVQF Level-1 Computer Operations Assessment Completed',
+                'excerpt' => '34 trainees completed the Level-1 NTVQF competency assessment in Computer Operation at RSUF.',
+                'content' => '<p>34 trainees successfully completed the Level-1 National Technical and Vocational Qualifications Framework (NTVQF) assessment for Computer Operation, run at RSUF\'s training center.</p>',
+                'published_at' => '2023-06-03',
+            ],
+            [
+                'slug' => 'qurbani-food-meat-distribution-2023',
+                'title' => 'RSUF Distributes Food & Sacrificial Meat to 110 Families in Kalukhali',
+                'excerpt' => '110 extremely poor families in Kalukhali upazila received food and Qurbani (sacrificial) meat.',
+                'content' => '<p>RSUF distributed food and Qurbani (sacrificial) meat to 110 extremely poor families across Kalukhali upazila.</p>',
+                'published_at' => '2023-06-27',
+            ],
+            [
+                'slug' => 'electrical-installation-course-admission-2024-2025',
+                'title' => 'Admission Open: 2-Year Residential Electrical Installation & Maintenance Course (2024–2025)',
+                'excerpt' => "Enrollment is now open for RSUF's 2-year residential trade course in Electrical Installation and Maintenance for the 2024–2025 session.",
+                'content' => '<p>RSUF is now accepting applications for its 2-year residential trade course in Electrical Installation and Maintenance, for the 2024–2025 session. The course includes rural electrification and industrial training placements, a free certificate and toolbox on completion.</p>',
+                'published_at' => '2023-11-20',
+                'is_featured' => true,
+            ],
+        ];
+
+        foreach ($posts as $p) {
+            $this->upsertNewsPost(
+                ['slug' => $p['slug']],
+                [
+                    'category_id' => $category->id,
+                    'title' => $p['title'],
+                    'excerpt' => $p['excerpt'],
+                    'content' => $p['content'],
+                    'published_at' => $p['published_at'],
+                    'is_featured' => $p['is_featured'] ?? false,
+                    'status' => 'published',
+                ]
+            );
+        }
+    }
+
     private function seedMenus(): void
     {
         $header = Menu::firstOrCreate(['slug' => 'header'], ['name' => 'Header Menu']);
@@ -612,6 +696,7 @@ class RsufDemoSeeder extends Seeder
             'type' => 'cards', 'sort_order' => 0,
             'subheading' => 'Get Involved',
             'heading' => 'Ways to Support RSUF',
+            'layout' => 'light',
         ]);
 
         $ways->items()->createMany([
@@ -642,8 +727,9 @@ class RsufDemoSeeder extends Seeder
         $page->sections()->delete();
 
         $page->sections()->create([
-            'type' => 'rich_text', 'sort_order' => 0,
-            'body' => 'Latest news and updates from RSUF will be posted here soon.',
+            'type' => 'news', 'sort_order' => 0,
+            'subheading' => 'Stay Updated',
+            'heading' => 'Latest News & Updates',
         ]);
     }
 
@@ -678,8 +764,8 @@ class RsufDemoSeeder extends Seeder
      * Non-destructively hide older, unrelated dev/test records so the
      * public site reflects RSUF's content only: deactivating a Gallery
      * (rather than deleting it) drops it out of the "flat" gallery view,
-     * and drafting a Project drops it out of the published listing - both
-     * fully reversible from the admin panel.
+     * and drafting a Project or NewsPost drops it out of the published
+     * listing - both fully reversible from the admin panel.
      */
     private function hideUnrelatedDemoContent(): void
     {
@@ -694,6 +780,14 @@ class RsufDemoSeeder extends Seeder
             'safe-drinking-water-project',
             'rsuf-old-care-project',
             'rsuf-emergency-relief-activities',
+        ])->update(['status' => 'draft']);
+
+        NewsPost::whereNotIn('slug', [
+            'ramadan-food-iftar-distribution-2023',
+            'b-koya-fire-relief-2023',
+            'computer-skills-ntvqf-assessment-2023',
+            'qurbani-food-meat-distribution-2023',
+            'electrical-installation-course-admission-2024-2025',
         ])->update(['status' => 'draft']);
     }
 }

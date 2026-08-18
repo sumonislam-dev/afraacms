@@ -239,12 +239,22 @@
                         <x-input-error class="mt-2" :messages="$errors->get('anchor')" />
                     </div>
 
-                    <div x-show="fields[type]?.includes('layout')" style="display: none;">
+                    <div x-show="type === 'image_text'" style="display: none;">
                         <x-input-label for="layout" :value="__('Layout')" />
-                        <select id="layout" name="layout" class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
+                        <select id="layout" x-bind:name="type === 'image_text' ? 'layout' : null" class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
                             <option value="image-left" @selected(old('layout', $section->layout ?? '') === 'image-left')>{{ __('Image Left') }}</option>
                             <option value="image-right" @selected(old('layout', $section->layout ?? '') === 'image-right')>{{ __('Image Right') }}</option>
                         </select>
+                        <x-input-error class="mt-2" :messages="$errors->get('layout')" />
+                    </div>
+
+                    <div x-show="['cards', 'contact'].includes(type)" style="display: none;">
+                        <x-input-label for="bg-layout" :value="__('Background')" />
+                        <select id="bg-layout" x-bind:name="['cards', 'contact'].includes(type) ? 'layout' : null" class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="dark" @selected(old('layout', $section->layout ?? 'dark') === 'dark')>{{ __('Dark Background') }}</option>
+                            <option value="light" @selected(old('layout', $section->layout ?? 'dark') === 'light')>{{ __('Light Background') }}</option>
+                        </select>
+                        <p class="mt-1 text-xs text-gray-500">{{ __('Choose Light if this section sits between other light sections and the dark block feels out of place.') }}</p>
                         <x-input-error class="mt-2" :messages="$errors->get('layout')" />
                     </div>
 

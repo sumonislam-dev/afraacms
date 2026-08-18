@@ -2,4 +2,5 @@
     :heading="$section['heading']"
     :subheading="$section['subheading']"
     :items="$section['items']"
+    :layout="$section['layout'] ?? 'dark'"
 />

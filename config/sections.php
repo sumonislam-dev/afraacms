@@ -32,7 +32,7 @@ return [
         ],
         'cards' => [
             'label' => 'Cards',
-            'fields' => ['heading', 'subheading'],
+            'fields' => ['heading', 'subheading', 'layout'],
             'has_items' => true,
             'item_fields' => ['title', 'body', 'image', 'icon', 'url'],
         ],
@@ -72,7 +72,7 @@ return [
         ],
         'contact' => [
             'label' => 'Contact',
-            'fields' => ['heading', 'subheading'],
+            'fields' => ['heading', 'subheading', 'layout'],
             'has_items' => false,
         ],
         'projects' => [
