@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Auth;
 
+use App\CMS\Services\SettingService;
+use App\Models\Setting;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -27,5 +29,30 @@ class RegistrationTest extends TestCase
 
         $this->assertAuthenticated();
         $response->assertRedirect(route('dashboard', absolute: false));
+    }
+
+    public function test_registration_is_blocked_when_disabled_in_settings(): void
+    {
+        Setting::create([
+            'group' => 'system',
+            'key' => 'registration_enabled',
+            'value' => '0',
+            'type' => 'boolean',
+            'autoload' => true,
+            'sort_order' => 0,
+        ]);
+        app(SettingService::class)->forget();
+
+        $this->get('/register')->assertNotFound();
+
+        $response = $this->post('/register', [
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'password' => 'Password1234',
+            'password_confirmation' => 'Password1234',
+        ]);
+
+        $response->assertNotFound();
+        $this->assertGuest();
     }
 }
