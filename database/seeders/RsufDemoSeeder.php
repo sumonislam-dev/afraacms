@@ -527,6 +527,8 @@ class RsufDemoSeeder extends Seeder
         }
 
         $header->items()->create(['label' => 'Contact Us', 'type' => 'internal', 'url' => '/contact', 'is_active' => true, 'sort_order' => 5]);
+        $header->items()->create(['label' => 'Validate Certificate', 'type' => 'internal', 'url' => '/verify', 'is_active' => true, 'sort_order' => 6]);
+        $header->items()->create(['label' => 'Login', 'type' => 'internal', 'url' => '/login', 'is_active' => true, 'sort_order' => 7]);
 
         $footer = Menu::firstOrCreate(['slug' => 'footer'], ['name' => 'Footer Menu']);
         $footer->items()->delete();
@@ -565,28 +567,17 @@ class RsufDemoSeeder extends Seeder
             $hero->galleries()->sync([$this->heroGallery->id]);
         }
 
-        $scholarshipSlider = $page->sections()->create([
-            'type' => 'photo_slider', 'sort_order' => 1,
-            'subheading' => 'Scholarships',
-            'heading' => 'Small Project Scholarship Program',
+        $page->sections()->create([
+            'type' => 'image_text', 'sort_order' => 1,
+            'subheading' => 'Welcome to RSUF',
+            'heading' => 'Socio-Economic Development Among the Poorest of the Poor',
+            'body' => "Rahmantunnessa Shikkha Unnayan Foundation (RSUF) is a Bangladeshi organization engaged in socio-economic development activities among the poorest of the poor. It is a non-government, non-political and non-profitable organization working with the poor of all levels irrespective of caste or creed.\n\nThe main aim of RSUF is to bring about self-reliance of the people through participation of grass-root communities in every development effort. We remain grateful to our well-wishers, partners, donors and the Government for their continuous support of our initiatives.",
+            'image' => $this->media['campus']->id ?? null,
+            'layout' => 'image-left',
         ]);
-
-        if ($this->scholarshipGallery) {
-            $scholarshipSlider->galleries()->sync([$this->scholarshipGallery->id]);
-        }
-
-        $workshopSlider = $page->sections()->create([
-            'type' => 'photo_slider', 'sort_order' => 2,
-            'subheading' => 'Community Development',
-            'heading' => 'RSUF Family Development Workshop',
-        ]);
-
-        if ($this->workshopGallery) {
-            $workshopSlider->galleries()->sync([$this->workshopGallery->id]);
-        }
 
         $whatWeDo = $page->sections()->create([
-            'type' => 'cards', 'sort_order' => 3,
+            'type' => 'cards', 'sort_order' => 2,
             'subheading' => 'What We Do',
             'heading' => 'Focus Areas That Drive Our Work',
         ]);
@@ -598,23 +589,14 @@ class RsufDemoSeeder extends Seeder
         ]);
 
         $page->sections()->create([
-            'type' => 'image_text', 'sort_order' => 4,
-            'subheading' => 'Welcome to RSUF',
-            'heading' => 'Socio-Economic Development Among the Poorest of the Poor',
-            'body' => "Rahmantunnessa Shikkha Unnayan Foundation (RSUF) is a Bangladeshi organization engaged in socio-economic development activities among the poorest of the poor. It is a non-government, non-political and non-profitable organization working with the poor of all levels irrespective of caste or creed.\n\nThe main aim of RSUF is to bring about self-reliance of the people through participation of grass-root communities in every development effort. We remain grateful to our well-wishers, partners, donors and the Government for their continuous support of our initiatives.",
-            'image' => $this->media['campus']->id ?? null,
-            'layout' => 'image-left',
-        ]);
-
-        $page->sections()->create([
-            'type' => 'projects', 'sort_order' => 5,
+            'type' => 'projects', 'sort_order' => 3,
             'subheading' => 'Our Projects',
             'heading' => 'Where Your Support Makes a Difference',
             'button_text' => 'View All Projects',
         ]);
 
         $galleryPreview = $page->sections()->create([
-            'type' => 'gallery_albums', 'sort_order' => 6,
+            'type' => 'gallery_albums', 'sort_order' => 4,
             'subheading' => 'Gallery',
             'heading' => 'Moments From the Field',
             'button_text' => 'View Full Gallery',
@@ -625,7 +607,7 @@ class RsufDemoSeeder extends Seeder
         }
 
         $page->sections()->create([
-            'type' => 'contact', 'sort_order' => 7,
+            'type' => 'contact', 'sort_order' => 5,
             'subheading' => 'Be a Volunteer',
             'heading' => 'Doing Nothing Is Not an Option',
         ]);

@@ -13,6 +13,7 @@ use App\CMS\Services\ProjectService;
 use App\CMS\Services\SettingService;
 use App\CMS\Services\StoryService;
 use App\CMS\Services\TeamService;
+use Illuminate\Database\Schema\Builder as SchemaBuilder;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -31,6 +32,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // MySQL/MariaDB with utf8mb4 caps indexed key length at ~1000 bytes;
+        // an unconstrained string() column (255 chars) needs 1020 bytes for a
+        // unique/composite index, which overflows it. 191 chars keeps every
+        // indexed string column (email, slugs, status+published_at, etc.)
+        // under that limit. Columns that need to hold long unindexed text
+        // (e.g. sections.subheading) use text() instead, so this cap never
+        // truncates real content - it only ever narrows the implicit default
+        // for columns that don't specify their own length.
+        SchemaBuilder::defaultStringLength(191);
+
         $cache = $this->app->make(CmsCacheManager::class);
         $cache->register('settings', fn () => $this->app->make(SettingService::class)->forget());
         $cache->register('menus', fn () => $this->app->make(MenuService::class)->forget());

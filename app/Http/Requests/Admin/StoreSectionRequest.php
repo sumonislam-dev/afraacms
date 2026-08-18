@@ -31,7 +31,7 @@ class StoreSectionRequest extends FormRequest
             'type' => ['required', Rule::in(array_keys(config('sections.types', [])))],
             'anchor' => ['nullable', 'string', 'max:100', 'alpha_dash'],
             'heading' => ['nullable', 'string', 'max:255'],
-            'subheading' => ['nullable', 'string', 'max:255'],
+            'subheading' => ['nullable', 'string', 'max:1000'],
             'body' => ['nullable', 'string'],
             'image' => ['nullable', 'integer', Rule::exists('media_items', 'id')],
             'button_text' => ['nullable', 'string', 'max:255'],

@@ -16,7 +16,11 @@ return new class extends Migration
             $table->foreignId('page_id')->constrained('pages')->cascadeOnDelete();
             $table->string('type');
             $table->string('heading')->nullable();
-            $table->string('subheading')->nullable();
+            // text(), not string(): most section types use this as a short
+            // eyebrow label, but CTA sections use it as a full descriptive
+            // paragraph (see resources/views/components/frontend/cta.blade.php),
+            // so it can't be capped at the app's default indexed-string length.
+            $table->text('subheading')->nullable();
             $table->longText('body')->nullable();
             $table->foreignId('image')->nullable()->constrained('media_items')->nullOnDelete();
             $table->string('button_text')->nullable();

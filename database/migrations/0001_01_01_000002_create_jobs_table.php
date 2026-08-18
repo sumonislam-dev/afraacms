@@ -37,8 +37,11 @@ return new class extends Migration
         Schema::create('failed_jobs', function (Blueprint $table) {
             $table->id();
             $table->string('uuid')->unique();
-            $table->string('connection');
-            $table->string('queue');
+            // Shortened from the default 191 chars: connection/queue names are
+            // always short identifiers, and utf8mb4 needs this composite index
+            // under 1000 bytes total (MySQL/MariaDB's indexed key length cap).
+            $table->string('connection', 100);
+            $table->string('queue', 100);
             $table->longText('payload');
             $table->longText('exception');
             $table->timestamp('failed_at')->useCurrent();
