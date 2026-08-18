@@ -1,0 +1,1003 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AfraaCMS Handbook</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #F3F6F6;
+    --surface: #FFFFFF;
+    --surface-2: #EDF2F2;
+    --ink: #172227;
+    --ink-soft: #52646B;
+    --ink-faint: #82969C;
+    --border: #DCE5E5;
+    --accent: #1F6F78;
+    --accent-ink: #0E4249;
+    --accent-soft: #E1F0EF;
+    --note-bg: #FBF1E1;
+    --note-border: #E7C989;
+    --note-ink: #6B4A12;
+    --chip-bg: #EEF3F3;
+    --shadow: 0 1px 2px rgba(23,34,39,0.06), 0 8px 24px rgba(23,34,39,0.05);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #131A1D;
+      --surface: #1B2428;
+      --surface-2: #212B2F;
+      --ink: #E7EEEE;
+      --ink-soft: #A9BABF;
+      --ink-faint: #71858B;
+      --border: #2C383C;
+      --accent: #4FB3B8;
+      --accent-ink: #BFE9E9;
+      --accent-soft: #1E3538;
+      --note-bg: #2B2416;
+      --note-border: #5A4420;
+      --note-ink: #E4C077;
+      --chip-bg: #232E32;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #131A1D;
+    --surface: #1B2428;
+    --surface-2: #212B2F;
+    --ink: #E7EEEE;
+    --ink-soft: #A9BABF;
+    --ink-faint: #71858B;
+    --border: #2C383C;
+    --accent: #4FB3B8;
+    --accent-ink: #BFE9E9;
+    --accent-soft: #1E3538;
+    --note-bg: #2B2416;
+    --note-border: #5A4420;
+    --note-ink: #E4C077;
+    --chip-bg: #232E32;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Zilla Slab', Georgia, serif;
+    color: var(--ink);
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  code, .chip, .field-name {
+    font-family: 'IBM Plex Mono', 'SFMono-Regular', monospace;
+  }
+
+  a { color: var(--accent-ink); }
+
+  /* ---------- Shell layout ---------- */
+  .shell {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    min-height: 100vh;
+  }
+
+  .sidebar {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 28px 20px 40px;
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+  .brand .mark {
+    font-family: 'Zilla Slab', serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--accent-ink);
+  }
+  .brand .rest {
+    font-family: 'Zilla Slab', serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+  }
+  .sidebar .kicker {
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0 0 22px;
+  }
+
+  .nav-group { margin-bottom: 22px; }
+  .nav-group h4 {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .nav-group ul { list-style: none; margin: 0; padding: 0; }
+  .nav-group li { margin: 0; }
+  .nav-group a {
+    display: block;
+    padding: 5px 8px;
+    margin: 1px 0;
+    border-radius: 6px;
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 0.89rem;
+    transition: background 0.12s ease, color 0.12s ease;
+  }
+  .nav-group a:hover { background: var(--surface-2); color: var(--ink); }
+
+  .content {
+    padding: 48px clamp(20px, 5vw, 72px) 100px;
+    max-width: 900px;
+  }
+
+  /* ---------- Cover / intro ---------- */
+  .cover {
+    margin-bottom: 56px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+  }
+  .cover .eyebrow {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+    margin-bottom: 14px;
+  }
+  .cover h1 {
+    font-size: clamp(2rem, 4vw, 2.7rem);
+    font-weight: 700;
+    line-height: 1.12;
+    margin-bottom: 16px;
+  }
+  .cover .dek {
+    max-width: 62ch;
+    font-size: 1.08rem;
+    color: var(--ink-soft);
+    margin-bottom: 0;
+  }
+
+  /* ---------- Section scaffolding ---------- */
+  section.category {
+    margin-bottom: 64px;
+    scroll-margin-top: 24px;
+  }
+  section.category > .cat-head {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 8px;
+  }
+  section.category > .cat-head h2 {
+    font-size: 1.6rem;
+    font-weight: 600;
+  }
+  section.category > .cat-blurb {
+    color: var(--ink-soft);
+    max-width: 66ch;
+    margin-bottom: 28px;
+  }
+
+  .module {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 30px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    scroll-margin-top: 24px;
+  }
+  .module h3 {
+    font-size: 1.28rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .module .purpose {
+    color: var(--ink-soft);
+    margin-bottom: 18px;
+    max-width: 62ch;
+  }
+  .module .subnote {
+    display: inline-block;
+    font-size: 0.78rem;
+    background: var(--chip-bg);
+    color: var(--ink-soft);
+    border-radius: 6px;
+    padding: 2px 9px;
+    margin-left: 10px;
+    font-weight: 500;
+    vertical-align: middle;
+    font-family: 'IBM Plex Sans', sans-serif;
+  }
+
+  .field-block h4, .note h4, .sub h4 {
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  ol.fields {
+    list-style: none;
+    counter-reset: field;
+    margin: 0 0 22px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  ol.fields li {
+    counter-increment: field;
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+    font-size: 0.94rem;
+  }
+  ol.fields li::before {
+    content: counter(field);
+    flex: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+  }
+  ol.fields .field-name { font-weight: 600; color: var(--ink); }
+  ol.fields .req {
+    font-size: 0.68rem;
+    color: var(--accent-ink);
+    background: var(--accent-soft);
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin-left: 6px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }
+  ol.fields .opt {
+    font-size: 0.68rem;
+    color: var(--ink-faint);
+    margin-left: 6px;
+  }
+  ol.fields .desc { color: var(--ink-soft); }
+
+  .note {
+    background: var(--note-bg);
+    border: 1px solid var(--note-border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-top: 4px;
+  }
+  .note h4 { color: var(--note-ink); margin-bottom: 8px; }
+  .note ul { margin: 0; padding-left: 18px; color: var(--note-ink); }
+  .note ul li { margin-bottom: 6px; font-size: 0.92rem; }
+  .note ul li:last-child { margin-bottom: 0; }
+  .note ul li b { color: var(--note-ink); }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  @media (max-width: 760px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* pattern diagram for "How a page is built" */
+  .stack-diagram {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 18px 0 22px;
+    max-width: 420px;
+  }
+  .stack-diagram .layer {
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    background: var(--surface-2);
+  }
+  .stack-diagram .layer.top {
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+    font-weight: 600;
+    border-style: solid;
+    border-color: var(--accent);
+  }
+  .stack-diagram .layer b { color: inherit; }
+
+  .pattern-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin: 20px 0 8px;
+  }
+  @media (max-width: 700px) { .pattern-grid { grid-template-columns: 1fr; } }
+  .pattern-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    background: var(--surface);
+  }
+  .pattern-card h4 {
+    font-family: 'Zilla Slab', serif;
+    font-size: 1.02rem;
+    font-weight: 600;
+    color: var(--ink);
+    text-transform: none;
+    letter-spacing: 0;
+    margin-bottom: 6px;
+  }
+  .pattern-card p { margin: 0; color: var(--ink-soft); font-size: 0.92rem; }
+
+  .toggle-demo {
+    display: inline-flex;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 2px;
+    background: var(--surface-2);
+    margin: 10px 0 0;
+    font-size: 0.82rem;
+  }
+  .toggle-demo span {
+    padding: 5px 14px;
+    border-radius: 999px;
+    color: var(--ink-faint);
+  }
+  .toggle-demo span.active {
+    background: var(--accent);
+    color: white;
+    font-weight: 600;
+  }
+
+  footer.manual-footer {
+    max-width: 900px;
+    color: var(--ink-faint);
+    font-size: 0.85rem;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 880px) {
+    .shell { grid-template-columns: 1fr; }
+    .sidebar { position: relative; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+  }
+
+  /* ---------- Print / Save-as-PDF (A4) ---------- */
+  @page {
+    size: A4;
+    margin: 16mm 14mm;
+  }
+
+  @media print {
+    /* !important beats the prefers-color-scheme block on specificity/order,
+       so a system-dark browser still prints the light palette. */
+    html, :root, :root[data-theme="dark"], :root[data-theme="light"] {
+      --bg: #FFFFFF !important;
+      --surface: #FFFFFF !important;
+      --surface-2: #F4F6F7 !important;
+      --ink: #172227 !important;
+      --ink-soft: #45565D !important;
+      --ink-faint: #6C7E84 !important;
+      --border: #C9D4D4 !important;
+      --accent: #1F6F78 !important;
+      --accent-ink: #0E4249 !important;
+      --accent-soft: #E1F0EF !important;
+      --note-bg: #FBF1E1 !important;
+      --note-border: #E2C07E !important;
+      --note-ink: #5C3F0F !important;
+      --chip-bg: #EEF3F3 !important;
+      --shadow: none !important;
+    }
+
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+    html, body { width: auto; height: auto; }
+    body { font-size: 10.8pt; line-height: 1.5; background: #FFF; }
+
+    /* Kill the on-screen app shell in favor of a linear document. */
+    .shell { display: block; }
+    .sidebar { display: none !important; }
+    .content { max-width: none; padding: 0; }
+
+    h1, h2, h3, h4 { text-wrap: unset; } /* text-wrap:balance can misjudge available width under print's fixed page box */
+
+    .cover { break-after: avoid; page-break-after: avoid; margin-bottom: 28px; padding-bottom: 20px; }
+    .cover h1 { font-size: 22pt; }
+
+    section.category { break-before: page; page-break-before: always; margin-bottom: 22px; }
+    section.category:first-of-type { break-before: avoid; page-break-before: avoid; }
+    .cat-head, .cat-blurb {
+      break-after: avoid; page-break-after: avoid;
+      break-inside: avoid; page-break-inside: avoid;
+    }
+    .cat-head h2 { font-size: 15pt; }
+
+    .module {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      box-shadow: none;
+      border: 1px solid var(--border);
+      padding: 16px 18px;
+      margin-bottom: 12px;
+    }
+    .module h3, .module .purpose {
+      break-after: avoid; page-break-after: avoid;
+    }
+    .module h3 { font-size: 12.5pt; }
+
+    /*
+      Chrome/Blink has a long-standing bug where break-inside: avoid is
+      unreliable for CSS Grid children - it can slice a grid item's text
+      mid-sentence across a page boundary. Drop display:grid entirely for
+      print and fall back to plain stacked blocks, where break-inside is
+      honored properly, instead of just collapsing the column count.
+    */
+    .pattern-grid, .two-col {
+      display: block !important;
+    }
+    .pattern-grid > *, .two-col > * {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      margin-bottom: 10px;
+    }
+    .pattern-grid > *:last-child, .two-col > *:last-child { margin-bottom: 0; }
+
+    ol.fields, .note, .stack-diagram {
+      break-inside: avoid; page-break-inside: avoid;
+    }
+    ol.fields li {
+      break-inside: avoid; page-break-inside: avoid;
+    }
+
+    a { color: var(--accent-ink); text-decoration: underline; }
+
+    footer.manual-footer { break-before: avoid; page-break-before: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <nav class="sidebar">
+    <div class="brand"><span class="mark">Afraa</span><span class="rest">CMS Handbook</span></div>
+    <p class="kicker">Dashboard reference</p>
+
+    <div class="nav-group">
+      <h4>Start here</h4>
+      <ul>
+        <li><a href="#getting-started">Getting around the dashboard</a></li>
+        <li><a href="#common-patterns">Patterns you'll see everywhere</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-group">
+      <h4>Building your site</h4>
+      <ul>
+        <li><a href="#pages">Pages &amp; Sections</a></li>
+        <li><a href="#menus">Menus</a></li>
+        <li><a href="#banners">Banners</a></li>
+        <li><a href="#media">Media Library</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-group">
+      <h4>Content</h4>
+      <ul>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#news">News</a></li>
+        <li><a href="#stories">Stories</a></li>
+        <li><a href="#galleries">Galleries</a></li>
+        <li><a href="#team">Team</a></li>
+        <li><a href="#featured-visitors">Featured Visitors</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-group">
+      <h4>Engagement</h4>
+      <ul>
+        <li><a href="#contact">Contact Inbox</a></li>
+        <li><a href="#visitor-book">Visitor Book</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-group">
+      <h4>Programs</h4>
+      <ul>
+        <li><a href="#courses">Courses</a></li>
+        <li><a href="#students">Students</a></li>
+        <li><a href="#enrollments">Enrollments</a></li>
+        <li><a href="#certificates">Certificates</a></li>
+        <li><a href="#donations">Donations</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-group">
+      <h4>Site setup</h4>
+      <ul>
+        <li><a href="#settings">Settings</a></li>
+        <li><a href="#seo">SEO &amp; Sitemap</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-group">
+      <h4>Administration</h4>
+      <ul>
+        <li><a href="#users">Users &amp; Roles</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="content">
+    <div class="cover">
+      <p class="eyebrow">AfraaCMS · Dashboard Handbook</p>
+      <h1>Everything you need to manage your website</h1>
+      <p class="dek">This handbook walks through every screen in your admin dashboard — what each one is for, exactly what to fill in, and the small behaviors that aren't obvious the first time you see them. Keep it open in a second tab while you work.</p>
+    </div>
+
+    <section class="category" id="getting-started">
+      <div class="cat-head"><h2>Getting around the dashboard</h2></div>
+      <p class="cat-blurb">Everything lives behind one login. Once you're in, the left-hand menu is your map — it's grouped the same way this handbook is.</p>
+
+      <div class="module">
+        <h3>Logging in</h3>
+        <p class="purpose">Go to <code>/admin/login</code> on your site's address, sign in with the email and password your administrator gave you, and you'll land on the Dashboard — a quick overview of recent activity.</p>
+        <div class="note">
+          <h4>Good to know</h4>
+          <ul>
+            <li>What you can see and edit depends on your <b>Role</b>. If a screen mentioned in this handbook doesn't appear in your menu, your role doesn't include it — ask a Super Admin to grant it under <a href="#users">Roles</a>.</li>
+            <li>Forgot your password? Use the "Forgot password" link on the login screen rather than asking someone else to reset it for you.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="category" id="common-patterns">
+      <div class="cat-head"><h2>Patterns you'll see everywhere</h2></div>
+      <p class="cat-blurb">Almost every module in the dashboard is built from the same handful of building blocks. Learn these once and every screen from here on will feel familiar.</p>
+
+      <div class="pattern-grid">
+        <div class="pattern-card">
+          <h4>Draft vs. Published</h4>
+          <p>Content saved as <b>Draft</b> only you can see in the dashboard — it never appears on the live site. Switch it to <b>Published</b> when it's ready for visitors.</p>
+        </div>
+        <div class="pattern-card">
+          <h4>Trash &amp; Restore</h4>
+          <p>Deleting a page, project, news post, story, team member, or a few other content types doesn't erase it right away — it moves to that module's <b>Trash</b> screen, where you can <b>Restore</b> it or delete it permanently.</p>
+        </div>
+        <div class="pattern-card">
+          <h4>Active / Featured toggles</h4>
+          <p>An <b>Active</b> toggle switched off hides something from the public site without deleting it — handy for retiring a team member or album temporarily. <b>Featured</b> just means "show this first."</p>
+        </div>
+        <div class="pattern-card">
+          <h4>The image picker</h4>
+          <p>Any Image field opens your <a href="#media">Media Library</a> — pick an existing photo or upload a new one on the spot. If the spot has a fixed shape (like a banner), you'll crop it right there before it saves.</p>
+        </div>
+        <div class="pattern-card">
+          <h4>Drag to reorder</h4>
+          <p>Lists with a small grip handle (⠿) on the left — menu items, sections, gallery photos — reorder by dragging. The new order saves automatically; there's no separate Save button for it.</p>
+        </div>
+        <div class="pattern-card">
+          <h4>The SEO panel</h4>
+          <p>Pages, Projects, News, Stories, and Galleries each have a collapsible <b>SEO</b> section for the page title/description search engines show. Every field is optional — leave it blank and your sitewide defaults (set once in <a href="#settings">Settings</a>) are used instead.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="category" id="site-building">
+      <div class="cat-head"><h2>Building your site</h2></div>
+      <p class="cat-blurb">The four modules that shape the pages visitors actually see: what pages exist, what's on them, how people navigate between them, and the images behind it all.</p>
+
+      <div class="module" id="pages">
+        <h3>Pages &amp; Sections</h3>
+        <p class="purpose">A <b>Page</b> is one URL on your site (Home, About, Contact...). It's built from a stack of <b>Sections</b> — reusable content blocks you arrange in order, like building with blocks.</p>
+
+        <div class="stack-diagram">
+          <div class="layer top">Hero — "Building a Poverty-Free, Educated &amp; Peaceful Society"</div>
+          <div class="layer">Cards — "What We Do"</div>
+          <div class="layer">Projects — auto-lists your Projects module</div>
+          <div class="layer">Gallery Albums — recent photos</div>
+          <div class="layer">Contact — the contact form</div>
+        </div>
+
+        <div class="field-block">
+          <h4>Creating a page</h4>
+          <ol class="fields">
+            <li><span><span class="field-name">Title</span><span class="req">required</span> — the name shown in menus and browser tabs.<br><span class="desc">e.g. "About Us"</span></span></li>
+            <li><span><span class="field-name">Slug</span><span class="req">required</span> — the web address, auto-filled from the Title but editable.<br><span class="desc">e.g. <code>about</code> → yoursite.com/about</span></span></li>
+            <li><span><span class="field-name">Page Banner</span><span class="opt">optional</span> — a banner image and short eyebrow text shown at the top of this page only.</span></li>
+            <li><span><span class="field-name">SEO panel</span><span class="opt">optional</span> — search-result title/description for this page.</span></li>
+            <li><span><span class="field-name">Status</span><span class="req">required</span> — Draft or Published.</span></li>
+            <li><span><span class="field-name">Template</span><span class="req">required</span> — Default or Full Width.</span></li>
+            <li><span><span class="field-name">Publish Date</span><span class="opt">optional</span> — leave blank to publish immediately.</span></li>
+          </ol>
+        </div>
+
+        <div class="field-block">
+          <h4>Adding sections to a page</h4>
+          <p style="color:var(--ink-soft); margin-bottom:14px;">Open a page and go to its <b>Sections</b> screen. Each section has a <b>Type</b> (Hero, Rich Text, Cards, Gallery, Call to Action, FAQ, Timeline, Stats, Image + Text, Contact, Projects, Gallery Albums, Latest News, Success Stories, Photo Slider, Team...) — the type decides which fields you'll see below it. Most types share: Heading, Subheading, an optional Button, and an <b>Anchor ID</b> (so a menu link can jump straight to it, e.g. <code>/about#history</code>).</p>
+        </div>
+
+        <div class="note">
+          <h4>Good to know</h4>
+          <ul>
+            <li><b>Cards</b> and <b>Contact</b> sections have a <b>Background</b> choice — Dark or Light. If a dark card block feels out of place sitting between two light sections on a page, open that section and switch it to Light Background. It defaults to Dark, matching how it's always looked.</li>
+            <li>Sections marked "All Active Albums / Members" update themselves automatically as you add new galleries or team members — no need to revisit the page. Switch to "Specific" only when you want to hand-pick exactly what shows.</li>
+            <li>Sections and their photo/card items drag-to-reorder and save instantly.</li>
+            <li>Deleting a section deletes everything inside it (its cards, its items) — there's no undo, so double-check before confirming.</li>
+            <li>Deleted pages go to <b>Trash</b> first (a separate screen) before they're gone for good.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="module" id="menus">
+        <h3>Menus</h3>
+        <p class="purpose">Controls the Header and Footer navigation links across your whole site.</p>
+        <div class="field-block">
+          <h4>Adding a menu item</h4>
+          <ol class="fields">
+            <li><span><span class="field-name">Label</span><span class="req">required</span> — the text visitors click, e.g. "Get Involved".</span></li>
+            <li><span><span class="field-name">Icon</span><span class="opt">optional</span></span></li>
+            <li><span><span class="field-name">Link Type</span><span class="req">required</span> — Internal (one of your own Pages) or External (any URL).</span></li>
+            <li><span><span class="field-name">Page</span><span class="desc">for Internal links — pick from a dropdown, the Label and URL fill in for you.</span></span></li>
+            <li><span><span class="field-name">Parent Item</span><span class="opt">optional</span> — nest this under another top-level item to create a dropdown, like About's sub-menu.</span></li>
+            <li><span><span class="field-name">Visible</span> / <span class="field-name">New Tab</span><span class="opt">toggles</span></span></li>
+          </ol>
+        </div>
+        <div class="note">
+          <h4>Good to know</h4>
+          <ul>
+            <li>Drag items to reorder or nest them under a parent — it saves as you drop it, no Save button needed.</li>
+            <li>To rename a menu itself (not its items), use the "Edit Menu" button on its item-management screen — it opens in a small popup.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="module" id="banners">
+        <h3>Banners</h3>
+        <p class="purpose">The large promotional image strips shown at fixed spots: Homepage, standard Page tops, Call-to-Action blocks, and Popups.</p>
+        <div class="field-block">
+          <ol class="fields">
+            <li><span><span class="field-name">Placement</span><span class="req">required</span> — which of the four spots this banner belongs to.</span></li>
+            <li><span><span class="field-name">Title / Subtitle / Button</span><span class="opt">optional</span></span></li>
+            <li><span><span class="field-name">Image</span><span class="req">required</span> — Homepage and Page banners crop to a wide letterbox shape automatically.</span></li>
+            <li><span><span class="field-name">Starts At / Ends At</span><span class="opt">optional</span> — schedule a banner to run only within a date range.</span></li>
+            <li><span><span class="field-name">Priority</span><span class="req">required</span> — the lowest number wins if more than one banner is active for the same spot at once.</span></li>
+          </ol>
+        </div>
+        <div class="note">
+          <h4>Good to know</h4>
+          <ul><li>Only <b>one</b> banner shows per placement at any moment — the active, in-schedule one with the lowest Priority number. Deleting a banner is permanent, so if you just want to pause one, turn its Active toggle off instead.</li></ul>
+        </div>
+      </div>
+
+      <div class="module" id="media">
+        <h3>Media Library</h3>
+        <p class="purpose">Every image you've ever uploaded, in one searchable place — independent of which page or module it's used on.</p>
+        <div class="note">
+          <h4>Good to know</h4>
+          <ul>
+            <li>Use <b>Replace</b> on an image to swap the file while keeping the same record — anything using that image site-wide (a banner, a team photo) updates instantly, without you having to re-attach it everywhere.</li>
+            <li>You can drag up to 20 files in at once to bulk-upload.</li>
+            <li>This same library is what opens any time you click an Image field elsewhere in the dashboard.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="category" id="content">
+      <div class="cat-head"><h2>Content</h2></div>
+      <p class="cat-blurb">The modules for your ongoing content: what you're working on, what's happening, who's involved, and the photos to prove it.</p>
+
+      <div class="module" id="projects">
+        <h3>Projects <span class="subnote">+ Project Categories</span></h3>
+        <p class="purpose">Your programs and initiatives — shown on the public Projects listing and linkable from anywhere on the site.</p>
+        <div class="field-block">
+          <ol class="fields">
+            <li><span><span class="field-name">Title</span><span class="req">required</span></span></li>
+            <li><span><span class="field-name">Slug</span><span class="req">required</span> — auto-filled, editable</span></li>
+            <li><span><span class="field-name">Excerpt</span><span class="opt">optional</span> — short summary shown on the listing grid</span></li>
+            <li><span><span class="field-name">Content</span><span class="opt">optional</span> — the full write-up, rich text editor</span></li>
+            <li><span><span class="field-name">SEO panel</span><span class="opt">optional</span></span></li>
+            <li><span><span class="field-name">Category</span><span class="opt">optional</span> — for filtering on the public site</span></li>
+            <li><span><span class="field-name">Status</span><span class="req">required</span> — Draft / Published</span></li>
+            <li><span><span class="field-name">Photo/Video Gallery</span><span class="opt">optional</span> — link one of your Gallery albums</span></li>
+            <li><span><span class="field-name">Cover Image</span><span class="req">required</span></span></li>
+            <li><span><span class="field-name">Featured</span><span class="opt">toggle</span> — featured projects list first</span></li>
+          </ol>
+        </div>
+        <div class="note">
+          <h4>Good to know</h4>
+          <ul>
+            <li><b>Project Categories</b> are managed right on the Projects list via a small popup — no separate page. Deleting a category never deletes its projects; they just lose that label.</li>
+            <li>Deleted projects go to Trash first, with Restore available.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="module" id="news">
+        <h3>News <span class="subnote">+ News Categories</span></h3>
+        <p class="purpose">Dated announcements and updates — same shape as Projects, plus a Published Date that controls display order.</p>
+        <div class="field-block">
+          <ol class="fields">
+            <li><span><span class="field-name">Title, Slug, Excerpt, Content, SEO panel</span><span class="desc">— same as Projects, above</span></span></li>
+            <li><span><span class="field-name">Category</span><span class="opt">optional</span></span></li>
+            <li><span><span class="field-name">Status</span><span class="req">required</span></span></li>
+            <li><span><span class="field-name">Published Date</span><span class="req">required</span> — newest shows first on the public News page</span></li>
+            <li><span><span class="field-name">Cover Image</span><span class="req">required</span></span></li>
+            <li><span><span class="field-name">Featured</span><span class="opt">toggle</span></span></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="module" id="stories">
+        <h3>Stories</h3>
+        <p class="purpose">Success stories and case studies — the same shape as News, with an optional link back to the Project the story came from, so visitors can browse stories by program.</p>
+      </div>
+
+      <div class="module" id="galleries">
+        <h3>Galleries</h3>
+        <p class="purpose">Photo (and video) albums. These power the public Gallery page and also act as the photo source for Hero backgrounds and Photo Slider sections elsewhere.</p>
+        <div class="field-block">
+          <ol class="fields">
+            <li><span><span class="field-name">Title, Slug, Description, SEO panel</span></span></li>
+            <li><span><span class="field-name">Cover Image</span></span></li>
+            <li><span><span class="field-name">Active</span><span class="opt">toggle</span> — off disables it everywhere, including as a section's photo source</span></li>
+            <li><span><span class="field-name">Show in Public Gallery</span><span class="opt">toggle</span> — turn off if this album is only meant to feed a Hero/Slider section, not have its own public page</span></li>
+          </ol>
+        </div>
+        <div class="note">
+          <h4>Good to know</h4>
+          <ul><li>Adding photos one at a time gets slow — use <b>Bulk Add Photos</b> instead: pick several existing library images or upload new ones together, with an optional caption on each, in one go.</li></ul>
+        </div>
+      </div>
+
+      <div class="module" id="team">
+        <h3>Team <span class="subnote">+ Team Categories</span></h3>
+        <p class="purpose">Your board, staff, and volunteers.</p>
+        <div class="field-block">
+          <ol class="fields">
+            <li><span><span class="field-name">Name</span><span class="req">required</span></span></li>
+            <li><span><span class="field-name">Role / Position, Country, Service Period</span><span class="opt">optional</span></span></li>
+            <li><span><span class="field-name">Bio</span><span class="opt">optional</span></span></li>
+            <li><span><span class="field-name">Category</span><span class="opt">optional</span> — group into e.g. "Board" vs "Volunteers" so a page section can show just one group</span></li>
+            <li><span><span class="field-name">Photo, Active toggle, Display Order</span></span></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="module" id="featured-visitors">
+        <h3>Featured Visitors</h3>
+        <p class="purpose">Notable guests <i>you</i> choose to showcase — different from the Visitor Book below, which is submitted by the public.</p>
+        <div class="field-block">
+          <ol class="fields">
+            <li><span><span class="field-name">Name</span><span class="req">required</span></span></li>
+            <li><span><span class="field-name">Organization</span><span class="opt">optional</span></span></li>
+            <li><span><span class="field-name">Country, Visit Date</span><span class="req">required</span></span></li>
+            <li><span><span class="field-name">Photo, Active toggle, Display Order</span></span></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="category" id="engagement">
+      <div class="cat-head"><h2>Engagement</h2></div>
+      <p class="cat-blurb">What comes in from your visitors — nothing to create here, only to read and act on.</p>
+
+      <div class="module" id="contact">
+        <h3>Contact Inbox</h3>
+        <p class="purpose">Every submission from your site's contact form lands here.</p>
+        <div class="note">
+          <h4>Good to know</h4>
+          <ul>
+            <li>Unread messages are highlighted; opening one to view it automatically marks it read.</li>
+            <li>"Reply by Email" opens the message in <i>your own</i> email app (via a <code>mailto:</code> link) — there's no reply box inside the dashboard.</li>
+            <li>Deleting a message is permanent — there's no Trash for the inbox.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="module" id="visitor-book">
+        <h3>Visitor Book</h3>
+        <p class="purpose">Opinions and comments visitors submit publicly about a project or their visit — you moderate them before (or instead of) showing them anywhere.</p>
+        <div class="note">
+          <h4>Good to know</h4>
+          <ul><li>Each entry shows Pending, Approved, or Rejected. Use the <b>Approve</b> / <b>Reject</b> buttons to change its status; deleting is permanent.</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="category" id="programs">
+      <div class="cat-head"><h2>Programs</h2></div>
+      <p class="cat-blurb">If your site runs training courses, these five modules connect: a <b>Student</b> takes a <b>Course</b> through an <b>Enrollment</b>, which can lead to an issued <b>Certificate</b>. <b>Donations</b> is a separate, standalone ledger.</p>
+
+      <div class="module" id="courses">
+        <h3>Courses</h3>
+        <p class="purpose">Your catalog of training programs.</p>
+        <div class="field-block">
+          <ol class="fields">
+            <li><span><span class="field-name">Course Name</span><span class="req">required</span></span></li>
+            <li><span><span class="field-name">Description</span><span class="opt">optional</span></span></li>
+            <li><span><span class="field-name">Duration</span><span class="req">required</span> — free text, e.g. "02 Years"</span></li>
+            <li><span><span class="field-name">Status</span><span class="req">required</span> — only <b>Active</b> courses appear when creating an Enrollment</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="module" id="students">
+        <h3>Students</h3>
+        <p class="purpose">Enrollee records.</p>
+        <div class="field-block">
+          <ol class="fields">
+            <li><span><span class="field-name">Full Name, Father's Name, Mother's Name, Date of Birth</span><span class="req">required</span></span></li>
+            <li><span><span class="field-name">Address</span><span class="req">required</span></span></li>
+            <li><span><span class="field-name">Phone, Email</span><span class="opt">optional</span></span></li>
+          </ol>
+        </div>
+        <div class="note"><h4>Good to know</h4><ul><li>A <b>Student Code</b> is generated for you automatically once saved — you don't set it.</li></ul></div>
+      </div>
+
+      <div class="module" id="enrollments">
+        <h3>Enrollments</h3>
+        <p class="purpose">Links one Student to one Course and tracks their result.</p>
+        <div class="field-block">
+          <ol class="fields">
+            <li><span><span class="field-name">Student, Course</span><span class="req">required</span> — pick from dropdowns</span></li>
+            <li><span><span class="field-name">Session</span><span class="req">required</span> — e.g. "2024–2025"</span></li>
+            <li><span><span class="field-name">Roll Number, Registration Number, Admission/Completion Dates</span><span class="opt">optional</span></span></li>
+            <li><span><span class="field-name">Result Status</span><span class="req">required</span> — Pending / Passed / Failed</span></li>
+            <li><span><span class="field-name">Grade, Grade Point, Grade Scale</span><span class="opt">optional</span></span></li>
+          </ol>
+        </div>
+        <div class="note">
+          <h4>Good to know</h4>
+          <ul><li>The <b>Issue Certificate</b> button only appears once Result Status is saved as <b>Passed</b> — set the result, save, then reopen the enrollment to issue it.</li></ul>
+        </div>
+      </div>
+
+      <div class="module" id="certificates">
+        <h3>Certificates</h3>
+        <p class="purpose">Two ways a certificate gets created: automatically from a Passed Enrollment (above), or manually here for a one-off certificate not tied to a course.</p>
+        <div class="field-block">
+          <ol class="fields">
+            <li><span><span class="field-name">Recipient Name</span><span class="req">required</span></span></li>
+            <li><span><span class="field-name">Program/Course</span><span class="opt">optional free text</span></span></li>
+            <li><span><span class="field-name">Related Project</span><span class="opt">optional</span></span></li>
+            <li><span><span class="field-name">Issue Date</span><span class="req">required</span></span></li>
+            <li><span><span class="field-name">Status</span><span class="req">required</span> — Valid / Revoked</span></li>
+          </ol>
+        </div>
+        <div class="note">
+          <h4>Good to know</h4>
+          <ul><li>Every certificate gets a public verification link and a downloadable QR code, so anyone can confirm it's genuine. <b>Revoking</b> a certificate immediately breaks that public verification.</li></ul>
+        </div>
+      </div>
+
+      <div class="module" id="donations">
+        <h3>Donations</h3>
+        <p class="purpose">A manual ledger for donations received offline — there's no online payment gateway built in, this is for recording what came in by bank transfer, cash, etc.</p>
+        <div class="field-block">
+          <ol class="fields">
+            <li><span><span class="field-name">Donor Name</span><span class="req">required</span></span></li>
+            <li><span><span class="field-name">Donor Email</span><span class="opt">optional</span> — a receipt only gets emailed if this is filled in</span></li>
+            <li><span><span class="field-name">Amount, Currency, Payment Method, Donation Date</span><span class="req">required</span></span></li>
+            <li><span><span class="field-name">Related Project</span><span class="opt">optional</span></span></li>
+            <li><span><span class="field-name">Status</span><span class="req">required</span> — Completed / Refunded</span></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="category" id="site-setup">
+      <div class="cat-head"><h2>Site setup</h2></div>
+      <p class="cat-blurb">The two screens that shape the whole site at once, rather than one piece of content.</p>
+
+      <div class="module" id="settings">
+        <h3>Settings</h3>
+        <p class="purpose">One page, organized into tabs down the left. Anything here affects the entire site immediately on save.</p>
+        <div class="two-col">
+          <div>
+            <p style="margin:0 0 6px; font-weight:600; font-size:0.9rem;">General &amp; Branding</p>
+            <p style="margin:0; color:var(--ink-soft); font-size:0.88rem;">Site Name, Tagline, Homepage (which Page shows at your root address), Logo, Favicon, and one <b>Brand Color</b> — every accent color across your public site derives from this single value.</p>
+          </div>
+          <div>
+            <p style="margin:0 0 6px; font-weight:600; font-size:0.9rem;">Contact &amp; Social</p>
+            <p style="margin:0; color:var(--ink-soft); font-size:0.88rem;">Email, Phone, Address, Google Map link, and your social profile URLs — these feed the footer and Contact sections sitewide.</p>
+          </div>
+          <div>
+            <p style="margin:0 0 6px; font-weight:600; font-size:0.9rem;">Footer, Gallery &amp; News</p>
+            <p style="margin:0; color:var(--ink-soft); font-size:0.88rem;">Copyright text, how many footer links/projects show, gallery display style, and how many News items appear on the homepage.</p>
+          </div>
+          <div>
+            <p style="margin:0 0 6px; font-weight:600; font-size:0.9rem;">Analytics &amp; System</p>
+            <p style="margin:0; color:var(--ink-soft); font-size:0.88rem;">Google Analytics/Tag Manager/Facebook Pixel IDs, Maintenance Mode, and reCAPTCHA keys (both keys are required together to activate spam protection on your contact form).</p>
+          </div>
+        </div>
+        <div class="note" style="margin-top:18px;">
+          <h4>Good to know</h4>
+          <ul>
+            <li>The <b>Developer</b> tab is visible but locked to Super Admin only — everyone else can look but not edit it.</li>
+            <li>If you see a banner saying "You have view-only access," your role can see Settings but not save changes — ask a Super Admin.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="module" id="seo">
+        <h3>SEO &amp; Sitemap</h3>
+        <p class="purpose">Separate from Settings — this is the sitewide default for search engines and your sitemap, not per-page SEO (that lives on each page/project/etc.'s own SEO panel).</p>
+        <div class="field-block">
+          <ol class="fields">
+            <li><span><span class="field-name">Default Meta Robots</span><span class="req">required</span> — whether search engines are allowed to index the site by default</span></li>
+            <li><span><span class="field-name">Include Projects / Include Galleries</span><span class="opt">toggles</span> — whether those show up in your sitemap</span></li>
+            <li><span><span class="field-name">robots.txt Contents</span><span class="opt">optional</span></span></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="category" id="administration">
+      <div class="cat-head"><h2>Administration</h2></div>
+      <p class="cat-blurb">Who can log in, and what they're allowed to touch.</p>
+
+      <div class="module" id="users">
+        <h3>Users &amp; Roles</h3>
+        <p class="purpose"><b>Users</b> are the people who can log into this dashboard. Each one has exactly one <b>Role</b>, and a Role is just a named set of permission checkboxes grouped by module.</p>
+        <div class="field-block">
+          <ol class="fields">
+            <li><span><span class="field-name">Name, Email</span><span class="req">required</span></span></li>
+            <li><span><span class="field-name">Password</span><span class="req">required on create</span> — leave blank when editing to keep the current one</span></li>
+            <li><span><span class="field-name">Role</span><span class="req">required</span></span></li>
+            <li><span><span class="field-name">Active</span><span class="opt">toggle</span></span></li>
+          </ol>
+        </div>
+        <div class="note">
+          <h4>Good to know</h4>
+          <ul>
+            <li>Use the <b>Deactivate</b> button on the users list to lock someone out temporarily without deleting their account — Delete is permanent everywhere here, there's no Trash for Users.</li>
+            <li>To give someone access to a module missing from their menu, edit their <b>Role</b> and check that module's permission — not the individual user.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <footer class="manual-footer">
+      AfraaCMS Dashboard Handbook — covers every admin module as of this build. If a screen you're looking at doesn't match this description, your site's version may have moved on since this was written.
+    </footer>
+  </main>
+</div>
+
+</body>
+</html>
