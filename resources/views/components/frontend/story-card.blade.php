@@ -1,6 +1,14 @@
 @props(['story'])
 
-<a href="{{ route('stories.show', $story['slug']) }}" class="group block overflow-hidden rounded-2xl bg-white shadow-md ring-1 ring-black/5 transition hover:shadow-xl">
+@php
+    $isAttachment = (bool) ($story['attachment_url'] ?? null);
+@endphp
+
+<a
+    href="{{ $isAttachment ? $story['attachment_url'] : route('stories.show', $story['slug']) }}"
+    @if ($isAttachment) target="_blank" rel="noopener" @endif
+    class="group block overflow-hidden rounded-2xl bg-white shadow-md ring-1 ring-black/5 transition hover:shadow-xl"
+>
     <div class="relative h-52 overflow-hidden">
         @if ($story['cover_image_url'])
             <img src="{{ $story['cover_image_url'] }}" alt="" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy">
@@ -13,10 +21,22 @@
         @if ($story['is_featured'])
             <span class="absolute left-2 top-2 rounded-full bg-brand-500 px-2 py-0.5 text-xs font-semibold text-white">{{ __('Featured') }}</span>
         @endif
+
+        @if ($isAttachment)
+            <span class="absolute right-2 top-2 flex items-center gap-1 rounded-full bg-ink-900/80 px-2 py-0.5 text-xs font-semibold text-white">
+                <x-icon name="document-text" class="h-3.5 w-3.5" />
+                {{ __('Document') }}
+            </span>
+        @endif
     </div>
 
     <div class="p-6">
         <div class="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-brand-600">
+            @if ($story['category'])
+                <span>{{ $story['category']['name'] }}</span>
+                <span>&middot;</span>
+            @endif
+
             @if ($story['project'])
                 <span>{{ $story['project']['title'] }}</span>
                 <span>&middot;</span>
@@ -27,7 +47,12 @@
             @endif
         </div>
 
-        <h3 class="mt-2 text-lg font-semibold text-ink-900">{{ $story['title'] }}</h3>
+        <h3 class="mt-2 flex items-center gap-1.5 text-lg font-semibold text-ink-900">
+            {{ $story['title'] }}
+            @if ($isAttachment)
+                <x-icon name="arrow-top-right-on-square" class="h-4 w-4 shrink-0 text-ink-900/40" />
+            @endif
+        </h3>
 
         @if ($story['excerpt'])
             <p class="mt-2 text-sm text-ink-900/60">{{ $story['excerpt'] }}</p>

@@ -20,6 +20,27 @@
     <x-sections :sections="$cmsPage['sections'] ?? []" />
 
     <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+        <form method="GET" action="{{ route('stories.index') }}" class="mx-auto mb-8 max-w-md">
+            @if (request('project'))
+                <input type="hidden" name="project" value="{{ request('project') }}">
+            @endif
+            @if (request('category'))
+                <input type="hidden" name="category" value="{{ request('category') }}">
+            @endif
+            <div class="flex gap-2">
+                <input
+                    type="search"
+                    name="q"
+                    value="{{ request('q') }}"
+                    placeholder="{{ __('Search stories...') }}"
+                    class="block w-full rounded-full border-gray-300 shadow-xs focus:border-brand-500 focus:ring-brand-500"
+                >
+                <button type="submit" class="shrink-0 rounded-full bg-brand-500 px-5 py-2 text-sm font-semibold text-white hover:bg-brand-600">
+                    {{ __('Search') }}
+                </button>
+            </div>
+        </form>
+
         @if ($projects->isNotEmpty())
             <div class="flex flex-wrap justify-center gap-2">
                 <a
@@ -40,14 +61,36 @@
             </div>
         @endif
 
+        @if ($categories->isNotEmpty())
+            <div class="mt-3 flex flex-wrap justify-center gap-2">
+                <a
+                    href="{{ route('stories.index') }}"
+                    class="rounded-full px-3 py-1 text-sm font-medium {{ request('category') ? 'bg-gray-100 text-gray-600 hover:bg-gray-200' : 'bg-brand-500 text-white' }}"
+                >
+                    {{ __('All Categories') }}
+                </a>
+
+                @foreach ($categories as $category)
+                    <a
+                        href="{{ route('stories.index', ['category' => $category->slug]) }}"
+                        class="rounded-full px-3 py-1 text-sm font-medium {{ request('category') === $category->slug ? 'bg-brand-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}"
+                    >
+                        {{ $category->name }}
+                    </a>
+                @endforeach
+            </div>
+        @endif
+
         @if (empty($stories))
-            <p class="mt-10 text-center text-gray-500">{{ __('No success stories yet.') }}</p>
+            <p class="mt-10 text-center text-gray-500">{{ __('No success stories found.') }}</p>
         @else
             <div class="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
                 @foreach ($stories as $story)
                     <x-frontend.story-card :story="$story" />
                 @endforeach
             </div>
+
+            <x-frontend.pagination :paginator="$paginator" />
         @endif
     </div>
 </x-frontend-layout>

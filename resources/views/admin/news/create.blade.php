@@ -5,7 +5,7 @@
         <h2 class="text-xl font-semibold text-gray-900">{{ __('New Post') }}</h2>
     </x-slot>
 
-    <form method="POST" action="{{ route('admin.news.store') }}">
+    <form method="POST" action="{{ route('admin.news.store') }}" enctype="multipart/form-data">
         @csrf
         @include('admin.news._form')
     </form>

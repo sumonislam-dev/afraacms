@@ -6,11 +6,14 @@ use App\CMS\Services\PageService;
 use App\CMS\Services\ProjectService;
 use App\CMS\Services\StoryService;
 use App\CMS\Services\VisitorBookService;
+use App\Http\Controllers\Concerns\PaginatesArrays;
 use App\Models\ProjectCategory;
 use Illuminate\View\View;
 
 class ProjectController extends Controller
 {
+    use PaginatesArrays;
+
     public function __construct(
         private readonly ProjectService $projects,
         private readonly StoryService $stories,
@@ -19,7 +22,8 @@ class ProjectController extends Controller
     ) {}
 
     /**
-     * Display every published project, optionally filtered by category.
+     * Display every published project, optionally filtered by category and
+     * a search query, one page at a time.
      */
     public function index(): View
     {
@@ -33,11 +37,16 @@ class ProjectController extends Controller
             ));
         }
 
+        $projects = $this->searchArray($projects, request('q'));
+
+        $paginator = $this->paginateArray($projects, 'projects_items_per_page', 9);
+        $projects = $paginator->items();
+
         // The "projects" slug's Page record supplies this listing's banner
         // image/eyebrow/SEO override, if an admin has set one.
         $cmsPage = $this->pages->findPublished('projects');
 
-        return view('frontend.projects.index', compact('projects', 'categories', 'cmsPage'));
+        return view('frontend.projects.index', compact('projects', 'categories', 'cmsPage', 'paginator'));
     }
 
     /**

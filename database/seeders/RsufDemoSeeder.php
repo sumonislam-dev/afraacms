@@ -50,10 +50,6 @@ class RsufDemoSeeder extends Seeder
 
     private ?Gallery $heroGallery = null;
 
-    private ?Gallery $scholarshipGallery = null;
-
-    private ?Gallery $workshopGallery = null;
-
     private ?Page $homePage = null;
 
     private ?TeamCategory $executiveCommittee = null;
@@ -290,45 +286,6 @@ class RsufDemoSeeder extends Seeder
             ]);
         }
 
-        // The live site's two homepage carousels ("Small Project Scholarship
-        // Program", "RSUF Family Development Workshop") each showed 10+ distinct
-        // photos we don't have locally - these reuse the same imported demo
-        // images as a stand-in until the client supplies the real photo sets.
-        $this->scholarshipGallery = Gallery::updateOrCreate(
-            ['slug' => 'small-project-scholarship-program'],
-            ['title' => 'Small Project Scholarship Program', 'is_active' => true, 'is_public' => false, 'sort_order' => 2]
-        );
-        $this->scholarshipGallery->items()->delete();
-
-        $this->workshopGallery = Gallery::updateOrCreate(
-            ['slug' => 'family-development-workshop'],
-            ['title' => 'RSUF Family Development Workshop', 'is_active' => true, 'is_public' => false, 'sort_order' => 3]
-        );
-        $this->workshopGallery->items()->delete();
-
-        $scholarshipPhotos = ['scholarship', 'campus', 'slider_2', 'slider_3'];
-
-        foreach ($scholarshipPhotos as $i => $key) {
-            if (! isset($this->media[$key])) {
-                continue;
-            }
-
-            $this->scholarshipGallery->items()->create([
-                'type' => 'image', 'image' => $this->media[$key]->id, 'sort_order' => $i,
-            ]);
-        }
-
-        $workshopPhotos = ['old_care', 'relief', 'hospital', 'safe_water'];
-
-        foreach ($workshopPhotos as $i => $key) {
-            if (! isset($this->media[$key])) {
-                continue;
-            }
-
-            $this->workshopGallery->items()->create([
-                'type' => 'image', 'image' => $this->media[$key]->id, 'sort_order' => $i,
-            ]);
-        }
     }
 
     private function seedProjects(): void
@@ -589,7 +546,7 @@ class RsufDemoSeeder extends Seeder
         ]);
 
         $page->sections()->create([
-            'type' => 'projects', 'sort_order' => 3,
+            'type' => 'content_list', 'source' => 'projects', 'sort_order' => 3,
             'subheading' => 'Our Projects',
             'heading' => 'Where Your Support Makes a Difference',
             'button_text' => 'View All Projects',
@@ -645,7 +602,7 @@ class RsufDemoSeeder extends Seeder
         }
 
         $page->sections()->create([
-            'type' => 'stories', 'sort_order' => count($sections),
+            'type' => 'content_list', 'source' => 'stories', 'sort_order' => count($sections),
             'subheading' => 'Success Stories',
             'heading' => 'Lives Changed Through RSUF',
         ]);
@@ -709,7 +666,7 @@ class RsufDemoSeeder extends Seeder
         $page->sections()->delete();
 
         $page->sections()->create([
-            'type' => 'news', 'sort_order' => 0,
+            'type' => 'content_list', 'source' => 'news', 'sort_order' => 0,
             'subheading' => 'Stay Updated',
             'heading' => 'Latest News & Updates',
         ]);
@@ -751,9 +708,7 @@ class RsufDemoSeeder extends Seeder
      */
     private function hideUnrelatedDemoContent(): void
     {
-        Gallery::whereNotIn('slug', [
-            'field-work', 'homepage-hero', 'small-project-scholarship-program', 'family-development-workshop',
-        ])->update(['is_active' => false]);
+        Gallery::whereNotIn('slug', ['field-work', 'homepage-hero'])->update(['is_active' => false]);
 
         Project::whereNotIn('slug', [
             'rahmatunnesa-skill-training-project-rstp',

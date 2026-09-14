@@ -1,15 +1,17 @@
 @php
     $isEdit = isset($section);
     $currentType = old('type', $section->type ?? '');
+    $currentSource = old('source', $section->source ?? '');
     $typesConfig = config('sections.types', []);
+    $contentSources = config('content_sources', []);
 @endphp
 
-<div x-data="{ type: @js($currentType), fields: @js(collect($typesConfig)->map(fn ($t) => $t['fields'])->all()) }">
+<div x-data="{ type: @js($currentType), source: @js($currentSource), fields: @js(collect($typesConfig)->map(fn ($t) => $t['fields'])->all()) }">
     <x-admin.edit-layout>
         <x-slot name="main">
             <x-admin.card>
                 <div class="space-y-4">
-                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                    <div class="grid grid-cols-1 gap-4" x-bind:class="type === 'content_list' ? 'sm:grid-cols-2' : ''">
                         <div>
                             <x-input-label for="type" :value="__('Type')" />
                             <select id="type" name="type" x-model="type" required class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
@@ -21,6 +23,22 @@
                             <x-input-error class="mt-2" :messages="$errors->get('type')" />
                         </div>
 
+                        <div x-show="type === 'content_list'" style="display: none;">
+                            <div class="flex items-center gap-1">
+                                <x-input-label for="content-source" :value="__('Content Source')" />
+                                <x-admin.info-tooltip :text="__('Pick which pool of content this block pulls from. Add a new source later (e.g. Annual Reports) without ever needing a new section type.')" />
+                            </div>
+                            <select id="content-source" x-model="source" x-bind:name="type === 'content_list' ? 'source' : null" class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
+                                <option value="">{{ __('Select a source') }}</option>
+                                @foreach ($contentSources as $sourceKey => $sourceMeta)
+                                    <option value="{{ $sourceKey }}" @selected($currentSource === $sourceKey)>{{ $sourceMeta['label'] }}</option>
+                                @endforeach
+                            </select>
+                            <x-input-error class="mt-2" :messages="$errors->get('source')" />
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-4" x-bind:class="(fields[type]?.includes('heading') && fields[type]?.includes('subheading')) ? 'sm:grid-cols-2' : ''">
                         <div x-show="fields[type]?.includes('heading')" style="display: none;">
                             <x-input-label for="heading" :value="__('Heading')" />
                             <x-text-input id="heading" name="heading" type="text" class="mt-1 block w-full" :value="old('heading', $section->heading ?? '')" />
@@ -75,7 +93,10 @@
                         style="display: none;"
                         x-data="{ galleryMode: @js(! empty($selectedGalleryIds ?? []) ? 'specific' : 'all') }"
                     >
-                        <x-input-label :value="__('Albums to Show')" />
+                        <div class="flex items-center gap-1">
+                            <x-input-label :value="__('Albums to Show')" />
+                            <x-admin.info-tooltip :text="__('\"All Active Albums\" always shows your latest active albums automatically. Choose \"Specific Albums\" to hand-pick which ones appear here.')" />
+                        </div>
                         <div class="mt-1 inline-flex rounded-md border border-gray-300 bg-white p-0.5 text-sm">
                             <label class="cursor-pointer rounded-sm px-3 py-1 font-medium transition-colors" :class="galleryMode === 'all' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-50'">
                                 <input type="radio" x-model="galleryMode" value="all" class="sr-only">
@@ -107,8 +128,6 @@
                                 <p class="text-sm text-gray-500">{{ __('No albums yet.') }}</p>
                             @endforelse
                         </div>
-
-                        <p class="mt-2 text-xs text-gray-500">{{ __('"All Active Albums" always shows your latest active albums automatically. Choose "Specific Albums" to hand-pick which ones appear here.') }}</p>
                     </div>
 
                     <div
@@ -120,7 +139,10 @@
                                 : (! empty($selectedTeamMemberIds ?? []) ? 'specific' : 'all')),
                         }"
                     >
-                        <x-input-label :value="__('Members to Show')" />
+                        <div class="flex items-center gap-1">
+                            <x-input-label :value="__('Members to Show')" />
+                            <x-admin.info-tooltip :text="__('\"All Active Members\" shows everyone. \"By Category\" shows only the categories you pick here (e.g. Volunteers on one page, Board on another). \"Specific Members\" lets you hand-pick exactly who appears.')" />
+                        </div>
                         <div class="mt-1 inline-flex rounded-md border border-gray-300 bg-white p-0.5 text-sm">
                             <label class="cursor-pointer rounded-sm px-3 py-1 font-medium transition-colors" :class="teamMode === 'all' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-50'">
                                 <input type="radio" x-model="teamMode" value="all" class="sr-only">
@@ -174,13 +196,90 @@
                                 <p class="text-sm text-gray-500">{{ __('No team members yet. Add some under Team in the sidebar.') }}</p>
                             @endforelse
                         </div>
+                    </div>
 
-                        <p class="mt-2 text-xs text-gray-500">{{ __('"All Active Members" shows everyone. "By Category" shows only the categories you pick here (e.g. Volunteers on one page, Board on another). "Specific Members" lets you hand-pick exactly who appears.') }}</p>
+                    <div
+                        x-show="type === 'content_list' && source !== ''"
+                        style="display: none;"
+                        x-data="{
+                            contentMode: @js(! empty($selectedContentCategoryIds ?? [])
+                                ? 'category'
+                                : (! empty($selectedContentItemIds ?? []) ? 'specific' : 'all')),
+                        }"
+                    >
+                        <div class="flex items-center gap-1">
+                            <x-input-label :value="__('Items to Show')" />
+                            <x-admin.info-tooltip :text="__('\"All Active\" shows the latest published items automatically. \"By Category\" and \"Specific Items\" let you narrow it down, same as the Team sections.')" />
+                        </div>
+                        <div class="mt-1 inline-flex rounded-md border border-gray-300 bg-white p-0.5 text-sm">
+                            <label class="cursor-pointer rounded-sm px-3 py-1 font-medium transition-colors" :class="contentMode === 'all' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-50'">
+                                <input type="radio" x-model="contentMode" value="all" class="sr-only">
+                                {{ __('All Active') }}
+                            </label>
+                            <label class="cursor-pointer rounded-sm px-3 py-1 font-medium transition-colors" :class="contentMode === 'category' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-50'">
+                                <input type="radio" x-model="contentMode" value="category" class="sr-only">
+                                {{ __('By Category') }}
+                            </label>
+                            <label class="cursor-pointer rounded-sm px-3 py-1 font-medium transition-colors" :class="contentMode === 'specific' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-50'">
+                                <input type="radio" x-model="contentMode" value="specific" class="sr-only">
+                                {{ __('Specific Items') }}
+                            </label>
+                        </div>
+
+                        @foreach (($contentCategoryOptions ?? []) as $sourceKey => $categories)
+                            <div
+                                class="mt-3 max-h-56 space-y-2 overflow-y-auto rounded-md border border-gray-200 p-3"
+                                x-show="contentMode === 'category' && source === '{{ $sourceKey }}'"
+                                style="display: none;"
+                            >
+                                @forelse ($categories as $category)
+                                    <label class="flex items-center gap-2 text-sm text-gray-700">
+                                        <input
+                                            type="checkbox"
+                                            name="content_category_ids[]"
+                                            value="{{ $category->id }}"
+                                            @checked(in_array($category->id, $selectedContentCategoryIds ?? [], true))
+                                            x-bind:disabled="! (contentMode === 'category' && source === '{{ $sourceKey }}')"
+                                            class="rounded-sm border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                        >
+                                        {{ $category->name }}
+                                    </label>
+                                @empty
+                                    <p class="text-sm text-gray-500">{{ __('No categories yet.') }}</p>
+                                @endforelse
+                            </div>
+                        @endforeach
+
+                        @foreach (($contentItemOptions ?? []) as $sourceKey => $items)
+                            <div
+                                class="mt-3 max-h-56 space-y-2 overflow-y-auto rounded-md border border-gray-200 p-3"
+                                x-show="contentMode === 'specific' && source === '{{ $sourceKey }}'"
+                                style="display: none;"
+                            >
+                                @forelse ($items as $item)
+                                    <label class="flex items-center gap-2 text-sm text-gray-700">
+                                        <input
+                                            type="checkbox"
+                                            name="content_item_ids[]"
+                                            value="{{ $item->id }}"
+                                            @checked(in_array($item->id, $selectedContentItemIds ?? [], true))
+                                            x-bind:disabled="! (contentMode === 'specific' && source === '{{ $sourceKey }}')"
+                                            class="rounded-sm border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                        >
+                                        {{ $item->title }}
+                                    </label>
+                                @empty
+                                    <p class="text-sm text-gray-500">{{ __('Nothing here yet.') }}</p>
+                                @endforelse
+                            </div>
+                        @endforeach
                     </div>
 
                     <div x-show="type === 'photo_slider'" style="display: none;">
-                        <x-input-label :value="__('Slides')" />
-                        <p class="mt-1 text-xs text-gray-500">{{ __('Pick one or more albums - their photos become the slides, in order.') }}</p>
+                        <div class="flex items-center gap-1">
+                            <x-input-label :value="__('Slides')" />
+                            <x-admin.info-tooltip :text="__('Pick one or more albums - their photos become the slides, in order.')" />
+                        </div>
                         <div class="mt-2 max-h-56 space-y-2 overflow-y-auto rounded-md border border-gray-200 p-3">
                             @forelse ($galleries ?? [] as $gallery)
                                 <label class="flex items-center gap-2 text-sm text-gray-700">
@@ -203,8 +302,10 @@
                     </div>
 
                     <div x-show="type === 'hero'" style="display: none;">
-                        <x-input-label :value="__('Background Images')" />
-                        <p class="mt-1 text-xs text-gray-500">{{ __('Optional. Pick one or more albums to rotate their photos behind the heading. Left blank, the single Image above is used instead.') }}</p>
+                        <div class="flex items-center gap-1">
+                            <x-input-label :value="__('Background Images')" />
+                            <x-admin.info-tooltip :text="__('Optional. Pick one or more albums to rotate their photos behind the heading. Left blank, the single Image above is used instead.')" />
+                        </div>
                         <div class="mt-2 max-h-56 space-y-2 overflow-y-auto rounded-md border border-gray-200 p-3">
                             @forelse ($galleries ?? [] as $gallery)
                                 <label class="flex items-center gap-2 text-sm text-gray-700">
@@ -233,9 +334,11 @@
             <x-admin.card :title="__('Settings')">
                 <div class="space-y-4">
                     <div>
-                        <x-input-label for="anchor" :value="__('Anchor ID')" />
+                        <div class="flex items-center gap-1">
+                            <x-input-label for="anchor" :value="__('Anchor ID')" />
+                            <x-admin.info-tooltip :text="__('Optional. Lets a menu link jump straight to this section, e.g. /about#history.')" />
+                        </div>
                         <x-text-input id="anchor" name="anchor" type="text" class="mt-1 block w-full" :value="old('anchor', $section->anchor ?? '')" placeholder="e.g. history" />
-                        <p class="mt-1 text-xs text-gray-500">{{ __('Optional. Lets a menu link jump straight to this section, e.g. /about#history.') }}</p>
                         <x-input-error class="mt-2" :messages="$errors->get('anchor')" />
                     </div>
 
@@ -249,23 +352,68 @@
                     </div>
 
                     <div x-show="['cards', 'contact'].includes(type)" style="display: none;">
-                        <x-input-label for="bg-layout" :value="__('Background')" />
+                        <div class="flex items-center gap-1">
+                            <x-input-label for="bg-layout" :value="__('Background')" />
+                            <x-admin.info-tooltip :text="__('Choose Light if this section sits between other light sections and the dark block feels out of place.')" />
+                        </div>
                         <select id="bg-layout" x-bind:name="['cards', 'contact'].includes(type) ? 'layout' : null" class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
                             <option value="dark" @selected(old('layout', $section->layout ?? 'dark') === 'dark')>{{ __('Dark Background') }}</option>
                             <option value="light" @selected(old('layout', $section->layout ?? 'dark') === 'light')>{{ __('Light Background') }}</option>
                         </select>
-                        <p class="mt-1 text-xs text-gray-500">{{ __('Choose Light if this section sits between other light sections and the dark block feels out of place.') }}</p>
                         <x-input-error class="mt-2" :messages="$errors->get('layout')" />
                     </div>
 
-                    @if ($isEdit)
-                        <div class="border-t border-gray-100 pt-4">
-                            <x-input-label :value="__('Visible')" />
-                            <div class="mt-1 flex items-center rounded-md border border-gray-200 px-3 py-2">
-                                <x-admin.toggle name="is_active" :checked="(bool) old('is_active', $section->is_active ?? true)" />
-                            </div>
+                    <div x-show="['news', 'notices', 'stories', 'content_list'].includes(type)" style="display: none;">
+                        <div class="flex items-center gap-1">
+                            <x-input-label for="display-layout" :value="__('Display Style')" />
+                            <x-admin.info-tooltip :text="__('Table List shows a row per item with date, description, thumbnail and a click-through button - handy for notices and circulars.')" />
                         </div>
-                    @endif
+                        <select id="display-layout" x-bind:name="['news', 'notices', 'stories', 'content_list'].includes(type) ? 'layout' : null" class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="cards" @selected(old('layout', $section->layout ?? 'cards') === 'cards')>{{ __('Card Grid') }}</option>
+                            <option value="table" @selected(old('layout', $section->layout ?? 'cards') === 'table')>{{ __('Table List') }}</option>
+                        </select>
+                        <x-input-error class="mt-2" :messages="$errors->get('layout')" />
+                    </div>
+
+                    <div x-show="['news', 'notices', 'stories', 'projects', 'content_list'].includes(type)" style="display: none;">
+                        <div class="flex items-center gap-1">
+                            <x-input-label for="item-limit" :value="__('Items to Show')" />
+                            <x-admin.info-tooltip :text="__('How many items this section pulls in. Leave blank to use a sensible default for this type.')" />
+                        </div>
+                        <x-text-input
+                            id="item-limit"
+                            type="number"
+                            min="1"
+                            max="50"
+                            class="mt-1 block w-full"
+                            x-bind:name="['news', 'notices', 'stories', 'projects', 'content_list'].includes(type) ? 'item_limit' : null"
+                            :value="old('item_limit', $section->item_limit ?? '')"
+                            placeholder="e.g. 6"
+                        />
+                        <x-input-error class="mt-2" :messages="$errors->get('item_limit')" />
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-4 border-t border-gray-100 pt-4" x-bind:class="['news', 'notices', 'stories', 'content_list'].includes(type) ? 'sm:grid-cols-2' : ''">
+                        <div x-show="['news', 'notices', 'stories', 'content_list'].includes(type)" style="display: none;">
+                            <div class="flex items-center gap-1">
+                                <x-input-label :value="__('Search Box')" />
+                                <x-admin.info-tooltip :text="__('Always shows a search box above this section. Searching takes the visitor to the full listing page with matching results.')" />
+                            </div>
+                            <div class="mt-1 flex items-center rounded-md border border-gray-200 px-3 py-2">
+                                <x-admin.toggle name="show_search" :checked="(bool) old('show_search', $section->show_search ?? false)" />
+                            </div>
+                            <x-input-error class="mt-2" :messages="$errors->get('show_search')" />
+                        </div>
+
+                        @if ($isEdit)
+                            <div>
+                                <x-input-label :value="__('Visible')" />
+                                <div class="mt-1 flex items-center rounded-md border border-gray-200 px-3 py-2">
+                                    <x-admin.toggle name="is_active" :checked="(bool) old('is_active', $section->is_active ?? true)" />
+                                </div>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </x-admin.card>
         </x-slot>

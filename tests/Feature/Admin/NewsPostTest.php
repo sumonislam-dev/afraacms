@@ -5,12 +5,21 @@ namespace Tests\Feature\Admin;
 use App\Models\NewsCategory;
 use App\Models\NewsPost;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\Concerns\CreatesAdminUsers;
 use Tests\TestCase;
 
 class NewsPostTest extends TestCase
 {
     use CreatesAdminUsers, RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Storage::fake('public');
+    }
 
     public function test_guests_are_redirected_to_login(): void
     {
@@ -137,5 +146,72 @@ class NewsPostTest extends TestCase
             ->assertRedirect(route('admin.news.trash'));
 
         $this->assertNotSoftDeleted($post);
+    }
+
+    public function test_editor_can_upload_an_attachment_with_a_post(): void
+    {
+        $editor = $this->editor();
+        $file = UploadedFile::fake()->create('notice.pdf', 100);
+
+        $this->actingAs($editor)->post(route('admin.news.store'), [
+            'title' => 'Notice With Attachment',
+            'slug' => 'notice-with-attachment',
+            'status' => 'published',
+            'attachment' => $file,
+        ])->assertRedirect(route('admin.news.index'));
+
+        $post = NewsPost::where('slug', 'notice-with-attachment')->firstOrFail();
+        $this->assertNotNull($post->attachment_url);
+        $this->assertSame('notice.pdf', $post->attachment_file_name);
+    }
+
+    public function test_an_attachment_must_be_an_allowed_file_type(): void
+    {
+        $editor = $this->editor();
+        $file = UploadedFile::fake()->create('malware.exe', 100);
+
+        $this->actingAs($editor)
+            ->post(route('admin.news.store'), [
+                'title' => 'Bad Attachment',
+                'slug' => 'bad-attachment',
+                'status' => 'draft',
+                'attachment' => $file,
+            ])
+            ->assertSessionHasErrors('attachment');
+    }
+
+    public function test_editor_can_remove_an_existing_attachment(): void
+    {
+        $editor = $this->editor();
+        $post = NewsPost::factory()->create(['title' => 'Has Attachment', 'slug' => 'has-attachment']);
+        $post->addMedia(UploadedFile::fake()->create('old.pdf', 50))->toMediaCollection('attachment');
+        $this->assertNotNull($post->fresh()->attachment_url);
+
+        $this->actingAs($editor)->put(route('admin.news.update', $post), [
+            'title' => 'Has Attachment',
+            'slug' => 'has-attachment',
+            'status' => 'draft',
+            'remove_attachment' => true,
+        ])->assertRedirect(route('admin.news.index'));
+
+        $this->assertNull($post->fresh()->attachment_url);
+    }
+
+    public function test_uploading_a_new_attachment_replaces_the_old_one(): void
+    {
+        $editor = $this->editor();
+        $post = NewsPost::factory()->create(['title' => 'Swap Attachment', 'slug' => 'swap-attachment']);
+        $post->addMedia(UploadedFile::fake()->create('old.pdf', 50))->toMediaCollection('attachment');
+
+        $this->actingAs($editor)->put(route('admin.news.update', $post), [
+            'title' => 'Swap Attachment',
+            'slug' => 'swap-attachment',
+            'status' => 'draft',
+            'attachment' => UploadedFile::fake()->create('new.pdf', 50),
+        ])->assertRedirect(route('admin.news.index'));
+
+        $post->refresh();
+        $this->assertSame('new.pdf', $post->attachment_file_name);
+        $this->assertSame(1, $post->getMedia('attachment')->count());
     }
 }

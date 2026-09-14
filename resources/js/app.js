@@ -218,3 +218,80 @@ document.addEventListener('DOMContentLoaded', () => {
     initFlatSortable('gallery-list-root', '[data-sortable-list]');
     initFlatSortable('gallery-items-root', '[data-sortable-list]');
 });
+
+/**
+ * AJAX pagination + search for [data-content-list] sections
+ * (frontend/sections/content_list.blade.php).
+ *
+ * Clicking Prev/Next or submitting the section's own search box normally
+ * reloads the whole page just to update one section. Instead we fetch the
+ * target URL, pull the matching #content-list-{id} block out of the
+ * response, and swap only that - the rest of the page (and any other
+ * content_list sections on it) stays put. Delegated on document so it keeps
+ * working after the container's own innerHTML is replaced.
+ */
+async function swapContentList(container, url) {
+    container.classList.add('opacity-50', 'pointer-events-none', 'transition-opacity');
+
+    try {
+        const response = await fetch(url, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        });
+
+        if (! response.ok) {
+            throw new Error(`Unexpected status ${response.status}`);
+        }
+
+        const html = await response.text();
+        const newContainer = new DOMParser()
+            .parseFromString(html, 'text/html')
+            .getElementById(container.id);
+
+        if (! newContainer) {
+            throw new Error(`#${container.id} missing from response`);
+        }
+
+        container.innerHTML = newContainer.innerHTML;
+        history.pushState({}, '', url);
+    } catch (error) {
+        window.location.href = url;
+    } finally {
+        container.classList.remove('opacity-50', 'pointer-events-none', 'transition-opacity');
+    }
+}
+
+function initAjaxContentListPagination() {
+    if (! document.querySelector('[data-content-list]')) {
+        return;
+    }
+
+    document.addEventListener('click', (event) => {
+        const link = event.target.closest('[data-content-list] nav a[href]');
+
+        if (! link) {
+            return;
+        }
+
+        event.preventDefault();
+        swapContentList(link.closest('[data-content-list]'), link.href);
+    });
+
+    document.addEventListener('submit', (event) => {
+        const form = event.target.closest('[data-content-list] form[data-content-search]');
+
+        if (! form) {
+            return;
+        }
+
+        event.preventDefault();
+
+        const params = new URLSearchParams(new FormData(form)).toString();
+        const url = form.getAttribute('action') + (params ? `?${params}` : '');
+
+        swapContentList(form.closest('[data-content-list]'), url);
+    });
+
+    window.addEventListener('popstate', () => window.location.reload());
+}
+
+document.addEventListener('DOMContentLoaded', initAjaxContentListPagination);

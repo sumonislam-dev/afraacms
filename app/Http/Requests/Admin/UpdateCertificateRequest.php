@@ -24,7 +24,11 @@ class UpdateCertificateRequest extends FormRequest
     {
         return [
             'project_id' => ['nullable', 'integer', Rule::exists('projects', 'id')],
-            'recipient_name' => ['required', 'string', 'max:255'],
+            'enrollment_id' => [
+                'nullable', 'integer', Rule::exists('enrollments', 'id'),
+                Rule::unique('certificates', 'enrollment_id')->ignore($this->route('certificate')),
+            ],
+            'recipient_name' => ['required_without:enrollment_id', 'nullable', 'string', 'max:255'],
             'program' => ['nullable', 'string', 'max:255'],
             'issued_at' => ['required', 'date'],
             'status' => ['required', Rule::in(['valid', 'revoked'])],

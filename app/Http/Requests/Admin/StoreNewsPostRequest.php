@@ -36,6 +36,9 @@ class StoreNewsPostRequest extends FormRequest
             'published_at' => ['nullable', 'date'],
             'is_featured' => ['sometimes', 'boolean'],
             'status' => ['required', Rule::in(['draft', 'published'])],
+            // Optional on every post - a post with an attachment is picked up
+            // by the "notices" Section type without a separate type field.
+            'attachment' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png,webp', 'max:10240'],
             ...$this->seoRules(),
         ];
     }

@@ -5,6 +5,8 @@ namespace App\CMS\Services;
 use App\CMS\Services\Concerns\CachesForFrontend;
 use App\Models\NewsPost;
 use App\Models\SeoMeta;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Arr;
 
 class NewsService
 {
@@ -23,7 +25,7 @@ class NewsService
      * down to __PHP_Incomplete_Class on read, so only arrays/scalars may be
      * cached here (see PageService/ProjectService for the same pattern).
      *
-     * @return array{title: string, slug: string, excerpt: ?string, content: ?string, cover_image_url: ?string, published_at: ?string, is_featured: bool, updated_at: ?string, seo: array, category: ?array}|null
+     * @return array{id: int, title: string, slug: string, excerpt: ?string, content: ?string, cover_image_url: ?string, attachment_url: ?string, published_at: ?string, is_featured: bool, updated_at: ?string, seo: array, category_id: ?int, category: ?array}|null
      */
     public function find(string $slug): ?array
     {
@@ -50,15 +52,18 @@ class NewsService
             ->get()
             ->mapWithKeys(fn (NewsPost $post) => [
                 $post->slug => [
+                    'id' => $post->id,
                     'title' => $post->title,
                     'slug' => $post->slug,
                     'excerpt' => $post->excerpt,
                     'content' => $post->content,
                     'cover_image_url' => $post->cover_image_url,
+                    'attachment_url' => $post->attachment_url,
                     'published_at' => $post->published_at?->toDateString(),
                     'is_featured' => $post->is_featured,
                     'updated_at' => $post->updated_at?->toIso8601String(),
                     'seo' => SeoMeta::toCacheArray($post->seo),
+                    'category_id' => $post->category_id,
                     'category' => $post->category ? [
                         'name' => $post->category->name,
                         'slug' => $post->category->slug,
@@ -73,7 +78,13 @@ class NewsService
      */
     public function create(array $data): NewsPost
     {
+        $attachment = Arr::pull($data, 'attachment');
+
         $post = NewsPost::create($data);
+
+        if ($attachment instanceof UploadedFile) {
+            $post->addMedia($attachment)->toMediaCollection('attachment');
+        }
 
         SeoMeta::syncFor($post, $data);
 
@@ -87,7 +98,17 @@ class NewsService
      */
     public function update(NewsPost $post, array $data): NewsPost
     {
+        $attachment = Arr::pull($data, 'attachment');
+        $removeAttachment = Arr::pull($data, 'remove_attachment', false);
+
         $post->update($data);
+
+        if ($attachment instanceof UploadedFile) {
+            // singleFile() collection: adding a new one replaces the old.
+            $post->addMedia($attachment)->toMediaCollection('attachment');
+        } elseif ($removeAttachment) {
+            $post->clearMediaCollection('attachment');
+        }
 
         SeoMeta::syncFor($post, $data);
 

@@ -98,7 +98,7 @@ storage/
 | 21 — Testing | ✅ Done | 184 automated feature tests passing across every module |
 | 22 — Release v1.0 | ⏸ Blocked | Waiting on Phase 20 (`Shared hosting verified`, `Production deployed`) and a manual `Responsive verified` pass; all other checklist items are satisfied |
 
-**Built beyond this original plan:** Trash & Restore for Pages/Projects, an Activity Log/audit trail (spatie/laravel-activitylog across all content models), a cache-service refactor (`CachesForFrontend` trait, removing duplicated cache logic), pagination + search on admin index pages, compact create/edit forms, collapsible SEO fields, and a sitemap.xml fix for a false-positive IDE parsing error.
+**Built beyond this original plan:** Trash & Restore for Pages/Projects, an Activity Log/audit trail (spatie/laravel-activitylog across all content models), a cache-service refactor (`CachesForFrontend` trait, removing duplicated cache logic), pagination + search on admin index pages, compact create/edit forms, collapsible SEO fields, a sitemap.xml fix for a false-positive IDE parsing error, a Team Members module (global directory + manual list section types), a News/Blog module (categories, a "Notice" post format for PDF/image attachments with automatic new-tab linking), a matching PDF/image attachment option on Success Stories, anchor-id sub-navigation on any Section (jump links like `/about#history`), a "Notices" Section type (pulls Notice-format posts by category or hand-picked selection), a generic "Content List (Global)" Section type (one Section that can pull News/Notices/Stories/Projects by a `source` field, with the same All/By Category/Specific picker and a Card Grid/Table List display toggle - built precisely so a future content source, e.g. Annual Reports, only needs a config entry, not a new Section type), public pagination + search + filter on the News/Stories/Projects listing pages (`PaginatesArrays` trait, reusing the Gallery pagination pattern), a per-section "Show Search Box" toggle, and an info-tooltip UI pattern replacing always-visible field descriptions in the admin Section form.
 
 ---
 
@@ -561,14 +561,15 @@ AfraaCMS v1.0
 
 > **Direction confirmed 2026-08-03:** AfraaCMS is no longer just AfraaWorld's own site — it is being sold to other clients. First real client: an NGO whose reference site is https://demo1.rsufbd.com (a 6-page site: Home, About [with anchor sub-sections: History, Registration, Vision & Mission, Areas of Operation, What We Do, Success], Get Involved, News, Gallery, Contact Us — currently a placeholder/skeleton demo, no advanced features like search, multi-language, newsletter, or team profiles yet). This client's real needs now drive v2 prioritization below, instead of guessing.
 
-## Tier 1 — Next up (drives real client delivery)
+## Tier 1 — Status update (2026-09-13)
 
-- **Team Members** — decided: build this now. Every NGO/org site (including this client's) eventually needs a Board of Directors / Founder / Staff page, even though it isn't on the reference demo yet. Small, well-scoped CRUD module — same shape as Projects/Gallery (name, designation, photo, bio, sort order). Low effort, immediate value for the first paying client.
-- **Blog / News** — promoted here because the reference site has a "News" nav item. Reuses the existing Page/Section engine almost directly (title, slug, status, template, SEO already built).
-- **Anchor sub-navigation for Pages** — a small gap found while reviewing the reference site: its About page jumps between sub-sections (History, Vision & Mission, etc.) via in-page anchors. AfraaCMS's Section engine doesn't yet support an anchor id + jump-nav pattern; needed to replicate that About-page structure.
-- **Announcements** — same CRUD shape as Team Members, reuses Banner/Section display patterns.
-- **Newsletter** — reuses the Contact module's pattern (spam protection, storage, admin inbox); only new piece is an outbound email/provider integration.
-- **Form Builder** — hold until the above are done. A true generic form builder is bigger than it looks; consider scoping it to "one custom form per page" rather than a full builder unless a client has a concrete need for many different forms.
+- **Team Members** — ✅ Built. Global directory + manual-list Section types, categories, sort order.
+- **Blog / News** — ✅ Built. Categories, "Notice" post format (PDF/image attachment, auto new-tab linking), a dedicated "Notices" Section type, and a generic "Content List (Global)" Section type that can also pull News/Notices.
+- **Anchor sub-navigation for Pages** — ✅ Built. Every Section has an optional Anchor ID field; menu links can jump straight to `/about#history`-style targets.
+- **Announcements** — ✅ Effectively covered by the Notices feature above (an "Announcements" or similar News category, surfaced via the Notices/Content List Section types) rather than a separate module. Revisit only if a client needs an announcement with fields News genuinely can't express.
+- **Annual Reports** *(new, client-requested)* — plan agreed: reuse News + a dedicated "Annual Reports" category rather than a new content model, since every other piece (attachment upload, listing, filtering, pagination/search) already exists for News. Not yet implemented.
+- **Newsletter** — still not started. Reuses the Contact module's pattern (spam protection, storage, admin inbox); only new piece is an outbound email/provider integration.
+- **Form Builder** — still on hold. A true generic form builder is bigger than it looks; consider scoping it to "one custom form per page" rather than a full builder unless a client has a concrete need for many different forms.
 
 ## Tier 2 — Decide deliberately per client, don't default into them
 

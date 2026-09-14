@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['page_id', 'type', 'anchor', 'heading', 'subheading', 'body', 'image', 'button_text', 'button_url', 'layout', 'is_active', 'sort_order'])]
+#[Fillable(['page_id', 'type', 'anchor', 'heading', 'subheading', 'body', 'image', 'button_text', 'button_url', 'layout', 'source', 'show_search', 'item_limit', 'is_active', 'sort_order'])]
 class Section extends Model
 {
     use HasFactory;
@@ -23,6 +23,8 @@ class Section extends Model
     {
         return [
             'is_active' => 'boolean',
+            'show_search' => 'boolean',
+            'item_limit' => 'integer',
             'sort_order' => 'integer',
         ];
     }
@@ -63,6 +65,62 @@ class Section extends Model
     public function teamCategories(): BelongsToMany
     {
         return $this->belongsToMany(TeamCategory::class, 'section_team_category');
+    }
+
+    /**
+     * Notice-format news posts explicitly hand-picked for this section (only
+     * meaningful for the "notices" type, in "Specific Notices" mode).
+     */
+    public function newsPosts(): BelongsToMany
+    {
+        return $this->belongsToMany(NewsPost::class, 'section_news_post')->orderByDesc('news_posts.published_at');
+    }
+
+    /**
+     * News categories picked for this section (only meaningful for the
+     * "notices" type, in "By Category" mode).
+     */
+    public function newsCategories(): BelongsToMany
+    {
+        return $this->belongsToMany(NewsCategory::class, 'section_news_category');
+    }
+
+    /**
+     * Projects explicitly hand-picked for this section (only meaningful for
+     * the "content_list" type, source "projects", "Specific Items" mode).
+     */
+    public function projectItems(): BelongsToMany
+    {
+        return $this->belongsToMany(Project::class, 'section_project_item');
+    }
+
+    /**
+     * Project categories picked for this section (only meaningful for the
+     * "content_list" type, source "projects", "By Category" mode).
+     */
+    public function projectCategories(): BelongsToMany
+    {
+        return $this->belongsToMany(ProjectCategory::class, 'section_project_category');
+    }
+
+    /**
+     * Success Stories explicitly hand-picked for this section (only
+     * meaningful for the "content_list" type, source "stories", "Specific
+     * Items" mode - Story has no category concept yet, so that's the only
+     * non-"all" mode available for this source).
+     */
+    public function storyItems(): BelongsToMany
+    {
+        return $this->belongsToMany(Story::class, 'section_story_item');
+    }
+
+    /**
+     * Story categories picked for this section (only meaningful for the
+     * "content_list" type, source "stories", "By Category" mode).
+     */
+    public function storyCategories(): BelongsToMany
+    {
+        return $this->belongsToMany(StoryCategory::class, 'section_story_category');
     }
 
     public function getImageUrlAttribute(): ?string

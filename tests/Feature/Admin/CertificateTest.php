@@ -3,7 +3,10 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Certificate;
+use App\Models\Course;
+use App\Models\Enrollment;
 use App\Models\Project;
+use App\Models\Student;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Concerns\CreatesAdminUsers;
 use Tests\TestCase;
@@ -60,6 +63,39 @@ class CertificateTest extends TestCase
         $this->assertNotEmpty($certificate->verification_code);
         $this->assertSame(32, strlen($certificate->verification_code));
         $this->assertSame($project->id, $certificate->project_id);
+    }
+
+    public function test_editor_can_issue_a_certificate_from_an_enrollment(): void
+    {
+        $editor = $this->editor();
+        $student = Student::factory()->create(['name' => 'Amina Rahman']);
+        $course = Course::factory()->create(['course_name' => 'Tailoring Basics']);
+        $enrollment = Enrollment::factory()->create(['student_id' => $student->id, 'course_id' => $course->id]);
+
+        $response = $this->actingAs($editor)->post(route('admin.certificates.store'), [
+            'enrollment_id' => $enrollment->id,
+            'issued_at' => '2026-01-15',
+            'status' => 'valid',
+        ]);
+
+        $response->assertRedirect(route('admin.certificates.index'));
+
+        $certificate = Certificate::where('enrollment_id', $enrollment->id)->firstOrFail();
+        $this->assertSame('Amina Rahman', $certificate->recipient_name);
+        $this->assertSame('Tailoring Basics', $certificate->program);
+    }
+
+    public function test_an_enrollment_already_linked_to_a_certificate_cannot_be_picked_again(): void
+    {
+        $editor = $this->editor();
+        $enrollment = Enrollment::factory()->create();
+        Certificate::factory()->create(['enrollment_id' => $enrollment->id]);
+
+        $this->actingAs($editor)->post(route('admin.certificates.store'), [
+            'enrollment_id' => $enrollment->id,
+            'issued_at' => '2026-01-15',
+            'status' => 'valid',
+        ])->assertSessionHasErrors('enrollment_id');
     }
 
     public function test_a_user_without_permissions_cannot_create_a_certificate(): void

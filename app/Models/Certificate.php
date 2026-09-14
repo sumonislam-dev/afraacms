@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-#[Fillable(['project_id', 'recipient_name', 'program', 'issued_at', 'status', 'notes'])]
+#[Fillable(['project_id', 'enrollment_id', 'recipient_name', 'program', 'issued_at', 'status', 'notes'])]
 class Certificate extends Model
 {
     use HasFactory, LogsActivity, SoftDeletes;
@@ -46,6 +46,15 @@ class Certificate extends Model
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
+    }
+
+    /**
+     * The Student+Course enrollment this certificate was issued for, if it
+     * was issued for one - null for a manual (non-course) certificate.
+     */
+    public function enrollment(): BelongsTo
+    {
+        return $this->belongsTo(Enrollment::class);
     }
 
     /**

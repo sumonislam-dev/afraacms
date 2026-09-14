@@ -24,11 +24,52 @@
         </div>
     </x-slot>
 
-    <x-admin.search-form :placeholder="__('Search by student name, roll number, or certificate number...')" />
+    <form method="GET" class="mb-4 flex flex-wrap items-end gap-3">
+        <div class="relative max-w-sm flex-1 min-w-55">
+            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <x-admin.icon name="magnifying-glass" class="h-4 w-4 text-gray-400" />
+            </div>
+            <input
+                type="text"
+                name="search"
+                value="{{ request('search') }}"
+                placeholder="{{ __('Search by student name, roll number, or certificate number...') }}"
+                class="block w-full rounded-md border-gray-300 pl-9 shadow-xs focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            >
+        </div>
+
+        <select name="result_status" class="rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+            <option value="">{{ __('All Results') }}</option>
+            <option value="pending" @selected(request('result_status') === 'pending')>{{ __('Pending') }}</option>
+            <option value="passed" @selected(request('result_status') === 'passed')>{{ __('Passed') }}</option>
+            <option value="failed" @selected(request('result_status') === 'failed')>{{ __('Failed') }}</option>
+        </select>
+
+        <select name="session" class="rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+            <option value="">{{ __('All Sessions') }}</option>
+            @foreach ($sessions as $session)
+                <option value="{{ $session }}" @selected(request('session') === $session)>{{ $session }}</option>
+            @endforeach
+        </select>
+
+        <select name="course_id" class="rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+            <option value="">{{ __('All Courses') }}</option>
+            @foreach ($courses as $course)
+                <option value="{{ $course->id }}" @selected((string) request('course_id') === (string) $course->id)>{{ $course->course_name }}</option>
+            @endforeach
+        </select>
+
+        <x-secondary-button type="submit">{{ __('Filter') }}</x-secondary-button>
+
+        @if (request()->hasAny(['search', 'result_status', 'session', 'course_id']))
+            <x-secondary-button type="button" onclick="window.location='{{ route('admin.enrollments.index') }}'">{{ __('Clear') }}</x-secondary-button>
+        @endif
+    </form>
 
     <x-admin.table>
         <thead>
             <tr>
+                <x-admin.table-th>{{ __('S.L') }}</x-admin.table-th>
                 <x-admin.table-th>{{ __('Student') }}</x-admin.table-th>
                 <x-admin.table-th>{{ __('Course') }}</x-admin.table-th>
                 <x-admin.table-th>{{ __('Session') }}</x-admin.table-th>
@@ -40,6 +81,7 @@
         <tbody class="divide-y divide-gray-100">
             @forelse ($enrollments as $enrollment)
                 <tr>
+                    <x-admin.table-td class="text-gray-500">{{ $enrollments->firstItem() + $loop->index }}</x-admin.table-td>
                     <x-admin.table-td class="font-medium text-gray-900">{{ $enrollment->student->name }}</x-admin.table-td>
                     <x-admin.table-td>{{ $enrollment->course->course_name }}</x-admin.table-td>
                     <x-admin.table-td>{{ $enrollment->session }}</x-admin.table-td>
@@ -66,6 +108,13 @@
                             @if ($enrollment->certificate_status !== 'not_issued')
                                 @can('view', $enrollment)
                                     <a href="{{ route('admin.enrollments.show', $enrollment) }}" class="text-sm font-medium text-gray-500 hover:text-gray-700">{{ __('View Certificate') }}</a>
+                                @endcan
+                            @elseif ($enrollment->result_status === 'passed')
+                                @can('update', $enrollment)
+                                    <form method="POST" action="{{ route('admin.enrollments.issue-certificate', $enrollment) }}">
+                                        @csrf
+                                        <button type="submit" class="cursor-pointer text-sm font-medium text-indigo-600 hover:text-indigo-900">{{ __('Issue Certificate') }}</button>
+                                    </form>
                                 @endcan
                             @endif
 
@@ -101,7 +150,7 @@
                 </tr>
             @empty
                 <tr>
-                    <x-admin.table-td colspan="6" class="text-center text-gray-500">{{ __('No enrollments added yet.') }}</x-admin.table-td>
+                    <x-admin.table-td colspan="7" class="text-center text-gray-500">{{ __('No enrollments added yet.') }}</x-admin.table-td>
                 </tr>
             @endforelse
         </tbody>

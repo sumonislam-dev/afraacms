@@ -29,16 +29,22 @@ class EnrollmentController extends Controller
      */
     public function index(): View
     {
-        $enrollments = Enrollment::with(['student', 'course'])
+        $enrollments = Enrollment::with(['student', 'course', 'certificate'])
             ->when(request('search'), fn ($query, $search) => $query
-                ->where('certificate_number', 'like', "%{$search}%")
-                ->orWhere('roll_number', 'like', "%{$search}%")
+                ->where('roll_number', 'like', "%{$search}%")
+                ->orWhereHas('certificate', fn ($q) => $q->where('certificate_number', 'like', "%{$search}%"))
                 ->orWhereHas('student', fn ($q) => $q->where('name', 'like', "%{$search}%")))
+            ->when(request('result_status'), fn ($query, $status) => $query->where('result_status', $status))
+            ->when(request('session'), fn ($query, $session) => $query->where('session', $session))
+            ->when(request('course_id'), fn ($query, $courseId) => $query->where('course_id', $courseId))
             ->latest()
             ->paginate(15)
             ->withQueryString();
 
-        return view('admin.enrollments.index', compact('enrollments'));
+        $courses = Course::orderBy('course_name')->get();
+        $sessions = Enrollment::query()->distinct()->orderByDesc('session')->pluck('session');
+
+        return view('admin.enrollments.index', compact('enrollments', 'courses', 'sessions'));
     }
 
     /**
@@ -115,8 +121,9 @@ class EnrollmentController extends Controller
         $this->authorize('viewAny', Enrollment::class);
 
         $enrollments = Enrollment::onlyTrashed()
-            ->with(['student', 'course'])
-            ->when(request('search'), fn ($query, $search) => $query->where('certificate_number', 'like', "%{$search}%"))
+            ->with(['student', 'course', 'certificate'])
+            ->when(request('search'), fn ($query, $search) => $query
+                ->whereHas('certificate', fn ($q) => $q->where('certificate_number', 'like', "%{$search}%")))
             ->orderByDesc('deleted_at')
             ->paginate(15)
             ->withQueryString();

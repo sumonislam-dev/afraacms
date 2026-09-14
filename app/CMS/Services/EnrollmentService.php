@@ -12,20 +12,7 @@ use App\Models\Enrollment;
  */
 class EnrollmentService
 {
-    /**
-     * Find an issued enrollment/certificate by its public certificate number
-     * or its QR/verification code - either is a valid lookup key on the
-     * public verify page. Enrollments that never had a certificate issued
-     * have both fields null, so they can never match here.
-     */
-    public function findForVerification(string $identifier): ?Enrollment
-    {
-        return Enrollment::query()
-            ->with(['student', 'course'])
-            ->where('certificate_number', $identifier)
-            ->orWhere('verification_code', $identifier)
-            ->first();
-    }
+    public function __construct(private readonly CertificateService $certificates) {}
 
     /**
      * Create a new enrollment.
@@ -72,10 +59,11 @@ class EnrollmentService
     }
 
     /**
-     * Issue the certificate for a passed enrollment: marks it valid, which
-     * triggers Enrollment's saving() hook to generate its certificate_number
-     * and verification_code. Refuses if a certificate was already issued
-     * (has its own explicit revoke() instead) or the student hasn't passed yet.
+     * Issue the certificate for a passed enrollment: creates (or reactivates)
+     * the linked Certificate row - certificate_status/certificate_number/
+     * verification_code are computed straight from it, so there's nothing
+     * else to update. Refuses if a certificate was already issued (has its
+     * own explicit revoke() instead) or the student hasn't passed yet.
      */
     public function issueCertificate(Enrollment $enrollment): bool
     {
@@ -83,7 +71,17 @@ class EnrollmentService
             return false;
         }
 
-        $enrollment->forceFill(['certificate_status' => 'valid'])->save();
+        $certificate = $enrollment->certificate ?? $this->certificates->create([
+            'enrollment_id' => $enrollment->id,
+            'issued_at' => $enrollment->completion_date ?? now(),
+            'status' => 'valid',
+        ]);
+
+        if ($certificate->status !== 'valid') {
+            $certificate->update(['status' => 'valid']);
+        }
+
+        $enrollment->setRelation('certificate', $certificate);
 
         return true;
     }
@@ -91,8 +89,10 @@ class EnrollmentService
     /**
      * Revoke an already-issued certificate - it immediately stops verifying
      * as valid, but keeps its certificate_number/verification_code so the
-     * printed document still resolves (to a "revoked" result) rather than
-     * a bare "not found".
+     * printed document still resolves (to a "revoked" result) rather than a
+     * bare "not found". certificate_status === 'valid' can only be true when
+     * a linked Certificate exists (it's computed from one), so there's no
+     * null case to guard here.
      */
     public function revokeCertificate(Enrollment $enrollment): bool
     {
@@ -100,7 +100,7 @@ class EnrollmentService
             return false;
         }
 
-        $enrollment->forceFill(['certificate_status' => 'revoked'])->save();
+        $enrollment->certificate->update(['status' => 'revoked']);
 
         return true;
     }

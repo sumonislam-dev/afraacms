@@ -11,6 +11,7 @@
             <div
                 x-data="{
                     slugTouched: {{ $isEdit || old('slug') ? 'true' : 'false' }},
+                    attachmentFileName: null,
                     slugify(value) {
                         return value.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
                     },
@@ -106,6 +107,42 @@
                     <x-input-label :value="__('Cover Image')" />
                     <x-admin.media-picker name="cover_image" :current="old('cover_image', $post->cover_image ?? null)" />
                     <x-input-error class="mt-2" :messages="$errors->get('cover_image')" />
+                </div>
+
+                <div class="border-t border-gray-100 pt-4">
+                    <x-input-label for="attachment" :value="__('Attachment (optional)')" />
+                    <p class="mt-1 text-xs text-gray-500">{{ __('Attach a PDF or image (e.g. a notice, circular). Pick this post into a Notices section to feature it.') }}</p>
+
+                    @if ($isEdit && $post->attachment_url)
+                        <p class="mt-2 text-sm text-gray-700">
+                            <a href="{{ $post->attachment_url }}" target="_blank" rel="noopener" class="font-medium text-indigo-600 hover:text-indigo-900">{{ $post->attachment_file_name }}</a>
+                        </p>
+                    @endif
+
+                    <input
+                        id="attachment"
+                        name="attachment"
+                        type="file"
+                        accept="application/pdf,image/*"
+                        class="hidden"
+                        x-ref="attachmentInput"
+                        @change="attachmentFileName = $event.target.files[0]?.name ?? null"
+                    >
+
+                    <div class="mt-2 flex items-center gap-3">
+                        <x-secondary-button type="button" @click="$refs.attachmentInput.click()">
+                            {{ __('Choose File') }}
+                        </x-secondary-button>
+                        <span class="truncate text-sm text-gray-600" x-text="attachmentFileName ?? '{{ __('No file chosen') }}'"></span>
+                    </div>
+                    <x-input-error class="mt-2" :messages="$errors->get('attachment')" />
+
+                    @if ($isEdit && $post->attachment_url)
+                        <label class="mt-3 flex items-center gap-2 text-sm text-gray-700">
+                            <input type="checkbox" name="remove_attachment" value="1" class="rounded-sm border-gray-300 text-red-600 focus:ring-red-500">
+                            {{ __('Remove the current attachment') }}
+                        </label>
+                    @endif
                 </div>
 
                 <div class="border-t border-gray-100 pt-4">

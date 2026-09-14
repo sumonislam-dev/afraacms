@@ -75,15 +75,17 @@ return [
         'label' => 'News',
         'icon' => 'information-circle',
         'children' => [
-            ['label' => 'All Posts', 'route' => 'admin.news.index', 'permission' => 'news.view'],
+            ['label' => 'All News', 'route' => 'admin.news.index', 'permission' => 'news.view'],
             ['label' => 'Categories', 'route' => 'admin.news-categories.index', 'permission' => 'news.view'],
         ],
     ],
     [
         'label' => 'Success Stories',
         'icon' => 'check-circle',
-        'route' => 'admin.stories.index',
-        'permission' => 'stories.view',
+        'children' => [
+            ['label' => 'All Stories', 'route' => 'admin.stories.index', 'permission' => 'stories.view'],
+            ['label' => 'Categories', 'route' => 'admin.story-categories.index', 'permission' => 'stories.view'],
+        ],
     ],
     [
         'label' => 'Certificates',

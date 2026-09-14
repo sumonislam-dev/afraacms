@@ -4,21 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Str;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
- * An enrollment is not itself a certificate - it starts as certificate_status
- * "not_issued" with no certificate_number/verification_code, and only gets
- * those (via the saving() hook below) once its certificate_status moves to
- * "valid" or "revoked" for the first time. This is deliberately different
- * from Certificate, where every row IS a certificate from creation.
+ * An enrollment is not itself a certificate - the certificate_status/
+ * certificate_number/verification_code below are computed accessors, not
+ * real columns: they read through the certificate() relation, so there's
+ * nothing to issue/revoke here directly. See EnrollmentService::issueCertificate()/
+ * revokeCertificate(), which create/update the linked Certificate row instead.
  */
 #[Fillable([
     'student_id', 'course_id', 'session', 'roll_number', 'registration_number',
@@ -27,25 +27,6 @@ use Spatie\Activitylog\Traits\LogsActivity;
 class Enrollment extends Model
 {
     use HasFactory, LogsActivity, SoftDeletes;
-
-    protected static function booted(): void
-    {
-        static::saving(function (Enrollment $enrollment) {
-            // Generated here (fired once per actual save) rather than by
-            // whoever flips certificate_status, so it can never be computed
-            // twice for two different rows before either commits - that
-            // race is exactly what happened when a factory's state()
-            // closure precomputed it for a whole batch before any insert.
-            if ($enrollment->certificate_number || ! in_array($enrollment->certificate_status, ['valid', 'revoked'], true)) {
-                return;
-            }
-
-            $year = $enrollment->completion_date ? Carbon::parse($enrollment->completion_date)->year : now()->year;
-
-            $enrollment->certificate_number = static::generateCertificateNumber($year);
-            $enrollment->verification_code = static::generateVerificationCode();
-        });
-    }
 
     public function getActivitylogOptions(): LogOptions
     {
@@ -84,46 +65,43 @@ class Enrollment extends Model
     }
 
     /**
+     * The Certificate record issued for this enrollment - null until
+     * EnrollmentService::issueCertificate() creates one.
+     */
+    public function certificate(): HasOne
+    {
+        return $this->hasOne(Certificate::class);
+    }
+
+    /**
+     * "not_issued" | "valid" | "revoked" - mirrors the linked Certificate's
+     * own status, kept as a same-named computed attribute so every existing
+     * view/query written against "certificate_status" as if it were a column
+     * keeps working unchanged.
+     */
+    protected function certificateStatus(): Attribute
+    {
+        return Attribute::get(fn () => $this->certificate?->status ?? 'not_issued');
+    }
+
+    protected function certificateNumber(): Attribute
+    {
+        return Attribute::get(fn () => $this->certificate?->certificate_number);
+    }
+
+    protected function verificationCode(): Attribute
+    {
+        return Attribute::get(fn () => $this->certificate?->verification_code);
+    }
+
+    /**
      * Scope a query to only enrollments whose certificate currently verifies
-     * as valid (not_issued and revoked are both excluded).
+     * as valid (not_issued and revoked are both excluded). certificate_status
+     * is a computed accessor, not a column, so this has to join through the
+     * relation rather than a plain where().
      */
     public function scopeCertificateValid(Builder $query): Builder
     {
-        return $query->where('certificate_status', 'valid');
-    }
-
-    /**
-     * Generate a unique, human-readable certificate number, e.g. CERT-2026-00042.
-     *
-     * Sequence is per issuance year and derived from the current count of
-     * already-issued enrollments - the while-loop guards the rare concurrent
-     * collision rather than relying on the count alone (same approach as
-     * Certificate::generateCertificateNumber()).
-     */
-    public static function generateCertificateNumber(int $year): string
-    {
-        $sequence = static::withTrashed()->whereNotNull('certificate_number')->whereYear('completion_date', $year)->count() + 1;
-        $number = sprintf('CERT-%d-%05d', $year, $sequence);
-
-        while (static::withTrashed()->where('certificate_number', $number)->exists()) {
-            $sequence++;
-            $number = sprintf('CERT-%d-%05d', $year, $sequence);
-        }
-
-        return $number;
-    }
-
-    /**
-     * Generate a unique, non-guessable code used in the public verification
-     * URL/QR - deliberately separate from certificate_number so the number
-     * printed on paper can't be used to enumerate other recipients' records.
-     */
-    public static function generateVerificationCode(): string
-    {
-        do {
-            $code = Str::random(32);
-        } while (static::withTrashed()->where('verification_code', $code)->exists());
-
-        return $code;
+        return $query->whereHas('certificate', fn ($q) => $q->where('status', 'valid'));
     }
 }

@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\SectionController;
 use App\Http\Controllers\Admin\SectionItemController;
 use App\Http\Controllers\Admin\SeoController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\StoryCategoryController;
 use App\Http\Controllers\Admin\StoryController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\TeamCategoryController;
@@ -112,6 +113,10 @@ Route::middleware(['auth', 'verified'])
         Route::get('news-trash', [NewsPostController::class, 'trash'])->name('news.trash');
         Route::post('news/{post}/restore', [NewsPostController::class, 'restore'])->name('news.restore')->withTrashed();
         Route::delete('news/{post}/force', [NewsPostController::class, 'forceDelete'])->name('news.force-delete')->withTrashed();
+
+        Route::resource('story-categories', StoryCategoryController::class)
+            ->except(['show', 'create', 'edit'])
+            ->parameters(['story-categories' => 'category']);
 
         Route::resource('stories', StoryController::class)->except('show')->parameters(['stories' => 'story']);
         Route::get('stories-trash', [StoryController::class, 'trash'])->name('stories.trash');

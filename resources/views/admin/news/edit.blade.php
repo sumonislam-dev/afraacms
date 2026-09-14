@@ -5,7 +5,7 @@
         <h2 class="text-xl font-semibold text-gray-900">{{ __('Edit Post') }}</h2>
     </x-slot>
 
-    <form method="POST" action="{{ route('admin.news.update', $post) }}">
+    <form method="POST" action="{{ route('admin.news.update', $post) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         @include('admin.news._form')

@@ -74,7 +74,10 @@ class PageService
     {
         return $this->rememberForever(fn () => Page::published()
             ->with([
-                'sections' => fn ($query) => $query->where('is_active', true)->with(['items', 'galleries', 'teamMembers', 'teamCategories']),
+                'sections' => fn ($query) => $query->where('is_active', true)->with([
+                    'items', 'galleries', 'teamMembers', 'teamCategories', 'newsPosts', 'newsCategories',
+                    'projectCategories', 'projectItems', 'storyItems', 'storyCategories',
+                ]),
                 'seo',
             ])
             ->get()
@@ -90,6 +93,7 @@ class PageService
                     'updated_at' => $page->updated_at?->toIso8601String(),
                     'seo' => SeoMeta::toCacheArray($page->seo),
                     'sections' => $page->sections->map(fn (Section $section) => [
+                        'id' => $section->id,
                         'type' => $section->type,
                         'anchor' => $section->anchor,
                         'heading' => $section->heading,
@@ -99,9 +103,24 @@ class PageService
                         'button_text' => $section->button_text,
                         'button_url' => $section->button_url,
                         'layout' => $section->layout,
+                        'source' => $section->source,
+                        'show_search' => $section->show_search,
+                        'item_limit' => $section->item_limit,
                         'gallery_ids' => $section->galleries->pluck('id')->all(),
                         'team_member_ids' => $section->teamMembers->pluck('id')->all(),
                         'team_category_ids' => $section->teamCategories->pluck('id')->all(),
+                        'content_category_ids' => match ($section->source) {
+                            'news', 'notices' => $section->newsCategories->pluck('id')->all(),
+                            'projects' => $section->projectCategories->pluck('id')->all(),
+                            'stories' => $section->storyCategories->pluck('id')->all(),
+                            default => [],
+                        },
+                        'content_item_ids' => match ($section->source) {
+                            'news', 'notices' => $section->newsPosts->pluck('id')->all(),
+                            'projects' => $section->projectItems->pluck('id')->all(),
+                            'stories' => $section->storyItems->pluck('id')->all(),
+                            default => [],
+                        },
                         'items' => $section->items->map(fn ($item) => [
                             'title' => $item->title,
                             'subtitle' => $item->subtitle,

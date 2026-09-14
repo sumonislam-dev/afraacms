@@ -27,6 +27,7 @@ class UpdateStoryRequest extends FormRequest
     {
         return [
             'project_id' => ['nullable', 'integer', Rule::exists('projects', 'id')],
+            'category_id' => ['nullable', 'integer', Rule::exists('story_categories', 'id')],
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['required', 'string', 'max:255', 'alpha_dash', Rule::unique('stories', 'slug')->ignore($this->route('story'))],
             'excerpt' => ['nullable', 'string', 'max:255'],
@@ -35,6 +36,8 @@ class UpdateStoryRequest extends FormRequest
             'published_at' => ['nullable', 'date'],
             'is_featured' => ['sometimes', 'boolean'],
             'status' => ['required', Rule::in(['draft', 'published'])],
+            'attachment' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png,webp', 'max:10240'],
+            'remove_attachment' => ['sometimes', 'boolean'],
             ...$this->seoRules(),
         ];
     }

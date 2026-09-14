@@ -8,6 +8,8 @@
 
     <form method="POST" action="{{ route('admin.pages.sections.store', $page) }}">
         @csrf
-        @include('admin.pages.sections._section-form', ['page' => $page, 'galleries' => $galleries, 'teamMembers' => $teamMembers, 'teamCategories' => $teamCategories])
+        @include('admin.pages.sections._section-form', [
+            'page' => $page, 'galleries' => $galleries, 'teamMembers' => $teamMembers, 'teamCategories' => $teamCategories,
+        ])
     </form>
 </x-admin-layout>

@@ -5,7 +5,7 @@
         <h2 class="text-xl font-semibold text-gray-900">{{ __('New Story') }}</h2>
     </x-slot>
 
-    <form method="POST" action="{{ route('admin.stories.store') }}">
+    <form method="POST" action="{{ route('admin.stories.store') }}" enctype="multipart/form-data">
         @csrf
         @include('admin.stories._form')
     </form>

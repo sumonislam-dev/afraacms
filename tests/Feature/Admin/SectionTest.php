@@ -3,8 +3,13 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Gallery;
+use App\Models\NewsCategory;
+use App\Models\NewsPost;
 use App\Models\Page;
+use App\Models\ProjectCategory;
 use App\Models\Section;
+use App\Models\Story;
+use App\Models\StoryCategory;
 use App\Models\TeamCategory;
 use App\Models\TeamMember;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -195,5 +200,137 @@ class SectionTest extends TestCase
         $section = Section::first();
         $response->assertRedirect(route('admin.pages.sections.edit', [$page, $section]));
         $this->assertSame([$category->id], $section->teamCategories()->pluck('team_categories.id')->all());
+    }
+
+    public function test_editor_can_pick_categories_and_items_for_a_notices_content_list_section(): void
+    {
+        $editor = $this->editor();
+        $page = Page::factory()->create();
+        $category = NewsCategory::factory()->create();
+        $post = NewsPost::factory()->create();
+
+        $response = $this->actingAs($editor)->post(route('admin.pages.sections.store', $page), [
+            'type' => 'content_list',
+            'source' => 'notices',
+            'heading' => 'Notices',
+            'content_category_ids' => [$category->id],
+            'content_item_ids' => [$post->id],
+        ]);
+
+        $section = Section::first();
+        $response->assertRedirect(route('admin.pages.sections.edit', [$page, $section]));
+        $this->assertSame([$category->id], $section->newsCategories()->pluck('news_categories.id')->all());
+        $this->assertSame([$post->id], $section->newsPosts()->pluck('news_posts.id')->all());
+    }
+
+    public function test_editor_can_configure_a_content_list_section_with_a_source_and_categories(): void
+    {
+        $editor = $this->editor();
+        $page = Page::factory()->create();
+        $category = ProjectCategory::factory()->create();
+
+        $response = $this->actingAs($editor)->post(route('admin.pages.sections.store', $page), [
+            'type' => 'content_list',
+            'heading' => 'Projects Feed',
+            'source' => 'projects',
+            'content_category_ids' => [$category->id],
+        ]);
+
+        $section = Section::first();
+        $response->assertRedirect(route('admin.pages.sections.edit', [$page, $section]));
+        $this->assertSame('projects', $section->source);
+        $this->assertSame([$category->id], $section->projectCategories()->pluck('project_categories.id')->all());
+    }
+
+    public function test_editor_can_pick_specific_items_for_a_content_list_section(): void
+    {
+        $editor = $this->editor();
+        $page = Page::factory()->create();
+        $story = Story::factory()->create();
+
+        $response = $this->actingAs($editor)->post(route('admin.pages.sections.store', $page), [
+            'type' => 'content_list',
+            'heading' => 'Stories Feed',
+            'source' => 'stories',
+            'content_item_ids' => [$story->id],
+        ]);
+
+        $section = Section::first();
+        $response->assertRedirect(route('admin.pages.sections.edit', [$page, $section]));
+        $this->assertSame([$story->id], $section->storyItems()->pluck('stories.id')->all());
+    }
+
+    public function test_switching_a_content_list_sections_source_clears_the_old_sources_picks(): void
+    {
+        $editor = $this->editor();
+        $page = Page::factory()->create();
+        $projectCategory = ProjectCategory::factory()->create();
+        $storyCategory = StoryCategory::factory()->create();
+
+        $this->actingAs($editor)->post(route('admin.pages.sections.store', $page), [
+            'type' => 'content_list',
+            'heading' => 'Feed',
+            'source' => 'projects',
+            'content_category_ids' => [$projectCategory->id],
+        ]);
+        $section = Section::first();
+
+        $this->actingAs($editor)->put(route('admin.pages.sections.update', [$page, $section]), [
+            'type' => 'content_list',
+            'heading' => 'Feed',
+            'source' => 'stories',
+            'content_category_ids' => [$storyCategory->id],
+        ])->assertRedirect(route('admin.pages.sections.edit', [$page, $section]));
+
+        $this->assertSame([], $section->projectCategories()->pluck('project_categories.id')->all());
+        $this->assertSame([$storyCategory->id], $section->storyCategories()->pluck('story_categories.id')->all());
+    }
+
+    public function test_editor_can_set_an_item_limit_on_a_section(): void
+    {
+        $editor = $this->editor();
+        $page = Page::factory()->create();
+
+        $this->actingAs($editor)->post(route('admin.pages.sections.store', $page), [
+            'type' => 'content_list',
+            'source' => 'news',
+            'heading' => 'Latest News',
+            'item_limit' => 4,
+        ])->assertRedirect();
+
+        $section = Section::first();
+        $this->assertSame(4, $section->item_limit);
+    }
+
+    public function test_editor_can_enable_the_search_box_on_a_section(): void
+    {
+        $editor = $this->editor();
+        $page = Page::factory()->create();
+
+        $this->actingAs($editor)->post(route('admin.pages.sections.store', $page), [
+            'type' => 'content_list',
+            'source' => 'news',
+            'heading' => 'Latest News',
+            'show_search' => true,
+        ])->assertRedirect();
+
+        $section = Section::first();
+        $this->assertTrue($section->show_search);
+    }
+
+    public function test_editor_can_set_a_table_layout_on_a_section(): void
+    {
+        $editor = $this->editor();
+        $page = Page::factory()->create();
+
+        $this->actingAs($editor)->post(route('admin.pages.sections.store', $page), [
+            'type' => 'content_list',
+            'source' => 'news',
+            'heading' => 'Latest News',
+            'layout' => 'table',
+        ])->assertRedirect();
+
+        $section = Section::first();
+        $this->assertSame('table', $section->layout);
     }
 }

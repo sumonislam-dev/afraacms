@@ -45,7 +45,12 @@
         <tbody class="divide-y divide-gray-100">
             @forelse ($posts as $post)
                 <tr>
-                    <x-admin.table-td class="font-medium text-gray-900">{{ $post->title }}</x-admin.table-td>
+                    <x-admin.table-td class="font-medium text-gray-900">
+                        {{ $post->title }}
+                        @if ($post->attachment_url)
+                            <span class="ml-1 inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">{{ __('Notice') }}</span>
+                        @endif
+                    </x-admin.table-td>
                     <x-admin.table-td>{{ $post->category?->name ?? '—' }}</x-admin.table-td>
                     <x-admin.table-td>{{ $post->published_at?->format('M j, Y') ?? '—' }}</x-admin.table-td>
                     <x-admin.table-td>

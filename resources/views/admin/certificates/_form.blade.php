@@ -2,33 +2,74 @@
     $isEdit = isset($certificate);
     $currentStatus = old('status', $certificate->status ?? 'valid');
     $currentProjectId = old('project_id', $certificate->project_id ?? '');
+    $currentEnrollmentId = old('enrollment_id', $certificate->enrollment_id ?? '');
     $currentIssuedAt = old('issued_at', optional($certificate->issued_at ?? null)->format('Y-m-d') ?? now()->format('Y-m-d'));
 @endphp
 
 <x-admin.edit-layout>
     <x-slot name="main">
+        <x-admin.card :title="__('Recipient')">
+            <div
+                x-data="{
+                    recipientMode: @js(old('enrollment_id', $certificate->enrollment_id ?? null) ? 'enrollment' : 'manual'),
+                }"
+            >
+                <div class="inline-flex rounded-md border border-gray-300 bg-white p-0.5 text-sm">
+                    <label class="cursor-pointer rounded-sm px-3 py-1 font-medium transition-colors" :class="recipientMode === 'manual' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-50'">
+                        <input type="radio" x-model="recipientMode" value="manual" class="sr-only">
+                        {{ __('Manual') }}
+                    </label>
+                    <label class="cursor-pointer rounded-sm px-3 py-1 font-medium transition-colors" :class="recipientMode === 'enrollment' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-50'">
+                        <input type="radio" x-model="recipientMode" value="enrollment" class="sr-only">
+                        {{ __('From Enrollment') }}
+                    </label>
+                </div>
+
+                <div class="mt-4" x-show="recipientMode === 'enrollment'" style="display: none;">
+                    <x-input-label for="enrollment_id" :value="__('Enrollment (Student + Course)')" />
+                    <select
+                        id="enrollment_id"
+                        name="enrollment_id"
+                        x-bind:disabled="recipientMode !== 'enrollment'"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500"
+                    >
+                        <option value="">{{ __('— Select —') }}</option>
+                        @foreach ($enrollments as $enrollment)
+                            <option value="{{ $enrollment->id }}" @selected((string) $currentEnrollmentId === (string) $enrollment->id)>
+                                {{ $enrollment->student->name }} — {{ $enrollment->course->course_name }} ({{ $enrollment->session }})
+                            </option>
+                        @endforeach
+                    </select>
+                    <p class="mt-1 text-xs text-gray-500">{{ __('Recipient name and program are taken automatically from the enrollment - not retyped.') }}</p>
+                    <x-input-error class="mt-2" :messages="$errors->get('enrollment_id')" />
+                </div>
+
+                <div class="mt-4 space-y-4" x-show="recipientMode === 'manual'" style="display: none;">
+                    <div>
+                        <x-input-label for="recipient_name" :value="__('Recipient Name')" />
+                        <x-text-input
+                            id="recipient_name"
+                            name="recipient_name"
+                            type="text"
+                            class="mt-1 block w-full"
+                            x-bind:disabled="recipientMode !== 'manual'"
+                            :value="old('recipient_name', $certificate->recipient_name ?? '')"
+                            autofocus
+                        />
+                        <x-input-error class="mt-2" :messages="$errors->get('recipient_name')" />
+                    </div>
+
+                    <div>
+                        <x-input-label for="program" :value="__('Program / Course')" />
+                        <x-text-input id="program" name="program" type="text" class="mt-1 block w-full" x-bind:disabled="recipientMode !== 'manual'" :value="old('program', $certificate->program ?? '')" placeholder="{{ __('e.g. Web Development Training') }}" />
+                        <x-input-error class="mt-2" :messages="$errors->get('program')" />
+                    </div>
+                </div>
+            </div>
+        </x-admin.card>
+
         <x-admin.card>
             <div class="space-y-4">
-                <div>
-                    <x-input-label for="recipient_name" :value="__('Recipient Name')" />
-                    <x-text-input
-                        id="recipient_name"
-                        name="recipient_name"
-                        type="text"
-                        class="mt-1 block w-full"
-                        :value="old('recipient_name', $certificate->recipient_name ?? '')"
-                        required
-                        autofocus
-                    />
-                    <x-input-error class="mt-2" :messages="$errors->get('recipient_name')" />
-                </div>
-
-                <div>
-                    <x-input-label for="program" :value="__('Program / Course')" />
-                    <x-text-input id="program" name="program" type="text" class="mt-1 block w-full" :value="old('program', $certificate->program ?? '')" placeholder="{{ __('e.g. Web Development Training') }}" />
-                    <x-input-error class="mt-2" :messages="$errors->get('program')" />
-                </div>
-
                 <div>
                     <x-input-label for="notes" :value="__('Internal Notes')" />
                     <textarea id="notes" name="notes" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">{{ old('notes', $certificate->notes ?? '') }}</textarea>

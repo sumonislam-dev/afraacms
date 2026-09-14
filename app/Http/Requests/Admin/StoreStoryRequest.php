@@ -28,6 +28,7 @@ class StoreStoryRequest extends FormRequest
     {
         return [
             'project_id' => ['nullable', 'integer', Rule::exists('projects', 'id')],
+            'category_id' => ['nullable', 'integer', Rule::exists('story_categories', 'id')],
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['required', 'string', 'max:255', 'alpha_dash', Rule::unique('stories', 'slug')],
             'excerpt' => ['nullable', 'string', 'max:255'],
@@ -36,6 +37,7 @@ class StoreStoryRequest extends FormRequest
             'published_at' => ['nullable', 'date'],
             'is_featured' => ['sometimes', 'boolean'],
             'status' => ['required', Rule::in(['draft', 'published'])],
+            'attachment' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png,webp', 'max:10240'],
             ...$this->seoRules(),
         ];
     }

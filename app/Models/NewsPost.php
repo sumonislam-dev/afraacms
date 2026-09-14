@@ -11,11 +11,24 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
 #[Fillable(['category_id', 'title', 'slug', 'excerpt', 'content', 'cover_image', 'published_at', 'is_featured', 'status'])]
-class NewsPost extends Model
+class NewsPost extends Model implements HasMedia
 {
-    use HasFactory, LogsActivity, SoftDeletes;
+    use HasFactory, InteractsWithMedia, LogsActivity, SoftDeletes;
+
+    /**
+     * A "notice" post has no separate media library entry: the uploaded
+     * PDF/image is attached directly to this model via Spatie's media
+     * library, in its own collection, kept apart from the MediaItem-backed
+     * cover_image used by every other content type in the app.
+     */
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('attachment')->singleFile();
+    }
 
     public function getActivitylogOptions(): LogOptions
     {
@@ -59,5 +72,15 @@ class NewsPost extends Model
     public function getCoverImageUrlAttribute(): ?string
     {
         return media_url($this->cover_image);
+    }
+
+    public function getAttachmentUrlAttribute(): ?string
+    {
+        return $this->getFirstMediaUrl('attachment') ?: null;
+    }
+
+    public function getAttachmentFileNameAttribute(): ?string
+    {
+        return $this->getFirstMedia('attachment')?->file_name;
     }
 }

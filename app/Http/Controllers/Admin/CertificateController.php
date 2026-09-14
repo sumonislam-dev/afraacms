@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreCertificateRequest;
 use App\Http\Requests\Admin\UpdateCertificateRequest;
 use App\Models\Certificate;
+use App\Models\Enrollment;
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\QrCode;
@@ -53,7 +54,9 @@ class CertificateController extends Controller
      */
     public function create(): View
     {
-        return view('admin.certificates.create');
+        $enrollments = $this->enrollmentOptions();
+
+        return view('admin.certificates.create', compact('enrollments'));
     }
 
     /**
@@ -71,7 +74,22 @@ class CertificateController extends Controller
      */
     public function edit(Certificate $certificate): View
     {
-        return view('admin.certificates.edit', compact('certificate'));
+        $enrollments = $this->enrollmentOptions($certificate->enrollment_id);
+
+        return view('admin.certificates.edit', compact('certificate', 'enrollments'));
+    }
+
+    /**
+     * Enrollments selectable in the "From Enrollment" recipient picker: any
+     * enrollment not already backing a different certificate, plus (when
+     * editing) the one already linked to this certificate.
+     */
+    private function enrollmentOptions(?int $keepId = null): \Illuminate\Support\Collection
+    {
+        return Enrollment::with(['student', 'course'])
+            ->where(fn ($query) => $query->whereDoesntHave('certificate')->when($keepId, fn ($q) => $q->orWhere('id', $keepId)))
+            ->orderByDesc('id')
+            ->get();
     }
 
     /**

@@ -32,7 +32,7 @@ class NewsSectionTest extends TestCase
         NewsPost::factory()->create(['title' => 'Unpublished Draft']);
 
         $page = Page::factory()->create(['slug' => 'home', 'status' => 'published']);
-        Section::factory()->for($page)->create(['type' => 'news', 'heading' => 'Latest News']);
+        Section::factory()->for($page)->create(['type' => 'content_list', 'source' => 'news', 'heading' => 'Latest News']);
 
         $response = $this->get('/'.$page->slug);
 
@@ -51,7 +51,7 @@ class NewsSectionTest extends TestCase
         NewsPost::factory()->published()->create(['title' => 'Oldest Post', 'published_at' => now()->subDays(2)]);
 
         $page = Page::factory()->create(['slug' => 'home', 'status' => 'published']);
-        Section::factory()->for($page)->create(['type' => 'news']);
+        Section::factory()->for($page)->create(['type' => 'content_list', 'source' => 'news']);
 
         $response = $this->get('/'.$page->slug);
 

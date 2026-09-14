@@ -75,23 +75,8 @@ return [
             'fields' => ['heading', 'subheading', 'layout'],
             'has_items' => false,
         ],
-        'projects' => [
-            'label' => 'Projects',
-            'fields' => ['heading', 'subheading', 'button_text', 'button_url'],
-            'has_items' => false,
-        ],
         'gallery_albums' => [
             'label' => 'Gallery Albums',
-            'fields' => ['heading', 'subheading', 'button_text', 'button_url'],
-            'has_items' => false,
-        ],
-        'news' => [
-            'label' => 'Latest News',
-            'fields' => ['heading', 'subheading', 'button_text', 'button_url'],
-            'has_items' => false,
-        ],
-        'stories' => [
-            'label' => 'Success Stories',
             'fields' => ['heading', 'subheading', 'button_text', 'button_url'],
             'has_items' => false,
         ],
@@ -120,6 +105,11 @@ return [
         'featured_visitors' => [
             'label' => 'Featured Visitors',
             'fields' => ['heading', 'subheading'],
+            'has_items' => false,
+        ],
+        'content_list' => [
+            'label' => 'Content List (Global)',
+            'fields' => ['heading', 'subheading', 'button_text', 'button_url', 'layout', 'source', 'show_search', 'item_limit'],
             'has_items' => false,
         ],
     ],

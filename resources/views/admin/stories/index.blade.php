@@ -5,7 +5,12 @@
         <div class="flex items-center justify-between">
             <div>
                 <h2 class="text-xl font-semibold text-gray-900">{{ __('Success Stories') }}</h2>
-                <p class="mt-1 text-sm text-gray-500">{{ __('Manage the success stories shown on the public site.') }}</p>
+                <p class="mt-1 text-sm text-gray-500">
+                    {{ __('Manage the success stories shown on the public site.') }}
+                    @can('viewAny', \App\Models\StoryCategory::class)
+                        <a href="{{ route('admin.story-categories.index') }}" class="font-medium text-indigo-600 hover:text-indigo-500">{{ __('Manage Categories') }}</a>
+                    @endcan
+                </p>
             </div>
 
             <div class="flex items-center gap-3">
@@ -40,7 +45,12 @@
         <tbody class="divide-y divide-gray-100">
             @forelse ($stories as $story)
                 <tr>
-                    <x-admin.table-td class="font-medium text-gray-900">{{ $story->title }}</x-admin.table-td>
+                    <x-admin.table-td class="font-medium text-gray-900">
+                        {{ $story->title }}
+                        @if ($story->attachment_url)
+                            <span class="ml-1 inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">{{ __('Document') }}</span>
+                        @endif
+                    </x-admin.table-td>
                     <x-admin.table-td>{{ $story->project?->title ?? '—' }}</x-admin.table-td>
                     <x-admin.table-td>{{ $story->published_at?->format('M j, Y') ?? '—' }}</x-admin.table-td>
                     <x-admin.table-td>

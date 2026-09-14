@@ -2,9 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\CMS\Services\SettingService;
 use App\Models\NewsCategory;
 use App\Models\NewsPost;
+use App\Models\Setting;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 
 class NewsTest extends TestCase
@@ -31,6 +34,42 @@ class NewsTest extends TestCase
         $response = $this->get(route('news.index', ['category' => 'events']));
 
         $response->assertOk()->assertSee('Event Post')->assertDontSee('Press Post');
+    }
+
+    public function test_the_news_index_can_be_searched(): void
+    {
+        NewsPost::factory()->published()->create(['title' => 'New Scholarship Fund Launches']);
+        NewsPost::factory()->published()->create(['title' => 'Volunteers Needed This Weekend']);
+
+        $response = $this->get(route('news.index', ['q' => 'scholarship']));
+
+        $response->assertOk()->assertSee('New Scholarship Fund Launches')->assertDontSee('Volunteers Needed This Weekend');
+    }
+
+    public function test_the_news_index_paginates_results(): void
+    {
+        Setting::updateOrCreate(['key' => 'news_items_per_page'], ['value' => '1', 'group' => 'news']);
+        app(SettingService::class)->forget();
+
+        NewsPost::factory()->published()->create(['title' => 'First Post', 'published_at' => now()]);
+        NewsPost::factory()->published()->create(['title' => 'Second Post', 'published_at' => now()->subDay()]);
+
+        $pageOne = $this->get(route('news.index'));
+        $pageOne->assertOk()->assertSee('First Post')->assertDontSee('Second Post');
+
+        $pageTwo = $this->get(route('news.index', ['page' => 2]));
+        $pageTwo->assertOk()->assertSee('Second Post')->assertDontSee('First Post');
+    }
+
+    public function test_the_news_index_can_filter_to_only_notices(): void
+    {
+        $withAttachment = NewsPost::factory()->published()->create(['title' => 'Notice Post']);
+        $withAttachment->addMedia(UploadedFile::fake()->create('notice.pdf', 50))->toMediaCollection('attachment');
+        NewsPost::factory()->published()->create(['title' => 'Plain Article']);
+
+        $response = $this->get(route('news.index', ['format' => 'notice']));
+
+        $response->assertOk()->assertSee('Notice Post')->assertDontSee('Plain Article');
     }
 
     public function test_a_published_post_has_a_working_show_page(): void

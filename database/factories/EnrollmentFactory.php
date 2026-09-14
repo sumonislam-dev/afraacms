@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Certificate;
 use App\Models\Course;
 use App\Models\Enrollment;
 use App\Models\Student;
@@ -67,19 +68,20 @@ class EnrollmentFactory extends Factory
     }
 
     /**
-     * Indicate that a certificate has been issued for this (passed) enrollment.
-     *
-     * Deliberately does NOT set certificate_number/verification_code here -
-     * Enrollment's saving() hook generates those once per actual save. Doing
-     * it here instead would precompute the same "next" number for every row
-     * in a batch before any of them are inserted, causing duplicate-number
-     * collisions on ->count(n)->create().
+     * Indicate that a certificate has been issued for this (passed)
+     * enrollment: creates the linked Certificate row afterCreating() rather
+     * than as a plain state(), since certificate_status is now computed
+     * from that relation instead of being a column on this model.
      */
     public function certificateIssued(): static
     {
-        return $this->passed()->state(fn () => [
-            'certificate_status' => 'valid',
-        ]);
+        return $this->passed()->afterCreating(fn (Enrollment $enrollment) => Certificate::factory()->create([
+            'enrollment_id' => $enrollment->id,
+            'recipient_name' => $enrollment->student->name,
+            'program' => $enrollment->course->course_name,
+            'issued_at' => $enrollment->completion_date,
+            'status' => 'valid',
+        ]));
     }
 
     /**
@@ -87,6 +89,12 @@ class EnrollmentFactory extends Factory
      */
     public function certificateRevoked(): static
     {
-        return $this->certificateIssued()->state(fn () => ['certificate_status' => 'revoked']);
+        return $this->passed()->afterCreating(fn (Enrollment $enrollment) => Certificate::factory()->create([
+            'enrollment_id' => $enrollment->id,
+            'recipient_name' => $enrollment->student->name,
+            'program' => $enrollment->course->course_name,
+            'issued_at' => $enrollment->completion_date,
+            'status' => 'revoked',
+        ]));
     }
 }

@@ -24,7 +24,7 @@ class ProjectService
      * down to __PHP_Incomplete_Class on read, so only arrays/scalars may be
      * cached here (see PageService/GalleryService for the same pattern).
      *
-     * @return array{title: string, slug: string, excerpt: ?string, content: ?string, cover_image_url: ?string, is_featured: bool, updated_at: ?string, seo: array, category: ?array, gallery_items: array}|null
+     * @return array{id: int, title: string, slug: string, excerpt: ?string, content: ?string, cover_image_url: ?string, is_featured: bool, updated_at: ?string, seo: array, category_id: ?int, category: ?array, gallery_items: array}|null
      */
     public function find(string $slug): ?array
     {
@@ -51,6 +51,7 @@ class ProjectService
             ->get()
             ->mapWithKeys(fn (Project $project) => [
                 $project->slug => [
+                    'id' => $project->id,
                     'title' => $project->title,
                     'slug' => $project->slug,
                     'excerpt' => $project->excerpt,
@@ -59,6 +60,7 @@ class ProjectService
                     'is_featured' => $project->is_featured,
                     'updated_at' => $project->updated_at?->toIso8601String(),
                     'seo' => SeoMeta::toCacheArray($project->seo),
+                    'category_id' => $project->category_id,
                     'category' => $project->category ? [
                         'name' => $project->category->name,
                         'slug' => $project->category->slug,

@@ -4,13 +4,23 @@ namespace Tests\Feature\Admin;
 
 use App\Models\Project;
 use App\Models\Story;
+use App\Models\StoryCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\Concerns\CreatesAdminUsers;
 use Tests\TestCase;
 
 class StoryTest extends TestCase
 {
     use CreatesAdminUsers, RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Storage::fake('public');
+    }
 
     public function test_guests_are_redirected_to_login(): void
     {
@@ -137,5 +147,73 @@ class StoryTest extends TestCase
             ->assertRedirect(route('admin.stories.trash'));
 
         $this->assertNotSoftDeleted($story);
+    }
+
+    public function test_editor_can_create_a_story_with_a_category(): void
+    {
+        $editor = $this->editor();
+        $category = StoryCategory::factory()->create();
+
+        $response = $this->actingAs($editor)->post(route('admin.stories.store'), [
+            'category_id' => $category->id,
+            'title' => 'A Categorized Story',
+            'slug' => 'a-categorized-story',
+            'status' => 'draft',
+        ]);
+
+        $response->assertRedirect(route('admin.stories.index'));
+        $this->assertDatabaseHas('stories', [
+            'slug' => 'a-categorized-story',
+            'category_id' => $category->id,
+        ]);
+    }
+
+    public function test_editor_can_upload_an_attachment_with_a_story(): void
+    {
+        $editor = $this->editor();
+        $file = UploadedFile::fake()->create('report.pdf', 100);
+
+        $this->actingAs($editor)->post(route('admin.stories.store'), [
+            'title' => 'Story With Attachment',
+            'slug' => 'story-with-attachment',
+            'status' => 'published',
+            'attachment' => $file,
+        ])->assertRedirect(route('admin.stories.index'));
+
+        $story = Story::where('slug', 'story-with-attachment')->firstOrFail();
+        $this->assertNotNull($story->attachment_url);
+        $this->assertSame('report.pdf', $story->attachment_file_name);
+    }
+
+    public function test_an_attachment_must_be_an_allowed_file_type(): void
+    {
+        $editor = $this->editor();
+        $file = UploadedFile::fake()->create('malware.exe', 100);
+
+        $this->actingAs($editor)
+            ->post(route('admin.stories.store'), [
+                'title' => 'Bad Attachment',
+                'slug' => 'bad-attachment',
+                'status' => 'draft',
+                'attachment' => $file,
+            ])
+            ->assertSessionHasErrors('attachment');
+    }
+
+    public function test_editor_can_remove_an_existing_attachment(): void
+    {
+        $editor = $this->editor();
+        $story = Story::factory()->create(['title' => 'Has Attachment', 'slug' => 'has-attachment']);
+        $story->addMedia(UploadedFile::fake()->create('old.pdf', 50))->toMediaCollection('attachment');
+        $this->assertNotNull($story->fresh()->attachment_url);
+
+        $this->actingAs($editor)->put(route('admin.stories.update', $story), [
+            'title' => 'Has Attachment',
+            'slug' => 'has-attachment',
+            'status' => 'draft',
+            'remove_attachment' => true,
+        ])->assertRedirect(route('admin.stories.index'));
+
+        $this->assertNull($story->fresh()->attachment_url);
     }
 }

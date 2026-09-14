@@ -18,7 +18,7 @@ class StorySectionTest extends TestCase
         Story::factory()->create(['title' => 'Unpublished Draft Story']);
 
         $page = Page::factory()->create(['slug' => 'home', 'status' => 'published']);
-        Section::factory()->for($page)->create(['type' => 'stories', 'heading' => 'Lives Changed Through RSUF']);
+        Section::factory()->for($page)->create(['type' => 'content_list', 'source' => 'stories', 'heading' => 'Lives Changed Through RSUF']);
 
         $response = $this->get('/'.$page->slug);
 
