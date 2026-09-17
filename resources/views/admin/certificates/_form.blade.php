@@ -64,6 +64,40 @@
                         <x-text-input id="program" name="program" type="text" class="mt-1 block w-full" x-bind:disabled="recipientMode !== 'manual'" :value="old('program', $certificate->program ?? '')" placeholder="{{ __('e.g. Web Development Training') }}" />
                         <x-input-error class="mt-2" :messages="$errors->get('program')" />
                     </div>
+
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <div>
+                            <x-input-label for="session" :value="__('Session / Batch')" />
+                            <x-text-input id="session" name="session" type="text" class="mt-1 block w-full" x-bind:disabled="recipientMode !== 'manual'" :value="old('session', $certificate->session ?? '')" placeholder="{{ __('e.g. 2025-2026') }}" />
+                            <x-input-error class="mt-2" :messages="$errors->get('session')" />
+                        </div>
+
+                        <div>
+                            <x-input-label for="grade" :value="__('Grade')" />
+                            <x-text-input id="grade" name="grade" type="text" class="mt-1 block w-full" x-bind:disabled="recipientMode !== 'manual'" :value="old('grade', $certificate->grade ?? '')" />
+                            <x-input-error class="mt-2" :messages="$errors->get('grade')" />
+                        </div>
+
+                        <div>
+                            <x-input-label for="completion_date" :value="__('Completion Date')" />
+                            <x-text-input id="completion_date" name="completion_date" type="date" class="mt-1 block w-full" x-bind:disabled="recipientMode !== 'manual'" :value="old('completion_date', optional($certificate->completion_date ?? null)->format('Y-m-d'))" />
+                            <x-input-error class="mt-2" :messages="$errors->get('completion_date')" />
+                        </div>
+
+                        <div></div>
+
+                        <div>
+                            <x-input-label for="roll_number" :value="__('Roll Number')" />
+                            <x-text-input id="roll_number" name="roll_number" type="text" class="mt-1 block w-full" x-bind:disabled="recipientMode !== 'manual'" :value="old('roll_number', $certificate->roll_number ?? '')" />
+                            <x-input-error class="mt-2" :messages="$errors->get('roll_number')" />
+                        </div>
+
+                        <div>
+                            <x-input-label for="registration_number" :value="__('Registration Number')" />
+                            <x-text-input id="registration_number" name="registration_number" type="text" class="mt-1 block w-full" x-bind:disabled="recipientMode !== 'manual'" :value="old('registration_number', $certificate->registration_number ?? '')" />
+                            <x-input-error class="mt-2" :messages="$errors->get('registration_number')" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </x-admin.card>

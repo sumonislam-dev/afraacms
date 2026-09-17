@@ -49,7 +49,10 @@ class CertificateService
      * When an enrollment is picked, the recipient name/program are always
      * derived from its Student/Course - never trusted from the request -
      * so the form's "From Enrollment" fields can stay disabled client-side
-     * and the two never drift apart.
+     * and the two never drift apart. The manual-only fields (session, grade,
+     * completion_date, roll/registration number) have their own equivalent
+     * on the Enrollment itself, so they're cleared here rather than left as
+     * stale leftovers from a previous manual entry.
      */
     private function withEnrollmentRecipient(array $data): array
     {
@@ -61,6 +64,11 @@ class CertificateService
 
         $data['recipient_name'] = $enrollment->student->name;
         $data['program'] = $enrollment->course->course_name;
+        $data['session'] = null;
+        $data['grade'] = null;
+        $data['completion_date'] = null;
+        $data['roll_number'] = null;
+        $data['registration_number'] = null;
 
         return $data;
     }

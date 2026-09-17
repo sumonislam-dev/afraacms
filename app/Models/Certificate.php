@@ -13,7 +13,10 @@ use Illuminate\Support\Str;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-#[Fillable(['project_id', 'enrollment_id', 'recipient_name', 'program', 'issued_at', 'status', 'notes'])]
+#[Fillable([
+    'project_id', 'enrollment_id', 'recipient_name', 'program', 'issued_at', 'status', 'notes',
+    'session', 'grade', 'completion_date', 'roll_number', 'registration_number',
+])]
 class Certificate extends Model
 {
     use HasFactory, LogsActivity, SoftDeletes;
@@ -40,6 +43,7 @@ class Certificate extends Model
     {
         return [
             'issued_at' => 'date',
+            'completion_date' => 'date',
         ];
     }
 

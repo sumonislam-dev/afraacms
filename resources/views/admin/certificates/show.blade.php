@@ -36,6 +36,41 @@
                         <dt class="text-sm font-medium text-gray-500">{{ __('Issued On') }}</dt>
                         <dd class="mt-1 text-sm text-gray-900">{{ $certificate->issued_at?->format('M j, Y') }}</dd>
                     </div>
+
+                    @if ($certificate->session)
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">{{ __('Session / Batch') }}</dt>
+                            <dd class="mt-1 text-sm text-gray-900">{{ $certificate->session }}</dd>
+                        </div>
+                    @endif
+
+                    @if ($certificate->grade)
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">{{ __('Grade') }}</dt>
+                            <dd class="mt-1 text-sm text-gray-900">{{ $certificate->grade }}</dd>
+                        </div>
+                    @endif
+
+                    @if ($certificate->completion_date)
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">{{ __('Completion Date') }}</dt>
+                            <dd class="mt-1 text-sm text-gray-900">{{ $certificate->completion_date->format('M j, Y') }}</dd>
+                        </div>
+                    @endif
+
+                    @if ($certificate->roll_number)
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">{{ __('Roll Number') }}</dt>
+                            <dd class="mt-1 text-sm text-gray-900">{{ $certificate->roll_number }}</dd>
+                        </div>
+                    @endif
+
+                    @if ($certificate->registration_number)
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">{{ __('Registration Number') }}</dt>
+                            <dd class="mt-1 text-sm text-gray-900">{{ $certificate->registration_number }}</dd>
+                        </div>
+                    @endif
                 </dl>
 
                 @if ($certificate->notes)

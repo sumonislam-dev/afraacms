@@ -59,6 +59,15 @@
                                 @if ($certificate->project)
                                     <div class="flex justify-between gap-4"><dt class="text-gray-500">{{ __('Project') }}</dt><dd class="font-medium text-gray-900">{{ $certificate->project->title }}</dd></div>
                                 @endif
+                                @if ($certificate->session)
+                                    <div class="flex justify-between gap-4"><dt class="text-gray-500">{{ __('Session') }}</dt><dd class="font-medium text-gray-900">{{ $certificate->session }}</dd></div>
+                                @endif
+                                @if ($certificate->grade)
+                                    <div class="flex justify-between gap-4"><dt class="text-gray-500">{{ __('Grade') }}</dt><dd class="font-medium text-gray-900">{{ $certificate->grade }}</dd></div>
+                                @endif
+                                @if ($certificate->completion_date)
+                                    <div class="flex justify-between gap-4"><dt class="text-gray-500">{{ __('Completed') }}</dt><dd class="font-medium text-gray-900">{{ $certificate->completion_date->format('F j, Y') }}</dd></div>
+                                @endif
                             @endif
                             <div class="flex justify-between gap-4"><dt class="text-gray-500">{{ __('Issued') }}</dt><dd class="font-medium text-gray-900">{{ $certificate->issued_at->format('F j, Y') }}</dd></div>
                             <div class="flex justify-between gap-4"><dt class="text-gray-500">{{ __('Certificate #') }}</dt><dd class="font-mono font-medium text-gray-900">{{ $certificate->certificate_number }}</dd></div>
