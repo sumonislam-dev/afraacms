@@ -51,7 +51,7 @@ return new class extends Migration
                 Schema::table('stories', function (Blueprint $table) {
                     $table->dropForeign(['category_id']);
                 });
-            } catch (\Throwable) {
+            } catch (Throwable) {
                 // Constraint didn't exist under this name; nothing to drop.
             }
 

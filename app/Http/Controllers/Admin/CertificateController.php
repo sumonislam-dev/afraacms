@@ -14,6 +14,7 @@ use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
 class CertificateController extends Controller
@@ -84,7 +85,7 @@ class CertificateController extends Controller
      * enrollment not already backing a different certificate, plus (when
      * editing) the one already linked to this certificate.
      */
-    private function enrollmentOptions(?int $keepId = null): \Illuminate\Support\Collection
+    private function enrollmentOptions(?int $keepId = null): Collection
     {
         return Enrollment::with(['student', 'course'])
             ->where(fn ($query) => $query->whereDoesntHave('certificate')->when($keepId, fn ($q) => $q->orWhere('id', $keepId)))

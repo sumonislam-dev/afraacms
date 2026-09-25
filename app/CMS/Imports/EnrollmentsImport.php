@@ -22,7 +22,7 @@ use Maatwebsite\Excel\Concerns\WithValidation;
  * course_code) rather than by name - names collide, codes don't. See
  * EnrollmentsTemplateExport for the exact column headers this expects.
  */
-class EnrollmentsImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFailure, SkipsEmptyRows
+class EnrollmentsImport implements SkipsEmptyRows, SkipsOnFailure, ToModel, WithHeadingRow, WithValidation
 {
     use Importable, NormalizesExcelDates, SkipsFailures;
 

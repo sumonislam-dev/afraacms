@@ -18,7 +18,7 @@ use Maatwebsite\Excel\Concerns\WithValidation;
  * still runs and generates each row's student_code - see StudentsTemplateExport
  * for the exact column headers this expects.
  */
-class StudentsImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFailure, SkipsEmptyRows
+class StudentsImport implements SkipsEmptyRows, SkipsOnFailure, ToModel, WithHeadingRow, WithValidation
 {
     use Importable, NormalizesExcelDates, SkipsFailures;
 

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\CMS\Services\GalleryService;
 use App\CMS\Services\SettingService;
 use App\Models\Gallery;
 use App\Models\MediaItem;
@@ -146,7 +147,7 @@ class ProjectTest extends TestCase
         // Warm the cache while the gallery is still active.
         $this->get(route('projects.show', $project->slug))->assertOk()->assertSee('Album Photo');
 
-        app(\App\CMS\Services\GalleryService::class)->updateAlbum($gallery, ['is_active' => false]);
+        app(GalleryService::class)->updateAlbum($gallery, ['is_active' => false]);
 
         $response = $this->get(route('projects.show', $project->slug));
         $response->assertOk()->assertDontSee('Album Photo');

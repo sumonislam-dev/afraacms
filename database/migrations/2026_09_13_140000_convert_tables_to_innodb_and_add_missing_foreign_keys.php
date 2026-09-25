@@ -177,7 +177,7 @@ return new class extends Migration
 
                 try {
                     DB::statement("ALTER TABLE `{$table}` DROP FOREIGN KEY `{$constraint}`");
-                } catch (\Throwable) {
+                } catch (Throwable) {
                     // Constraint didn't exist under this name; nothing to drop.
                 }
             }

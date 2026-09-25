@@ -48,7 +48,7 @@ return new class extends Migration
                 Schema::table('certificates', function (Blueprint $table) {
                     $table->dropForeign(['enrollment_id']);
                 });
-            } catch (\Throwable) {
+            } catch (Throwable) {
                 // Constraint didn't exist under this name; nothing to drop.
             }
 
@@ -56,7 +56,7 @@ return new class extends Migration
                 Schema::table('certificates', function (Blueprint $table) {
                     $table->dropUnique(['enrollment_id']);
                 });
-            } catch (\Throwable) {
+            } catch (Throwable) {
                 // Index didn't exist under this name; nothing to drop.
             }
 

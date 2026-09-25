@@ -21,6 +21,7 @@ use App\Models\TeamCategory;
 use App\Models\TeamMember;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
 class SectionController extends Controller
@@ -171,7 +172,7 @@ class SectionController extends Controller
      * Category/item pickers for every content_sources source, keyed by
      * source key, for the "content_list" (global) Section type's form.
      *
-     * @return array{contentCategoryOptions: array<string, \Illuminate\Support\Collection>, contentItemOptions: array<string, \Illuminate\Support\Collection>}
+     * @return array{contentCategoryOptions: array<string, Collection>, contentItemOptions: array<string, Collection>}
      */
     private function contentSourceOptions(): array
     {

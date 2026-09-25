@@ -73,7 +73,7 @@ class TrainingCertificateSeeder extends Seeder
 
         $this->command?->info(
             "Training certificate data seeded: {$courses->count()} courses, "
-            .(count(self::SESSIONS) * self::STUDENTS_PER_SESSION)." enrollments "
+            .(count(self::SESSIONS) * self::STUDENTS_PER_SESSION).' enrollments '
             ."({$issued} issued, {$revoked} of those revoked, {$pending} left pending)."
         );
     }

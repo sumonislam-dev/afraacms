@@ -31,7 +31,7 @@ return new class extends Migration
                 Schema::table('pages', function (Blueprint $table) {
                     $table->dropForeign(['banner_image']);
                 });
-            } catch (\Throwable) {
+            } catch (Throwable) {
                 // Constraint didn't exist under this name; nothing to drop.
             }
 
