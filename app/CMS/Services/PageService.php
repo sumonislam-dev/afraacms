@@ -106,6 +106,7 @@ class PageService
                         'source' => $section->source,
                         'show_search' => $section->show_search,
                         'item_limit' => $section->item_limit,
+                        'display_mode' => $section->display_mode,
                         'gallery_ids' => $section->galleries->pluck('id')->all(),
                         'team_member_ids' => $section->teamMembers->pluck('id')->all(),
                         'team_category_ids' => $section->teamCategories->pluck('id')->all(),

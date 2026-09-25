@@ -2,11 +2,12 @@
     $isEdit = isset($section);
     $currentType = old('type', $section->type ?? '');
     $currentSource = old('source', $section->source ?? '');
+    $currentDisplayMode = old('display_mode', $section->display_mode ?? 'preview');
     $typesConfig = config('sections.types', []);
     $contentSources = config('content_sources', []);
 @endphp
 
-<div x-data="{ type: @js($currentType), source: @js($currentSource), fields: @js(collect($typesConfig)->map(fn ($t) => $t['fields'])->all()) }">
+<div x-data="{ type: @js($currentType), source: @js($currentSource), displayMode: @js($currentDisplayMode), fields: @js(collect($typesConfig)->map(fn ($t) => $t['fields'])->all()) }">
     <x-admin.edit-layout>
         <x-slot name="main">
             <x-admin.card>
@@ -395,6 +396,24 @@
                             placeholder="e.g. 6"
                         />
                         <x-input-error class="mt-2" :messages="$errors->get('item_limit')" />
+                    </div>
+
+                    <div x-show="type === 'content_list'" style="display: none;">
+                        <div class="flex items-center gap-1">
+                            <x-input-label :value="__('Display Mode')" />
+                            <x-admin.info-tooltip :text="__('Preview shows up to \"Items to Show\" items with a \"View All\" button linking to the full listing page. Full Pagination shows real prev/next page controls instead, and hides the button - use this when the section IS the full listing.')" />
+                        </div>
+                        <div class="mt-1 inline-flex rounded-md border border-gray-300 bg-white p-0.5 text-sm">
+                            <label class="cursor-pointer rounded-sm px-3 py-1 font-medium transition-colors" :class="displayMode === 'preview' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-50'">
+                                <input type="radio" x-model="displayMode" value="preview" x-bind:name="type === 'content_list' ? 'display_mode' : null" class="sr-only">
+                                {{ __('Preview') }}
+                            </label>
+                            <label class="cursor-pointer rounded-sm px-3 py-1 font-medium transition-colors" :class="displayMode === 'paginate' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-50'">
+                                <input type="radio" x-model="displayMode" value="paginate" x-bind:name="type === 'content_list' ? 'display_mode' : null" class="sr-only">
+                                {{ __('Full Pagination') }}
+                            </label>
+                        </div>
+                        <x-input-error class="mt-2" :messages="$errors->get('display_mode')" />
                     </div>
 
                     <div class="grid grid-cols-1 gap-4 border-t border-gray-100 pt-4" x-bind:class="['news', 'notices', 'stories', 'content_list'].includes(type) ? 'sm:grid-cols-2' : ''">

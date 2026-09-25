@@ -39,6 +39,7 @@ class StoreSectionRequest extends FormRequest
             'layout' => ['nullable', Rule::in(['image-left', 'image-right', 'light', 'dark', 'cards', 'table'])],
             'show_search' => ['sometimes', 'boolean'],
             'item_limit' => ['nullable', 'integer', 'min:1', 'max:50'],
+            'display_mode' => ['nullable', Rule::in(['preview', 'paginate'])],
             'is_active' => ['sometimes', 'boolean'],
             'galleries' => ['sometimes', 'array'],
             'galleries.*' => ['integer', Rule::exists('galleries', 'id')],

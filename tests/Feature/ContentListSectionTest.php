@@ -75,6 +75,7 @@ class ContentListSectionTest extends TestCase
             'type' => 'content_list',
             'source' => 'stories',
             'item_limit' => 1,
+            'display_mode' => 'paginate',
         ]);
         $section->storyItems()->sync($stories->pluck('id')->all());
 
@@ -316,7 +317,7 @@ class ContentListSectionTest extends TestCase
         Project::factory()->published()->create(['title' => 'Oldest Project', 'created_at' => now()->subDay()]);
 
         $page = Page::factory()->create(['slug' => 'home', 'status' => 'published']);
-        $section = Section::factory()->for($page)->create(['type' => 'content_list', 'source' => 'projects', 'item_limit' => 1]);
+        $section = Section::factory()->for($page)->create(['type' => 'content_list', 'source' => 'projects', 'item_limit' => 1, 'display_mode' => 'paginate']);
         $pageName = 'content_page_'.$section->id;
 
         $pageOne = $this->get('/'.$page->slug);
@@ -329,6 +330,49 @@ class ContentListSectionTest extends TestCase
         $pageTwo->assertOk()->assertSee('2 of 2');
     }
 
+    /**
+     * Preview is the default display mode: capped at item_limit with no
+     * inline pagination controls, but the "View All" button still shows -
+     * today's behaviour, unchanged for every section unless switched.
+     */
+    public function test_preview_mode_hides_pagination_but_keeps_the_view_all_button(): void
+    {
+        Project::factory()->published()->create(['title' => 'Newest Project', 'excerpt' => 'The newest excerpt', 'created_at' => now()]);
+        Project::factory()->published()->create(['title' => 'Oldest Project', 'excerpt' => 'The oldest excerpt', 'created_at' => now()->subDay()]);
+
+        $page = Page::factory()->create(['slug' => 'home', 'status' => 'published']);
+        Section::factory()->for($page)->create(['type' => 'content_list', 'source' => 'projects', 'item_limit' => 1]);
+
+        $response = $this->get('/'.$page->slug);
+
+        $response->assertOk()
+            ->assertSee('The newest excerpt')
+            ->assertDontSee('The oldest excerpt')
+            ->assertDontSee('1 of 2')
+            ->assertSee('View All Projects');
+    }
+
+    /**
+     * Full Pagination is the opposite: real prev/next controls, but no
+     * "View All" button (the section already IS the full listing).
+     */
+    public function test_paginate_mode_shows_pagination_and_hides_the_view_all_button(): void
+    {
+        Project::factory()->published()->create(['title' => 'Newest Project', 'excerpt' => 'The newest excerpt', 'created_at' => now()]);
+        Project::factory()->published()->create(['title' => 'Oldest Project', 'excerpt' => 'The oldest excerpt', 'created_at' => now()->subDay()]);
+
+        $page = Page::factory()->create(['slug' => 'home', 'status' => 'published']);
+        Section::factory()->for($page)->create(['type' => 'content_list', 'source' => 'projects', 'item_limit' => 1, 'display_mode' => 'paginate']);
+
+        $response = $this->get('/'.$page->slug);
+
+        $response->assertOk()
+            ->assertSee('The newest excerpt')
+            ->assertDontSee('The oldest excerpt')
+            ->assertSee('1 of 2')
+            ->assertDontSee('View All Projects');
+    }
+
     public function test_two_content_list_sections_on_one_page_paginate_independently(): void
     {
         NewsPost::factory()->published()->create(['title' => 'Newest News', 'published_at' => now()]);
@@ -337,8 +381,8 @@ class ContentListSectionTest extends TestCase
         Story::factory()->published()->create(['title' => 'Oldest Story', 'published_at' => now()->subDay()]);
 
         $page = Page::factory()->create(['slug' => 'home', 'status' => 'published']);
-        $newsSection = Section::factory()->for($page)->create(['type' => 'content_list', 'source' => 'news', 'item_limit' => 1, 'sort_order' => 0]);
-        $storySection = Section::factory()->for($page)->create(['type' => 'content_list', 'source' => 'stories', 'item_limit' => 1, 'sort_order' => 1]);
+        $newsSection = Section::factory()->for($page)->create(['type' => 'content_list', 'source' => 'news', 'item_limit' => 1, 'sort_order' => 0, 'display_mode' => 'paginate']);
+        $storySection = Section::factory()->for($page)->create(['type' => 'content_list', 'source' => 'stories', 'item_limit' => 1, 'sort_order' => 1, 'display_mode' => 'paginate']);
 
         $response = $this->get('/'.$page->slug.'?content_page_'.$newsSection->id.'=2');
 

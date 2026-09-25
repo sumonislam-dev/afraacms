@@ -20,6 +20,7 @@
         // section type.
         $defaultLimit = $sourceKey === 'news' ? (int) setting('news_section_count', 8) : 6;
         $perPage = max(1, (int) ($section['item_limit'] ?? $defaultLimit));
+        $displayMode = ($section['display_mode'] ?? 'preview') === 'paginate' ? 'paginate' : 'preview';
 
         $baseFiltered = match (true) {
             ! empty($itemIds) => $all->whereIn('id', $itemIds)->values(),
@@ -52,17 +53,25 @@
         // and try again instead of the whole section vanishing.
         $showSection = $baseFiltered->isNotEmpty() || $searchQuery !== '';
 
-        $currentPage = \Illuminate\Pagination\LengthAwarePaginator::resolveCurrentPage($pageName);
+        // Preview mode never inline-paginates - it always shows just the
+        // first page-worth of items and relies on the "View All" button for
+        // the rest, so there's no $paginator to render.
+        if ($displayMode === 'paginate') {
+            $currentPage = \Illuminate\Pagination\LengthAwarePaginator::resolveCurrentPage($pageName);
 
-        $paginator = (new \Illuminate\Pagination\LengthAwarePaginator(
-            $filtered->forPage($currentPage, $perPage)->values(),
-            $filtered->count(),
-            $perPage,
-            $currentPage,
-            ['path' => \Illuminate\Pagination\LengthAwarePaginator::resolveCurrentPath(), 'pageName' => $pageName]
-        ))->appends(request()->except($pageName));
+            $paginator = (new \Illuminate\Pagination\LengthAwarePaginator(
+                $filtered->forPage($currentPage, $perPage)->values(),
+                $filtered->count(),
+                $perPage,
+                $currentPage,
+                ['path' => \Illuminate\Pagination\LengthAwarePaginator::resolveCurrentPath(), 'pageName' => $pageName]
+            ))->appends(request()->except($pageName));
 
-        $items = collect($paginator->items());
+            $items = collect($paginator->items());
+        } else {
+            $paginator = null;
+            $items = $filtered->take($perPage);
+        }
 
         // Every field here is read defensively (??): not every source's
         // cached item array carries the same optional keys (e.g.
@@ -131,17 +140,21 @@
                         </div>
                     @endif
 
-                    <x-frontend.pagination :paginator="$paginator" />
+                    @if ($paginator)
+                        <x-frontend.pagination :paginator="$paginator" />
+                    @endif
                 </div>
 
-                <div class="mt-10 text-center">
-                    <a
-                        href="{{ $section['button_url'] ?: route($meta['index_route'], $meta['index_route_params'] ?? []) }}"
-                        class="inline-block rounded-full border border-brand-500 px-6 py-3 text-sm font-semibold text-brand-600 transition hover:bg-brand-500 hover:text-white"
-                    >
-                        {{ $section['button_text'] ?: __('View All :label', ['label' => $meta['index_label']]) }}
-                    </a>
-                </div>
+                @if ($displayMode === 'preview')
+                    <div class="mt-10 text-center">
+                        <a
+                            href="{{ $section['button_url'] ?: route($meta['index_route'], $meta['index_route_params'] ?? []) }}"
+                            class="inline-block rounded-full border border-brand-500 px-6 py-3 text-sm font-semibold text-brand-600 transition hover:bg-brand-500 hover:text-white"
+                        >
+                            {{ $section['button_text'] ?: __('View All :label', ['label' => $meta['index_label']]) }}
+                        </a>
+                    </div>
+                @endif
             </div>
         </section>
     @endif
