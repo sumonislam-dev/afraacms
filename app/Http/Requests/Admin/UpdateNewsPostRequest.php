@@ -3,12 +3,14 @@
 namespace App\Http\Requests\Admin;
 
 use App\Http\Requests\Admin\Concerns\HasSeoRules;
+use App\Http\Requests\Admin\Concerns\SanitizesRichTextFields;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class UpdateNewsPostRequest extends FormRequest
 {
     use HasSeoRules;
+    use SanitizesRichTextFields;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -16,6 +18,11 @@ class UpdateNewsPostRequest extends FormRequest
     public function authorize(): bool
     {
         return $this->user()->can('update', $this->route('post'));
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->sanitizeRichTextFields(['content']);
     }
 
     /**

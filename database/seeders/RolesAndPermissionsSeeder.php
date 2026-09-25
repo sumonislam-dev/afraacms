@@ -45,6 +45,17 @@ class RolesAndPermissionsSeeder extends Seeder
 
         $superAdminAccount = config('admin.super_admin');
 
+        // The default account (config/admin.php) is a known, committed
+        // password meant only for local development - refuse to seed it in
+        // production so a forgotten SUPER_ADMIN_PASSWORD override can't
+        // silently hand out a full-access account with a public password.
+        if (app()->environment('production') && in_array($superAdminAccount['password'], [null, '', 'password'], true)) {
+            throw new \RuntimeException(
+                'Refusing to seed the Super Admin account in production with no SUPER_ADMIN_PASSWORD (or the default "password") set. '
+                .'Set SUPER_ADMIN_EMAIL/SUPER_ADMIN_PASSWORD in the environment before running this seeder.'
+            );
+        }
+
         $user = User::firstOrCreate(
             ['email' => $superAdminAccount['email']],
             [

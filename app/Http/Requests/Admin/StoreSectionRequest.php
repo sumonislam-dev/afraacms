@@ -2,18 +2,26 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Http\Requests\Admin\Concerns\SanitizesRichTextFields;
 use App\Models\Section;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class StoreSectionRequest extends FormRequest
 {
+    use SanitizesRichTextFields;
+
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
         return $this->user()->can('create', Section::class);
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->sanitizeRichTextFields(['body']);
     }
 
     /**

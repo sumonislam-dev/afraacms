@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin;
 
 use App\Http\Requests\Admin\Concerns\HasSeoRules;
+use App\Http\Requests\Admin\Concerns\SanitizesRichTextFields;
 use App\Models\Project;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -10,6 +11,7 @@ use Illuminate\Validation\Rule;
 class StoreProjectRequest extends FormRequest
 {
     use HasSeoRules;
+    use SanitizesRichTextFields;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -17,6 +19,11 @@ class StoreProjectRequest extends FormRequest
     public function authorize(): bool
     {
         return $this->user()->can('create', Project::class);
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->sanitizeRichTextFields(['content']);
     }
 
     /**

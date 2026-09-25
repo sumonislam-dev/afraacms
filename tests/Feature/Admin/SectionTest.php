@@ -70,6 +70,28 @@ class SectionTest extends TestCase
         ]);
     }
 
+    /**
+     * See NewsPostTest::test_a_posts_content_is_sanitized_of_disallowed_html_on_create -
+     * a rich_text section's Body renders unescaped on the public frontend
+     * the same way, so it carries the same risk.
+     */
+    public function test_a_rich_text_sections_body_is_sanitized_of_disallowed_html_on_create(): void
+    {
+        $editor = $this->editor();
+        $page = Page::factory()->create();
+
+        $this->actingAs($editor)->post(route('admin.pages.sections.store', $page), [
+            'type' => 'rich_text',
+            'body' => '<p>Safe text</p><script>alert(1)</script><a href="javascript:alert(1)">bad link</a>',
+        ]);
+
+        $section = Section::first();
+
+        $this->assertStringNotContainsString('<script', $section->body);
+        $this->assertStringNotContainsString('javascript:', $section->body);
+        $this->assertStringContainsString('<p>Safe text</p>', $section->body);
+    }
+
     public function test_a_section_type_must_be_a_known_type(): void
     {
         $editor = $this->editor();

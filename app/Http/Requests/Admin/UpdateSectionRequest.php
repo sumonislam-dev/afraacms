@@ -2,17 +2,25 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Http\Requests\Admin\Concerns\SanitizesRichTextFields;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class UpdateSectionRequest extends FormRequest
 {
+    use SanitizesRichTextFields;
+
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
         return $this->user()->can('update', $this->route('section'));
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->sanitizeRichTextFields(['body']);
     }
 
     /**

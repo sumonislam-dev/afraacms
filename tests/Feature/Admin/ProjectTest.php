@@ -58,6 +58,28 @@ class ProjectTest extends TestCase
         ]);
     }
 
+    /**
+     * See NewsPostTest::test_a_posts_content_is_sanitized_of_disallowed_html_on_create -
+     * Content renders unescaped on the public frontend, same risk here.
+     */
+    public function test_a_projects_content_is_sanitized_of_disallowed_html_on_create(): void
+    {
+        $editor = $this->editor();
+
+        $this->actingAs($editor)->post(route('admin.projects.store'), [
+            'title' => 'Malicious Project',
+            'slug' => 'malicious-project',
+            'status' => 'draft',
+            'content' => '<p>Safe text</p><script>alert(1)</script><a href="javascript:alert(1)">bad link</a>',
+        ]);
+
+        $project = Project::whereSlug('malicious-project')->firstOrFail();
+
+        $this->assertStringNotContainsString('<script', $project->content);
+        $this->assertStringNotContainsString('javascript:', $project->content);
+        $this->assertStringContainsString('<p>Safe text</p>', $project->content);
+    }
+
     public function test_a_user_without_permissions_cannot_create_a_project(): void
     {
         $user = $this->userWithoutPermissions();

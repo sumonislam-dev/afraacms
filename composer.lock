@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ea2e61c5cf2d5b4715a789581298027f",
+    "content-hash": "c46cbc267dfa9c4848ad5ffb5892cdea",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -836,6 +836,67 @@
                 }
             ],
             "time": "2025-07-13T19:59:45+00:00"
+        },
+        {
+            "name": "ezyang/htmlpurifier",
+            "version": "v4.19.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ezyang/htmlpurifier.git",
+                "reference": "5e0539132d934f936fbae2c88b55d58f9438623f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/5e0539132d934f936fbae2c88b55d58f9438623f",
+                "reference": "5e0539132d934f936fbae2c88b55d58f9438623f",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~5.6.0 || ~7.0.0 || ~7.1.0 || ~7.2.0 || ~7.3.0 || ~7.4.0 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0"
+            },
+            "require-dev": {
+                "cerdic/css-tidy": "^1.7 || ^2.0",
+                "simpletest/simpletest": "dev-master"
+            },
+            "suggest": {
+                "cerdic/css-tidy": "If you want to use the filter 'Filter.ExtractStyleBlocks'.",
+                "ext-bcmath": "Used for unit conversion and imagecrash protection",
+                "ext-iconv": "Converts text to and from non-UTF-8 encodings",
+                "ext-tidy": "Used for pretty-printing HTML"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "library/HTMLPurifier.composer.php"
+                ],
+                "psr-0": {
+                    "HTMLPurifier": "library/"
+                },
+                "exclude-from-classmap": [
+                    "/library/HTMLPurifier/Language/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Edward Z. Yang",
+                    "email": "admin@htmlpurifier.org",
+                    "homepage": "http://ezyang.com"
+                }
+            ],
+            "description": "Standards compliant HTML filter written in PHP",
+            "homepage": "http://htmlpurifier.org/",
+            "keywords": [
+                "html"
+            ],
+            "support": {
+                "issues": "https://github.com/ezyang/htmlpurifier/issues",
+                "source": "https://github.com/ezyang/htmlpurifier/tree/v4.19.1"
+            },
+            "time": "2026-09-15T15:42:51+00:00"
         },
         {
             "name": "fruitcake/php-cors",
@@ -1949,16 +2010,16 @@
         },
         {
             "name": "league/commonmark",
-            "version": "2.8.3",
+            "version": "2.10.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/commonmark.git",
-                "reference": "1902f60f984235023acbe03db6ad614a37b3c3e7"
+                "reference": "6efbd9c472b91db0a3350fcd601c8332c2382e1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/1902f60f984235023acbe03db6ad614a37b3c3e7",
-                "reference": "1902f60f984235023acbe03db6ad614a37b3c3e7",
+                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/6efbd9c472b91db0a3350fcd601c8332c2382e1f",
+                "reference": "6efbd9c472b91db0a3350fcd601c8332c2382e1f",
                 "shasum": ""
             },
             "require": {
@@ -1995,7 +2056,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "2.9-dev"
+                    "dev-main": "2.11-dev"
                 }
             },
             "autoload": {
@@ -2052,7 +2113,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-07-12T15:29:16+00:00"
+            "time": "2026-09-21T13:07:34+00:00"
         },
         {
             "name": "league/config",
@@ -2781,6 +2842,84 @@
             "time": "2022-12-02T22:17:43+00:00"
         },
         {
+            "name": "mews/purifier",
+            "version": "3.4.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mewebstudio/Purifier.git",
+                "reference": "b2705cc6c832ce7229373418e191d71b6c037841"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mewebstudio/Purifier/zipball/b2705cc6c832ce7229373418e191d71b6c037841",
+                "reference": "b2705cc6c832ce7229373418e191d71b6c037841",
+                "shasum": ""
+            },
+            "require": {
+                "ezyang/htmlpurifier": "^4.16.0",
+                "illuminate/config": "^5.8|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0|^13.0",
+                "illuminate/filesystem": "^5.8|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0|^13.0",
+                "illuminate/support": "^5.8|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0|^13.0",
+                "php": "^7.2|^8.0"
+            },
+            "require-dev": {
+                "graham-campbell/testbench": "^3.2|^5.5.1|^6.1",
+                "mockery/mockery": "^1.3.3",
+                "phpunit/phpunit": "^8.0|^9.0|^10.0"
+            },
+            "suggest": {
+                "laravel/framework": "To test the Laravel bindings",
+                "laravel/lumen-framework": "To test the Lumen bindings"
+            },
+            "type": "package",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "Purifier": "Mews\\Purifier\\Facades\\Purifier"
+                    },
+                    "providers": [
+                        "Mews\\Purifier\\PurifierServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "Mews\\Purifier\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Muharrem ERİN",
+                    "email": "me@mewebstudio.com",
+                    "homepage": "https://github.com/mewebstudio",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Laravel 5/6/7/8/9/10 HtmlPurifier Package",
+            "homepage": "https://github.com/mewebstudio/purifier",
+            "keywords": [
+                "Laravel Purifier",
+                "Laravel Security",
+                "Purifier",
+                "htmlpurifier",
+                "laravel HtmlPurifier",
+                "security",
+                "xss"
+            ],
+            "support": {
+                "issues": "https://github.com/mewebstudio/Purifier/issues",
+                "source": "https://github.com/mewebstudio/Purifier/tree/3.4.4"
+            },
+            "time": "2026-04-15T16:41:08+00:00"
+        },
+        {
             "name": "monolog/monolog",
             "version": "3.10.0",
             "source": {
@@ -2990,16 +3129,16 @@
         },
         {
             "name": "nette/schema",
-            "version": "v1.3.5",
+            "version": "v1.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/schema.git",
-                "reference": "f0ab1a3cda782dbc5da270d28545236aa80c4002"
+                "reference": "c54350438cd6914616f790a49cb424605f421562"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/schema/zipball/f0ab1a3cda782dbc5da270d28545236aa80c4002",
-                "reference": "f0ab1a3cda782dbc5da270d28545236aa80c4002",
+                "url": "https://api.github.com/repos/nette/schema/zipball/c54350438cd6914616f790a49cb424605f421562",
+                "reference": "c54350438cd6914616f790a49cb424605f421562",
                 "shasum": ""
             },
             "require": {
@@ -3051,9 +3190,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/schema/issues",
-                "source": "https://github.com/nette/schema/tree/v1.3.5"
+                "source": "https://github.com/nette/schema/tree/v1.3.6"
             },
-            "time": "2026-02-23T03:47:12+00:00"
+            "time": "2026-08-16T21:58:41+00:00"
         },
         {
             "name": "nette/utils",

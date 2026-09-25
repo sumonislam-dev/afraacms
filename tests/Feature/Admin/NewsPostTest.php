@@ -67,6 +67,30 @@ class NewsPostTest extends TestCase
         ]);
     }
 
+    /**
+     * The Content field is authored via a rich-text editor and rendered
+     * unescaped on the public frontend - anything outside its own toolbar's
+     * output (see config/purifier.php's "cms" profile) must be stripped
+     * before it ever reaches the database, not just relied on at render time.
+     */
+    public function test_a_posts_content_is_sanitized_of_disallowed_html_on_create(): void
+    {
+        $editor = $this->editor();
+
+        $this->actingAs($editor)->post(route('admin.news.store'), [
+            'title' => 'Malicious Post',
+            'slug' => 'malicious-post',
+            'status' => 'draft',
+            'content' => '<p>Safe text</p><script>alert(1)</script><a href="javascript:alert(1)">bad link</a>',
+        ]);
+
+        $post = NewsPost::whereSlug('malicious-post')->firstOrFail();
+
+        $this->assertStringNotContainsString('<script', $post->content);
+        $this->assertStringNotContainsString('javascript:', $post->content);
+        $this->assertStringContainsString('<p>Safe text</p>', $post->content);
+    }
+
     public function test_a_user_without_permissions_cannot_create_a_post(): void
     {
         $user = $this->userWithoutPermissions();
