@@ -16,6 +16,12 @@
                 @endcan
 
                 @can('create', \App\Models\Enrollment::class)
+                    <x-secondary-button type="button" onclick="window.location='{{ route('admin.enrollments.import') }}'">
+                        {{ __('Import from Excel') }}
+                    </x-secondary-button>
+                @endcan
+
+                @can('create', \App\Models\Enrollment::class)
                     <x-primary-button type="button" onclick="window.location='{{ route('admin.enrollments.create') }}'">
                         {{ __('Add Enrollment') }}
                     </x-primary-button>

@@ -161,6 +161,9 @@ Route::middleware(['auth', 'verified'])
         Route::get('students-trash', [StudentController::class, 'trash'])->name('students.trash');
         Route::post('students/{student}/restore', [StudentController::class, 'restore'])->name('students.restore')->withTrashed();
         Route::delete('students/{student}/force', [StudentController::class, 'forceDelete'])->name('students.force-delete')->withTrashed();
+        Route::get('students-import', [StudentController::class, 'import'])->name('students.import');
+        Route::post('students-import', [StudentController::class, 'processImport'])->name('students.import.process');
+        Route::get('students-import-template', [StudentController::class, 'template'])->name('students.import.template');
 
         Route::resource('courses', CourseController::class)->except('show');
         Route::get('courses-trash', [CourseController::class, 'trash'])->name('courses.trash');
@@ -174,6 +177,9 @@ Route::middleware(['auth', 'verified'])
         Route::post('enrollments/{enrollment}/issue-certificate', [EnrollmentController::class, 'issueCertificate'])->name('enrollments.issue-certificate');
         Route::post('enrollments/{enrollment}/revoke-certificate', [EnrollmentController::class, 'revokeCertificate'])->name('enrollments.revoke-certificate');
         Route::get('enrollments/{enrollment}/qr', [EnrollmentController::class, 'qr'])->name('enrollments.qr');
+        Route::get('enrollments-import', [EnrollmentController::class, 'import'])->name('enrollments.import');
+        Route::post('enrollments-import', [EnrollmentController::class, 'processImport'])->name('enrollments.import.process');
+        Route::get('enrollments-import-template', [EnrollmentController::class, 'template'])->name('enrollments.import.template');
 
         Route::prefix('pages/{page}')->name('pages.')->group(function () {
             Route::get('sections', [SectionController::class, 'index'])->name('sections.index');

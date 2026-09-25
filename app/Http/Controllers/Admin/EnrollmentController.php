@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\CMS\Exports\EnrollmentsTemplateExport;
+use App\CMS\Imports\EnrollmentsImport;
 use App\CMS\Services\EnrollmentService;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\ImportEnrollmentsRequest;
 use App\Http\Requests\Admin\StoreEnrollmentRequest;
 use App\Http\Requests\Admin\UpdateEnrollmentRequest;
 use App\Models\Course;
@@ -16,6 +19,8 @@ use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class EnrollmentController extends Controller
 {
@@ -111,6 +116,50 @@ class EnrollmentController extends Controller
         $this->enrollments->delete($enrollment);
 
         return redirect()->route('admin.enrollments.index')->with('success', __('Enrollment deleted successfully.'));
+    }
+
+    /**
+     * Show the bulk-import form.
+     */
+    public function import(): View
+    {
+        $this->authorize('create', Enrollment::class);
+
+        return view('admin.enrollments.import');
+    }
+
+    /**
+     * Download a blank template with the exact columns import() expects.
+     */
+    public function template(): BinaryFileResponse
+    {
+        $this->authorize('create', Enrollment::class);
+
+        return Excel::download(new EnrollmentsTemplateExport, 'enrollments-import-template.xlsx');
+    }
+
+    /**
+     * Process an uploaded spreadsheet: valid rows are saved immediately,
+     * invalid ones are skipped and reported back row-by-row rather than
+     * aborting the whole file.
+     */
+    public function processImport(ImportEnrollmentsRequest $request): RedirectResponse
+    {
+        $import = new EnrollmentsImport;
+
+        Excel::import($import, $request->file('file'));
+
+        $failures = collect($import->failures())->map(fn ($failure) => [
+            'row' => $failure->row(),
+            'attribute' => $failure->attribute(),
+            'errors' => $failure->errors(),
+        ]);
+
+        if ($failures->isEmpty()) {
+            return redirect()->route('admin.enrollments.index')->with('success', __('Enrollments imported successfully.'));
+        }
+
+        return redirect()->route('admin.enrollments.import')->with('import_failures', $failures->all());
     }
 
     /**
