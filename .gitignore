@@ -32,3 +32,5 @@ rsuf_frontend
 
 # Stray scratchpad files from mangled Windows temp paths
 UsersMDSUMO~1*
+/storage/media-library/temp
+scratch_*
