@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\AnnualReport;
 use App\Models\NewsCategory;
 use App\Models\NewsPost;
 use App\Models\Page;
@@ -136,6 +137,39 @@ class ContentListSectionTest extends TestCase
         $response->assertOk()->assertSee('Health Win')->assertDontSee('Education Win');
     }
 
+    public function test_a_content_list_section_shows_all_active_annual_reports(): void
+    {
+        $active = AnnualReport::factory()->create(['title' => 'Active Report', 'year' => '2025-2026']);
+        $active->addMedia(UploadedFile::fake()->create('active.pdf', 500))->toMediaCollection('attachment');
+
+        $inactive = AnnualReport::factory()->create(['title' => 'Inactive Report', 'year' => '2024-2025', 'is_active' => false]);
+        $inactive->addMedia(UploadedFile::fake()->create('inactive.pdf', 500))->toMediaCollection('attachment');
+
+        $page = Page::factory()->create(['slug' => 'home', 'status' => 'published']);
+        Section::factory()->for($page)->create(['type' => 'content_list', 'source' => 'annual_reports', 'heading' => 'Reports Feed']);
+
+        $response = $this->get('/'.$page->slug);
+
+        $response->assertOk()->assertSee('Reports Feed')->assertSee('Active Report')->assertDontSee('Inactive Report');
+    }
+
+    public function test_a_content_list_section_can_show_specific_annual_reports(): void
+    {
+        $reports = collect([
+            AnnualReport::factory()->create(['title' => 'Picked Report', 'year' => '2025-2026']),
+            AnnualReport::factory()->create(['title' => 'Unpicked Report', 'year' => '2024-2025']),
+        ]);
+        $reports->each(fn (AnnualReport $report) => $report->addMedia(UploadedFile::fake()->create('report.pdf', 500))->toMediaCollection('attachment'));
+
+        $page = Page::factory()->create(['slug' => 'home', 'status' => 'published']);
+        $section = Section::factory()->for($page)->create(['type' => 'content_list', 'source' => 'annual_reports']);
+        $section->annualReportItems()->sync([$reports->first()->id]);
+
+        $response = $this->get('/'.$page->slug);
+
+        $response->assertOk()->assertSee('Picked Report')->assertDontSee('Unpicked Report');
+    }
+
     public function test_a_content_list_section_shows_only_notices_for_the_notices_source(): void
     {
         $withAttachment = NewsPost::factory()->published()->create(['title' => 'Has Attachment']);
@@ -160,6 +194,24 @@ class ContentListSectionTest extends TestCase
         $response = $this->get('/'.$page->slug);
 
         $response->assertOk()->assertSee('Table Row News')->assertSeeInOrder(['S.L', 'Title', 'Description']);
+    }
+
+    /**
+     * Regression test: annual_reports has no excerpt/content/cover_image_url/
+     * slug in its cached item array, unlike every other source - the table
+     * layout's row mapping must not assume every source carries those keys.
+     */
+    public function test_a_content_list_section_for_annual_reports_can_render_as_a_table(): void
+    {
+        $report = AnnualReport::factory()->create(['title' => 'Table Row Report', 'year' => '2025-2026']);
+        $report->addMedia(UploadedFile::fake()->create('report.pdf', 500))->toMediaCollection('attachment');
+
+        $page = Page::factory()->create(['slug' => 'home', 'status' => 'published']);
+        Section::factory()->for($page)->create(['type' => 'content_list', 'source' => 'annual_reports', 'layout' => 'table']);
+
+        $response = $this->get('/'.$page->slug);
+
+        $response->assertOk()->assertSee('Table Row Report');
     }
 
     public function test_a_content_list_section_shows_a_search_box_when_enabled(): void

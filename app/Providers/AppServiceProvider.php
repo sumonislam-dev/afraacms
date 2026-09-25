@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\CMS\Cache\CmsCacheManager;
+use App\CMS\Services\AnnualReportService;
 use App\CMS\Services\BannerService;
 use App\CMS\Services\FeaturedVisitorService;
 use App\CMS\Services\GalleryService;
@@ -53,6 +54,7 @@ class AppServiceProvider extends ServiceProvider
         $cache->register('featured_visitors', fn () => $this->app->make(FeaturedVisitorService::class)->forget());
         $cache->register('news', fn () => $this->app->make(NewsService::class)->forget());
         $cache->register('stories', fn () => $this->app->make(StoryService::class)->forget());
+        $cache->register('annual_reports', fn () => $this->app->make(AnnualReportService::class)->forget());
 
         Password::defaults(function () {
             $rule = Password::min(10)->mixedCase()->numbers();

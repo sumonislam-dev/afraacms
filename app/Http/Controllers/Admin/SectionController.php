@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ReorderSectionsRequest;
 use App\Http\Requests\Admin\StoreSectionRequest;
 use App\Http\Requests\Admin\UpdateSectionRequest;
+use App\Models\AnnualReport;
 use App\Models\Gallery;
 use App\Models\NewsCategory;
 use App\Models\NewsPost;
@@ -88,7 +89,7 @@ class SectionController extends Controller
     {
         $section->load([
             'items', 'galleries', 'teamMembers', 'teamCategories', 'newsPosts', 'newsCategories',
-            'projectCategories', 'projectItems', 'storyItems', 'storyCategories',
+            'projectCategories', 'projectItems', 'storyItems', 'storyCategories', 'annualReportItems',
         ]);
 
         $galleries = Gallery::orderBy('sort_order')->get(['id', 'title', 'is_active']);
@@ -109,6 +110,7 @@ class SectionController extends Controller
             'news', 'notices' => $section->newsPosts->pluck('id')->all(),
             'projects' => $section->projectItems->pluck('id')->all(),
             'stories' => $section->storyItems->pluck('id')->all(),
+            'annual_reports' => $section->annualReportItems->pluck('id')->all(),
             default => [],
         };
 
@@ -185,6 +187,7 @@ class SectionController extends Controller
                 'notices' => NewsPost::whereHas('media', fn ($q) => $q->where('collection_name', 'attachment'))->orderByDesc('published_at')->get(['id', 'title', 'category_id']),
                 'stories' => Story::orderByDesc('published_at')->get(['id', 'title']),
                 'projects' => Project::orderBy('title')->get(['id', 'title', 'category_id']),
+                'annual_reports' => AnnualReport::orderByDesc('year')->get(['id', 'title']),
             ],
         ];
     }
@@ -209,7 +212,7 @@ class SectionController extends Controller
             $section->$relation()->sync($relation === $categoriesRelation ? $contentCategoryIds : []);
         }
 
-        foreach (['newsPosts', 'projectItems', 'storyItems'] as $relation) {
+        foreach (['newsPosts', 'projectItems', 'storyItems', 'annualReportItems'] as $relation) {
             $section->$relation()->sync($relation === $itemsRelation ? $contentItemIds : []);
         }
     }

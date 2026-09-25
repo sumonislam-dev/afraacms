@@ -76,7 +76,7 @@ class PageService
             ->with([
                 'sections' => fn ($query) => $query->where('is_active', true)->with([
                     'items', 'galleries', 'teamMembers', 'teamCategories', 'newsPosts', 'newsCategories',
-                    'projectCategories', 'projectItems', 'storyItems', 'storyCategories',
+                    'projectCategories', 'projectItems', 'storyItems', 'storyCategories', 'annualReportItems',
                 ]),
                 'seo',
             ])
@@ -119,6 +119,7 @@ class PageService
                             'news', 'notices' => $section->newsPosts->pluck('id')->all(),
                             'projects' => $section->projectItems->pluck('id')->all(),
                             'stories' => $section->storyItems->pluck('id')->all(),
+                            'annual_reports' => $section->annualReportItems->pluck('id')->all(),
                             default => [],
                         },
                         'items' => $section->items->map(fn ($item) => [

@@ -216,7 +216,11 @@
                                 <input type="radio" x-model="contentMode" value="all" class="sr-only">
                                 {{ __('All Active') }}
                             </label>
-                            <label class="cursor-pointer rounded-sm px-3 py-1 font-medium transition-colors" :class="contentMode === 'category' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-50'">
+                            <label
+                                x-show="source !== 'annual_reports'"
+                                class="cursor-pointer rounded-sm px-3 py-1 font-medium transition-colors"
+                                :class="contentMode === 'category' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-50'"
+                            >
                                 <input type="radio" x-model="contentMode" value="category" class="sr-only">
                                 {{ __('By Category') }}
                             </label>

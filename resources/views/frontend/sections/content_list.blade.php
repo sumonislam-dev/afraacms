@@ -64,13 +64,18 @@
 
         $items = collect($paginator->items());
 
+        // Every field here is read defensively (??): not every source's
+        // cached item array carries the same optional keys (e.g.
+        // annual_reports has no excerpt/content/cover_image_url/slug), and a
+        // stale rememberForever() cache from before a source's array shape
+        // changed could still be serving the old, narrower shape.
         $isTable = ($section['layout'] ?? 'cards') === 'table';
         $rows = $isTable ? $items->map(fn ($item) => [
             'date' => $item['published_at'] ?? null,
             'title' => $item['title'],
-            'description' => $item['excerpt'] ?: str($item['content'] ?? '')->stripTags()->limit(160)->value(),
+            'description' => ($item['excerpt'] ?? null) ?: str($item['content'] ?? '')->stripTags()->limit(160)->value(),
             'image_url' => $item['cover_image_url'] ?? null,
-            'url' => ($item['attachment_url'] ?? null) ?: route($meta['show_route'], $item['slug']),
+            'url' => ($item['attachment_url'] ?? null) ?: ($meta['show_route'] ? route($meta['show_route'], $item['slug'] ?? null) : '#'),
             'new_tab' => (bool) ($item['attachment_url'] ?? null),
         ]) : collect();
     @endphp
@@ -117,6 +122,9 @@
                                         @break
                                     @case('projects')
                                         <x-frontend.project-card :project="$item" />
+                                        @break
+                                    @case('annual_reports')
+                                        <x-frontend.annual-report-card :report="$item" />
                                         @break
                                 @endswitch
                             @endforeach

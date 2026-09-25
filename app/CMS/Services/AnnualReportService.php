@@ -24,7 +24,13 @@ class AnnualReportService
      * down to __PHP_Incomplete_Class on read, so only arrays/scalars may be
      * cached here (see NewsService/GalleryService for the same pattern).
      *
-     * @return array<int, array{id: int, title: string, year: string, attachment_url: ?string}>
+     * The null fields below (slug, excerpt, content, cover_image_url,
+     * category_id, published_at) don't apply to an annual report, but are
+     * included anyway so this source's items satisfy the generic "content
+     * item" shape the content_list Section type's table layout and search
+     * expect from every source - see content_list.blade.php.
+     *
+     * @return array<int, array{id: int, title: string, year: string, attachment_url: ?string, slug: null, excerpt: null, content: null, cover_image_url: null, category_id: null, published_at: null}>
      */
     public function all(): array
     {
@@ -37,6 +43,12 @@ class AnnualReportService
                 'title' => $report->title,
                 'year' => $report->year,
                 'attachment_url' => $report->attachment_url,
+                'slug' => null,
+                'excerpt' => null,
+                'content' => null,
+                'cover_image_url' => null,
+                'category_id' => null,
+                'published_at' => null,
             ])
             ->all());
     }

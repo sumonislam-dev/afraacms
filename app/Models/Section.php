@@ -123,6 +123,17 @@ class Section extends Model
         return $this->belongsToMany(StoryCategory::class, 'section_story_category');
     }
 
+    /**
+     * Annual reports explicitly hand-picked for this section (only
+     * meaningful for the "content_list" type, source "annual_reports" -
+     * AnnualReport has no category concept, so "Specific Items" is the
+     * only non-"all" mode available for this source).
+     */
+    public function annualReportItems(): BelongsToMany
+    {
+        return $this->belongsToMany(AnnualReport::class, 'section_annual_report_item')->orderByDesc('annual_reports.year');
+    }
+
     public function getImageUrlAttribute(): ?string
     {
         return media_url($this->image);
