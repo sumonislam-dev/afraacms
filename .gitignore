@@ -29,3 +29,6 @@ Thumbs.db
 .claude/
 rsuf_frontend
 
+
+# Stray scratchpad files from mangled Windows temp paths
+UsersMDSUMO~1*
