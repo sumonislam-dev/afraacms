@@ -96,7 +96,9 @@
                     <select id="gallery_id" name="gallery_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
                         <option value="">{{ __('— None —') }}</option>
                         @foreach (\App\Models\Gallery::orderBy('title')->get() as $gallery)
-                            <option value="{{ $gallery->id }}" @selected((string) $currentGalleryId === (string) $gallery->id)>{{ $gallery->title }}</option>
+                            <option value="{{ $gallery->id }}" @selected((string) $currentGalleryId === (string) $gallery->id)>
+                                {{ $gallery->title }}{{ $gallery->is_active ? '' : ' ('.__('inactive').')' }}
+                            </option>
                         @endforeach
                     </select>
                     <x-input-error class="mt-2" :messages="$errors->get('gallery_id')" />

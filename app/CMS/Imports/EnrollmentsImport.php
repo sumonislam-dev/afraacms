@@ -6,6 +6,7 @@ use App\CMS\Imports\Concerns\NormalizesExcelDates;
 use App\Models\Course;
 use App\Models\Enrollment;
 use App\Models\Student;
+use Illuminate\Support\Collection;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
@@ -35,13 +36,41 @@ class EnrollmentsImport implements ToModel, WithHeadingRow, WithValidation, Skip
     private ?string $currentSession = null;
 
     /**
+     * code => id maps, loaded once per import (not once per row) - a
+     * spreadsheet can be hundreds of rows and every row needs both a
+     * student and a course lookup, so this turns what was up to 5
+     * queries/row into 2 queries for the whole import.
+     *
+     * @var ?Collection<string, int>
+     */
+    private ?Collection $studentIdsByCode = null;
+
+    private ?Collection $courseIdsByCode = null;
+
+    /**
+     * @return Collection<string, int>
+     */
+    private function studentIdsByCode(): Collection
+    {
+        return $this->studentIdsByCode ??= Student::query()->pluck('id', 'student_code');
+    }
+
+    /**
+     * @return Collection<string, int>
+     */
+    private function courseIdsByCode(): Collection
+    {
+        return $this->courseIdsByCode ??= Course::query()->pluck('id', 'course_code');
+    }
+
+    /**
      * @param  array<string, mixed>  $row
      */
     public function model(array $row): Enrollment
     {
         return new Enrollment([
-            'student_id' => Student::where('student_code', $row['student_code'])->value('id'),
-            'course_id' => Course::where('course_code', $row['course_code'])->value('id'),
+            'student_id' => $this->studentIdsByCode()->get($row['student_code']),
+            'course_id' => $this->courseIdsByCode()->get($row['course_code']),
             'session' => $row['session'],
             'roll_number' => $row['roll_number'] ?? null,
             'registration_number' => $row['registration_number'] ?? null,
@@ -60,13 +89,27 @@ class EnrollmentsImport implements ToModel, WithHeadingRow, WithValidation, Skip
     public function rules(): array
     {
         return [
-            'student_code' => ['required', Rule::exists('students', 'student_code')],
-            'course_code' => ['required', Rule::exists('courses', 'course_code')],
+            'student_code' => [
+                'required',
+                function (string $attribute, mixed $value, \Closure $fail): void {
+                    if (! $this->studentIdsByCode()->has($value)) {
+                        $fail(__('The selected student code is invalid.'));
+                    }
+                },
+            ],
+            'course_code' => [
+                'required',
+                function (string $attribute, mixed $value, \Closure $fail): void {
+                    if (! $this->courseIdsByCode()->has($value)) {
+                        $fail(__('The selected course code is invalid.'));
+                    }
+                },
+            ],
             'session' => ['required', 'string', 'max:20'],
             'roll_number' => [
                 'nullable', 'string', 'max:50',
                 Rule::unique('enrollments')->where(function ($query) {
-                    $courseId = Course::where('course_code', $this->currentCourseCode)->value('id');
+                    $courseId = $this->courseIdsByCode()->get($this->currentCourseCode);
 
                     return $query->where('course_id', $courseId)->where('session', $this->currentSession);
                 }),

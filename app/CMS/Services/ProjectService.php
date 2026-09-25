@@ -65,7 +65,7 @@ class ProjectService
                         'name' => $project->category->name,
                         'slug' => $project->category->slug,
                     ] : null,
-                    'gallery_items' => $project->gallery
+                    'gallery_items' => $project->gallery && $project->gallery->is_active
                         ? $project->gallery->items->map(fn (GalleryItem $item) => [
                             'type' => $item->type,
                             'image_url' => $item->image_url,

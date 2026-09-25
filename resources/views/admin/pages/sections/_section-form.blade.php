@@ -368,19 +368,19 @@
                         <x-input-error class="mt-2" :messages="$errors->get('layout')" />
                     </div>
 
-                    <div x-show="['news', 'notices', 'stories', 'content_list'].includes(type)" style="display: none;">
+                    <div x-show="type === 'content_list'" style="display: none;">
                         <div class="flex items-center gap-1">
                             <x-input-label for="display-layout" :value="__('Display Style')" />
                             <x-admin.info-tooltip :text="__('Table List shows a row per item with date, description, thumbnail and a click-through button - handy for notices and circulars.')" />
                         </div>
-                        <select id="display-layout" x-bind:name="['news', 'notices', 'stories', 'content_list'].includes(type) ? 'layout' : null" class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
+                        <select id="display-layout" x-bind:name="type === 'content_list' ? 'layout' : null" class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
                             <option value="cards" @selected(old('layout', $section->layout ?? 'cards') === 'cards')>{{ __('Card Grid') }}</option>
                             <option value="table" @selected(old('layout', $section->layout ?? 'cards') === 'table')>{{ __('Table List') }}</option>
                         </select>
                         <x-input-error class="mt-2" :messages="$errors->get('layout')" />
                     </div>
 
-                    <div x-show="['news', 'notices', 'stories', 'projects', 'content_list'].includes(type)" style="display: none;">
+                    <div x-show="type === 'content_list'" style="display: none;">
                         <div class="flex items-center gap-1">
                             <x-input-label for="item-limit" :value="__('Items to Show')" />
                             <x-admin.info-tooltip :text="__('How many items this section pulls in. Leave blank to use a sensible default for this type.')" />
@@ -391,7 +391,7 @@
                             min="1"
                             max="50"
                             class="mt-1 block w-full"
-                            x-bind:name="['news', 'notices', 'stories', 'projects', 'content_list'].includes(type) ? 'item_limit' : null"
+                            x-bind:name="type === 'content_list' ? 'item_limit' : null"
                             :value="old('item_limit', $section->item_limit ?? '')"
                             placeholder="e.g. 6"
                         />
@@ -416,8 +416,8 @@
                         <x-input-error class="mt-2" :messages="$errors->get('display_mode')" />
                     </div>
 
-                    <div class="grid grid-cols-1 gap-4 border-t border-gray-100 pt-4" x-bind:class="['news', 'notices', 'stories', 'content_list'].includes(type) ? 'sm:grid-cols-2' : ''">
-                        <div x-show="['news', 'notices', 'stories', 'content_list'].includes(type)" style="display: none;">
+                    <div class="grid grid-cols-1 gap-4 border-t border-gray-100 pt-4" x-bind:class="type === 'content_list' ? 'sm:grid-cols-2' : ''">
+                        <div x-show="type === 'content_list'" style="display: none;">
                             <div class="flex items-center gap-1">
                                 <x-input-label :value="__('Search Box')" />
                                 <x-admin.info-tooltip :text="__('Always shows a search box above this section. Searching takes the visitor to the full listing page with matching results.')" />

@@ -134,6 +134,7 @@ class GalleryService
         SeoMeta::syncFor($album, $data);
 
         $this->forget();
+        $this->projects->forget();
 
         return $album;
     }
