@@ -21,7 +21,7 @@ class CertificateService
     public function findForVerification(string $identifier): ?Certificate
     {
         return Certificate::query()
-            ->with(['enrollment.course', 'project'])
+            ->with(['enrollment.course', 'enrollment.student', 'project'])
             ->where('certificate_number', $identifier)
             ->orWhere('verification_code', $identifier)
             ->first();

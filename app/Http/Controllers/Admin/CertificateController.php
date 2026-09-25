@@ -44,7 +44,7 @@ class CertificateController extends Controller
      */
     public function show(Certificate $certificate): View
     {
-        $certificate->loadMissing('project');
+        $certificate->loadMissing(['project', 'enrollment.course', 'enrollment.student']);
 
         return view('admin.certificates.show', compact('certificate'));
     }

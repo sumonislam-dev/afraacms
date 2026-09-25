@@ -44,6 +44,15 @@
                         <dl class="mt-4 space-y-2 text-sm text-gray-700">
                             <div class="flex justify-between gap-4"><dt class="text-gray-500">{{ __('Recipient') }}</dt><dd class="font-medium text-gray-900">{{ $certificate->recipient_name }}</dd></div>
                             @if ($certificate->enrollment)
+                                @if ($certificate->enrollment->student->father_name)
+                                    <div class="flex justify-between gap-4"><dt class="text-gray-500">{{ __("Father's Name") }}</dt><dd class="font-medium text-gray-900">{{ $certificate->enrollment->student->father_name }}</dd></div>
+                                @endif
+                                @if ($certificate->enrollment->student->mother_name)
+                                    <div class="flex justify-between gap-4"><dt class="text-gray-500">{{ __("Mother's Name") }}</dt><dd class="font-medium text-gray-900">{{ $certificate->enrollment->student->mother_name }}</dd></div>
+                                @endif
+                                @if ($certificate->enrollment->student->date_of_birth)
+                                    <div class="flex justify-between gap-4"><dt class="text-gray-500">{{ __('Date of Birth') }}</dt><dd class="font-medium text-gray-900">{{ $certificate->enrollment->student->date_of_birth->format('F j, Y') }}</dd></div>
+                                @endif
                                 <div class="flex justify-between gap-4"><dt class="text-gray-500">{{ __('Course') }}</dt><dd class="font-medium text-gray-900">{{ $certificate->enrollment->course->course_name }}</dd></div>
                                 <div class="flex justify-between gap-4"><dt class="text-gray-500">{{ __('Session') }}</dt><dd class="font-medium text-gray-900">{{ $certificate->enrollment->session }}</dd></div>
                                 @if ($certificate->enrollment->grade)

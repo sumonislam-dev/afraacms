@@ -37,39 +37,94 @@
                         <dd class="mt-1 text-sm text-gray-900">{{ $certificate->issued_at?->format('M j, Y') }}</dd>
                     </div>
 
-                    @if ($certificate->session)
+@if ($certificate->enrollment)
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">{{ __("Father's Name") }}</dt>
+                            <dd class="mt-1 text-sm text-gray-900">{{ $certificate->enrollment->student->father_name }}</dd>
+                        </div>
+
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">{{ __("Mother's Name") }}</dt>
+                            <dd class="mt-1 text-sm text-gray-900">{{ $certificate->enrollment->student->mother_name }}</dd>
+                        </div>
+
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">{{ __('Date of Birth') }}</dt>
+                            <dd class="mt-1 text-sm text-gray-900">{{ $certificate->enrollment->student->date_of_birth->format('M j, Y') }}</dd>
+                        </div>
+
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">{{ __('Course') }}</dt>
+                            <dd class="mt-1 text-sm text-gray-900">{{ $certificate->enrollment->course->course_name }}</dd>
+                        </div>
+
                         <div>
                             <dt class="text-sm font-medium text-gray-500">{{ __('Session / Batch') }}</dt>
-                            <dd class="mt-1 text-sm text-gray-900">{{ $certificate->session }}</dd>
+                            <dd class="mt-1 text-sm text-gray-900">{{ $certificate->enrollment->session }}</dd>
                         </div>
-                    @endif
 
-                    @if ($certificate->grade)
-                        <div>
-                            <dt class="text-sm font-medium text-gray-500">{{ __('Grade') }}</dt>
-                            <dd class="mt-1 text-sm text-gray-900">{{ $certificate->grade }}</dd>
-                        </div>
-                    @endif
+                        @if ($certificate->enrollment->grade)
+                            <div>
+                                <dt class="text-sm font-medium text-gray-500">{{ __('Grade') }}</dt>
+                                <dd class="mt-1 text-sm text-gray-900">{{ $certificate->enrollment->grade }}</dd>
+                            </div>
+                        @endif
 
-                    @if ($certificate->completion_date)
-                        <div>
-                            <dt class="text-sm font-medium text-gray-500">{{ __('Completion Date') }}</dt>
-                            <dd class="mt-1 text-sm text-gray-900">{{ $certificate->completion_date->format('M j, Y') }}</dd>
-                        </div>
-                    @endif
+                        @if ($certificate->enrollment->completion_date)
+                            <div>
+                                <dt class="text-sm font-medium text-gray-500">{{ __('Completion Date') }}</dt>
+                                <dd class="mt-1 text-sm text-gray-900">{{ $certificate->enrollment->completion_date->format('M j, Y') }}</dd>
+                            </div>
+                        @endif
 
-                    @if ($certificate->roll_number)
-                        <div>
-                            <dt class="text-sm font-medium text-gray-500">{{ __('Roll Number') }}</dt>
-                            <dd class="mt-1 text-sm text-gray-900">{{ $certificate->roll_number }}</dd>
-                        </div>
-                    @endif
+                        @if ($certificate->enrollment->roll_number)
+                            <div>
+                                <dt class="text-sm font-medium text-gray-500">{{ __('Roll Number') }}</dt>
+                                <dd class="mt-1 text-sm text-gray-900">{{ $certificate->enrollment->roll_number }}</dd>
+                            </div>
+                        @endif
 
-                    @if ($certificate->registration_number)
-                        <div>
-                            <dt class="text-sm font-medium text-gray-500">{{ __('Registration Number') }}</dt>
-                            <dd class="mt-1 text-sm text-gray-900">{{ $certificate->registration_number }}</dd>
-                        </div>
+                        @if ($certificate->enrollment->registration_number)
+                            <div>
+                                <dt class="text-sm font-medium text-gray-500">{{ __('Registration Number') }}</dt>
+                                <dd class="mt-1 text-sm text-gray-900">{{ $certificate->enrollment->registration_number }}</dd>
+                            </div>
+                        @endif
+                    @else
+                        @if ($certificate->session)
+                            <div>
+                                <dt class="text-sm font-medium text-gray-500">{{ __('Session / Batch') }}</dt>
+                                <dd class="mt-1 text-sm text-gray-900">{{ $certificate->session }}</dd>
+                            </div>
+                        @endif
+
+                        @if ($certificate->grade)
+                            <div>
+                                <dt class="text-sm font-medium text-gray-500">{{ __('Grade') }}</dt>
+                                <dd class="mt-1 text-sm text-gray-900">{{ $certificate->grade }}</dd>
+                            </div>
+                        @endif
+
+                        @if ($certificate->completion_date)
+                            <div>
+                                <dt class="text-sm font-medium text-gray-500">{{ __('Completion Date') }}</dt>
+                                <dd class="mt-1 text-sm text-gray-900">{{ $certificate->completion_date->format('M j, Y') }}</dd>
+                            </div>
+                        @endif
+
+                        @if ($certificate->roll_number)
+                            <div>
+                                <dt class="text-sm font-medium text-gray-500">{{ __('Roll Number') }}</dt>
+                                <dd class="mt-1 text-sm text-gray-900">{{ $certificate->roll_number }}</dd>
+                            </div>
+                        @endif
+
+                        @if ($certificate->registration_number)
+                            <div>
+                                <dt class="text-sm font-medium text-gray-500">{{ __('Registration Number') }}</dt>
+                                <dd class="mt-1 text-sm text-gray-900">{{ $certificate->registration_number }}</dd>
+                            </div>
+                        @endif
                     @endif
                 </dl>
 
