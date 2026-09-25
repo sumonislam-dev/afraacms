@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ActivityController;
+use App\Http\Controllers\Admin\AnnualReportController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\CertificateController;
 use App\Http\Controllers\Admin\ContactController;
@@ -113,6 +114,10 @@ Route::middleware(['auth', 'verified'])
         Route::get('news-trash', [NewsPostController::class, 'trash'])->name('news.trash');
         Route::post('news/{post}/restore', [NewsPostController::class, 'restore'])->name('news.restore')->withTrashed();
         Route::delete('news/{post}/force', [NewsPostController::class, 'forceDelete'])->name('news.force-delete')->withTrashed();
+
+        Route::resource('annual-reports', AnnualReportController::class)
+            ->except('show')
+            ->parameters(['annual-reports' => 'annualReport']);
 
         Route::resource('story-categories', StoryCategoryController::class)
             ->except(['show', 'create', 'edit'])

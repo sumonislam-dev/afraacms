@@ -80,6 +80,12 @@ return [
         ],
     ],
     [
+        'label' => 'Annual Reports',
+        'icon' => 'document-text',
+        'route' => 'admin.annual-reports.index',
+        'permission' => 'annual_reports.view',
+    ],
+    [
         'label' => 'Success Stories',
         'icon' => 'check-circle',
         'children' => [

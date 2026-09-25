@@ -44,6 +44,7 @@ return [
         'gallery' => ['view', 'create', 'edit', 'delete'],
         'team' => ['view', 'create', 'edit', 'delete'],
         'news' => ['view', 'create', 'edit', 'delete'],
+        'annual_reports' => ['view', 'create', 'edit', 'delete'],
         'stories' => ['view', 'create', 'edit', 'delete'],
         'certificates' => ['view', 'create', 'edit', 'delete'],
         'donations' => ['view', 'create', 'edit', 'delete'],
@@ -99,7 +100,7 @@ return [
             // Activity, Settings beyond view/edit).
             'modules' => [
                 'dashboard', 'media', 'menus', 'pages', 'sections', 'banners', 'projects', 'gallery',
-                'team', 'news', 'stories', 'certificates', 'donations', 'visitor_book', 'featured_visitors',
+                'team', 'news', 'annual_reports', 'stories', 'certificates', 'donations', 'visitor_book', 'featured_visitors',
                 'students', 'courses', 'enrollments', 'contact', 'seo',
             ],
             'extra_permissions' => ['settings.view', 'settings.edit'],
@@ -111,7 +112,7 @@ return [
             // account/security-sensitive data a pure viewer shouldn't see.
             'view_only_modules' => [
                 'dashboard', 'media', 'menus', 'pages', 'sections', 'banners', 'projects', 'gallery',
-                'team', 'news', 'stories', 'certificates', 'donations', 'visitor_book', 'featured_visitors',
+                'team', 'news', 'annual_reports', 'stories', 'certificates', 'donations', 'visitor_book', 'featured_visitors',
                 'students', 'courses', 'enrollments', 'contact', 'seo',
             ],
         ],

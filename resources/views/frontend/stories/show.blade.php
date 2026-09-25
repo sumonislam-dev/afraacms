@@ -29,6 +29,18 @@
             @if ($story['excerpt'])
                 <p class="mt-4 text-lg text-gray-600">{{ $story['excerpt'] }}</p>
             @endif
+
+            @if ($story['attachment_url'])
+                <a
+                    href="{{ $story['attachment_url'] }}"
+                    target="_blank"
+                    rel="noopener"
+                    class="mt-6 inline-flex items-center gap-2 rounded-md bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-600"
+                >
+                    <x-icon name="document-text" class="h-4 w-4" />
+                    {{ __('Download Attachment') }}
+                </a>
+            @endif
         </div>
 
         @if ($story['content'])

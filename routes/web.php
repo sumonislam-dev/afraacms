@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnnualReportController;
 use App\Http\Controllers\CertificateVerificationController;
 use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\GalleryController;
@@ -49,6 +50,8 @@ Route::get('/stories', [StoryController::class, 'index'])->name('stories.index')
 Route::get('/stories/{slug}', [StoryController::class, 'show'])
     ->where('slug', '[a-z0-9-]+')
     ->name('stories.show');
+
+Route::get('/annual-reports', [AnnualReportController::class, 'index'])->name('annual-reports.index');
 
 Route::post('/contact', [ContactMessageController::class, 'store'])
     ->middleware('throttle:5,1')
