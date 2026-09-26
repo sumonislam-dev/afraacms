@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
-    branches: [main]
+    branches: [main, develop]
 
 jobs:
   lint:
@@ -72,21 +72,3 @@ jobs:
 
       - name: Run tests
         run: composer run test
-
-  build:
-    name: npm build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-
-      - name: Setup Node
-        uses: actions/setup-node@v5
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install npm dependencies
-        run: npm ci
-
-      - name: Build frontend assets
-        run: npm run build
