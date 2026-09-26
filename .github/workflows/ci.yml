@@ -2,9 +2,19 @@ name: CI
 
 on:
   push:
-    branches: [main, develop]
+    branches: [develop]
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
   pull_request:
     branches: [main, develop]
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   lint:
@@ -23,7 +33,7 @@ jobs:
         uses: actions/cache@v5
         with:
           path: vendor
-          key: composer-${{ hashFiles('composer.lock') }}
+          key: composer-${{ runner.os }}-php8.3-${{ hashFiles('composer.lock') }}
 
       - name: Install composer dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
@@ -47,7 +57,7 @@ jobs:
         uses: actions/cache@v5
         with:
           path: vendor
-          key: composer-${{ hashFiles('composer.lock') }}
+          key: composer-${{ runner.os }}-php8.3-${{ hashFiles('composer.lock') }}
 
       - name: Install composer dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
