@@ -91,6 +91,36 @@ class BannerTest extends TestCase
             ->assertSessionHasErrors(['popup_frequency', 'popup_pages', 'popup_delay']);
     }
 
+    public function test_button_text_requires_a_button_url(): void
+    {
+        $this->actingAs($this->editor())
+            ->post(route('admin.banners.store'), ['type' => 'cta', 'button_text' => 'Donate'])
+            ->assertSessionHasErrors('button_url');
+    }
+
+    public function test_button_url_requires_button_text(): void
+    {
+        $this->actingAs($this->editor())
+            ->post(route('admin.banners.store'), ['type' => 'cta', 'button_url' => '/donate'])
+            ->assertSessionHasErrors('button_text');
+    }
+
+    public function test_a_half_filled_button_is_rejected_on_update_too(): void
+    {
+        $banner = Banner::factory()->create(['type' => 'cta']);
+
+        $this->actingAs($this->editor())
+            ->put(route('admin.banners.update', $banner), ['type' => 'cta', 'button_text' => 'Donate'])
+            ->assertSessionHasErrors('button_url');
+    }
+
+    public function test_a_banner_without_any_button_is_still_valid(): void
+    {
+        $this->actingAs($this->editor())
+            ->post(route('admin.banners.store'), ['type' => 'cta', 'title' => 'No button'])
+            ->assertSessionHasNoErrors();
+    }
+
     public function test_a_banner_type_must_be_a_known_placement(): void
     {
         $editor = $this->editor();
