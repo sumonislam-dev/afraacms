@@ -20,10 +20,15 @@ class DatabaseSeeder extends Seeder
             SettingsSeeder::class,
             MenuSeeder::class,
             PagesSeeder::class,
-            NewsSeeder::class,
         ]);
 
-        // User::factory(10)->create();
+        // Demo news posts and a test login with the factory's known password
+        // ("password") must never reach a live site.
+        if (app()->isProduction()) {
+            return;
+        }
+
+        $this->call(NewsSeeder::class);
 
         $testUser = User::factory()->create([
             'name' => 'Test User',

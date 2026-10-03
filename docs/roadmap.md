@@ -94,7 +94,7 @@ storage/
 | 17 — SEO | ✅ Done | Canonical, Open Graph, Twitter Card, robots.txt, sitemap.xml |
 | 18 — Performance | ✅ Done | Frontend caching (pages/menus/settings/etc.), WebP conversion, lazy-loading on below-the-fold images |
 | 19 — Security | ✅ Done except 2FA | CSRF, hardened password policy, rate limiting, hardened session cookies, Activity Log/audit trail, secure uploads. **2FA explicitly deferred by product decision**, not started |
-| 20 — Shared Hosting Deployment | ⏭ Deferred | Explicitly skipped for now (no backup solution, cron, or deploy docs yet) — revisit when ready to deploy |
+| 20 — Shared Hosting Deployment | 🟡 Ready, not yet deployed | Target: Hostinger (hPanel + SSH). `docs/deployment.md` (first install, updates, logs, troubleshooting), `.env.production.example`, `deploy.sh`, HTTPS links forced in production, production-safe `db:seed`. No queue worker or cron needed (nothing queued or scheduled); backups via the Hostinger plan. Done once the first real deploy is verified |
 | 21 — Testing | ✅ Done | 184 automated feature tests passing across every module |
 | 22 — Release v1.0 | ⏸ Blocked | Waiting on Phase 20 (`Shared hosting verified`, `Production deployed`) and a manual `Responsive verified` pass; all other checklist items are satisfied |
 
