@@ -15,6 +15,7 @@ use App\CMS\Services\SettingService;
 use App\CMS\Services\StoryService;
 use App\CMS\Services\TeamService;
 use Illuminate\Database\Schema\Builder as SchemaBuilder;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -42,6 +43,11 @@ class AppServiceProvider extends ServiceProvider
         // truncates real content - it only ever narrows the implicit default
         // for columns that don't specify their own length.
         SchemaBuilder::defaultStringLength(191);
+
+        // Production is always served over HTTPS. Behind a CDN/proxy (e.g.
+        // Hostinger's CDN) PHP can see the request as plain http, which would
+        // otherwise generate http:// links and mixed-content asset URLs.
+        URL::forceHttps($this->app->isProduction());
 
         $cache = $this->app->make(CmsCacheManager::class);
         $cache->register('settings', fn () => $this->app->make(SettingService::class)->forget());
