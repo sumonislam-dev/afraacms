@@ -33,6 +33,9 @@ class UpdateBannerRequest extends FormRequest
             'starts_at' => ['nullable', 'date'],
             'ends_at' => ['nullable', 'date', 'after_or_equal:starts_at'],
             'sort_order' => ['nullable', 'integer'],
+            'popup_frequency' => ['sometimes', Rule::in(array_keys(config('banners.popup_frequencies', [])))],
+            'popup_pages' => ['sometimes', Rule::in(array_keys(config('banners.popup_pages', [])))],
+            'popup_delay' => ['sometimes', 'integer', 'min:0', 'max:'.config('banners.popup_max_delay', 60)],
         ];
     }
 }

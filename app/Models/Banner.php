@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-#[Fillable(['type', 'title', 'subtitle', 'image', 'button_text', 'button_url', 'is_active', 'starts_at', 'ends_at', 'sort_order'])]
+#[Fillable(['type', 'title', 'subtitle', 'image', 'button_text', 'button_url', 'is_active', 'starts_at', 'ends_at', 'sort_order', 'popup_frequency', 'popup_pages', 'popup_delay'])]
 class Banner extends Model
 {
     use HasFactory, LogsActivity;
@@ -31,6 +31,7 @@ class Banner extends Model
             'starts_at' => 'datetime',
             'ends_at' => 'datetime',
             'sort_order' => 'integer',
+            'popup_delay' => 'integer',
         ];
     }
 

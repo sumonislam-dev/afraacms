@@ -96,9 +96,11 @@ The large promotional image strips shown at fixed spots: Homepage, standard Page
 3. **Image** (required) — Homepage and Page banners crop to a wide letterbox shape automatically
 4. **Starts At / Ends At** (optional) — schedule a banner to run only within a date range
 5. **Priority** (required) — the lowest number wins if more than one banner is active for the same spot at once
+6. **Show Popup / Show On / Delay** (popups only) — how often a visitor sees the popup again after closing it (once per browser session, every page load, once per day, or only once), whether it shows on all pages or the homepage only, and how many seconds (0–60) to wait before it opens
 
 > **Good to know**
-> Only **one** banner shows per placement at any moment — the active, in-schedule one with the lowest Priority number. Deleting a banner is permanent, so if you just want to pause one, turn its Active toggle off instead.
+> - Only **one** banner shows per placement at any moment — the active, in-schedule one with the lowest Priority number. Deleting a banner is permanent, so if you just want to pause one, turn its Active toggle off instead.
+> - Editing a popup shows it again to every visitor, including those who already closed it.
 
 ### Media Library
 

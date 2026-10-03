@@ -47,6 +47,50 @@ class BannerTest extends TestCase
         $this->assertDatabaseHas('banners', ['title' => 'New Banner', 'type' => 'homepage']);
     }
 
+    public function test_editor_can_create_a_popup_with_display_options(): void
+    {
+        $editor = $this->editor();
+
+        $this->actingAs($editor)->post(route('admin.banners.store'), [
+            'type' => 'popup',
+            'title' => 'Webinar',
+            'popup_frequency' => 'daily',
+            'popup_pages' => 'home',
+            'popup_delay' => 5,
+        ])->assertRedirect(route('admin.banners.index'));
+
+        $this->assertDatabaseHas('banners', [
+            'title' => 'Webinar',
+            'popup_frequency' => 'daily',
+            'popup_pages' => 'home',
+            'popup_delay' => 5,
+        ]);
+    }
+
+    public function test_a_banner_created_without_popup_options_gets_the_defaults(): void
+    {
+        $this->actingAs($this->editor())->post(route('admin.banners.store'), ['type' => 'popup', 'title' => 'Plain']);
+
+        $this->assertDatabaseHas('banners', [
+            'title' => 'Plain',
+            'popup_frequency' => 'session',
+            'popup_pages' => 'all',
+            'popup_delay' => 0,
+        ]);
+    }
+
+    public function test_popup_options_must_be_known_values(): void
+    {
+        $this->actingAs($this->editor())
+            ->post(route('admin.banners.store'), [
+                'type' => 'popup',
+                'popup_frequency' => 'hourly',
+                'popup_pages' => 'contact',
+                'popup_delay' => 61,
+            ])
+            ->assertSessionHasErrors(['popup_frequency', 'popup_pages', 'popup_delay']);
+    }
+
     public function test_a_banner_type_must_be_a_known_placement(): void
     {
         $editor = $this->editor();
