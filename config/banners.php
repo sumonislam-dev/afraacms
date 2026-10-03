@@ -18,6 +18,30 @@ return [
         'homepage' => ['label' => 'Homepage Banner', 'description' => 'Shown at the top of the homepage, above all sections.'],
         'page' => ['label' => 'Page Banner', 'description' => 'Shown at the top of every inner page.'],
         'cta' => ['label' => 'CTA Banner', 'description' => 'Shown near the bottom of every page, site-wide.'],
-        'popup' => ['label' => 'Popup Banner', 'description' => 'Shown as a dismissible popup once per visitor session.'],
+        'popup' => ['label' => 'Popup Banner', 'description' => 'Shown as a dismissible popup; how often and where is set per banner.'],
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Popup Options
+    |--------------------------------------------------------------------------
+    |
+    | How often a dismissed popup comes back, and which pages it shows on.
+    | The first key of each list is the default.
+    |
+    */
+
+    'popup_frequencies' => [
+        'session' => 'Once per browser session',
+        'always' => 'Every page load',
+        'daily' => 'Once per day',
+        'once' => 'Only once',
+    ],
+
+    'popup_pages' => [
+        'all' => 'All pages',
+        'home' => 'Homepage only',
+    ],
+
+    'popup_max_delay' => 60,
 ];

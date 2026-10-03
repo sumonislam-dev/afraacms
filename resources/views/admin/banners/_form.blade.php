@@ -79,6 +79,36 @@
             </div>
         </div>
 
+        <div x-show="type === 'popup'" x-cloak class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div>
+                <x-input-label for="popup_frequency" :value="__('Show Popup')" />
+                <select id="popup_frequency" name="popup_frequency" class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
+                    @foreach (config('banners.popup_frequencies', []) as $value => $label)
+                        <option value="{{ $value }}" @selected(old('popup_frequency', $banner->popup_frequency ?? 'session') === $value)>{{ __($label) }}</option>
+                    @endforeach
+                </select>
+                <p class="mt-1 text-xs text-gray-500">{{ __('How soon a visitor sees it again after closing it. Editing the popup shows it again to everyone.') }}</p>
+                <x-input-error class="mt-2" :messages="$errors->get('popup_frequency')" />
+            </div>
+
+            <div>
+                <x-input-label for="popup_pages" :value="__('Show On')" />
+                <select id="popup_pages" name="popup_pages" class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
+                    @foreach (config('banners.popup_pages', []) as $value => $label)
+                        <option value="{{ $value }}" @selected(old('popup_pages', $banner->popup_pages ?? 'all') === $value)>{{ __($label) }}</option>
+                    @endforeach
+                </select>
+                <x-input-error class="mt-2" :messages="$errors->get('popup_pages')" />
+            </div>
+
+            <div>
+                <x-input-label for="popup_delay" :value="__('Delay (seconds)')" />
+                <x-text-input id="popup_delay" name="popup_delay" type="number" min="0" :max="config('banners.popup_max_delay', 60)" class="mt-1 block w-full" :value="old('popup_delay', $banner->popup_delay ?? 0)" />
+                <p class="mt-1 text-xs text-gray-500">{{ __('Wait this long after the page loads. 0 = show immediately.') }}</p>
+                <x-input-error class="mt-2" :messages="$errors->get('popup_delay')" />
+            </div>
+        </div>
+
         @if ($isEdit)
             <div class="sm:max-w-xs">
                 <div class="flex items-center justify-between rounded-md border border-gray-200 px-3 py-2">
