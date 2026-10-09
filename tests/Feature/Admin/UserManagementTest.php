@@ -126,6 +126,61 @@ class UserManagementTest extends TestCase
         $this->assertDatabaseMissing('users', ['email' => 'sneaky@example.test']);
     }
 
+    /**
+     * UserPolicy::update() blocks self-edit entirely (same self-protection
+     * as delete()) - without it, a user could deactivate or otherwise
+     * tamper with their own account through this screen. Personal profile
+     * edits still go through /profile.
+     */
+    public function test_a_user_cannot_edit_or_deactivate_themselves_via_the_admin_users_screen(): void
+    {
+        $superAdmin = $this->superAdmin();
+
+        $this->actingAs($superAdmin)
+            ->get(route('admin.users.edit', $superAdmin))
+            ->assertForbidden();
+
+        $this->actingAs($superAdmin)
+            ->put(route('admin.users.update', $superAdmin), [
+                'name' => $superAdmin->name,
+                'email' => $superAdmin->email,
+                'role' => 'Super Admin',
+                'is_active' => '0',
+            ])
+            ->assertForbidden();
+
+        $this->assertTrue($superAdmin->fresh()->is_active);
+    }
+
+    /**
+     * Only the edit/delete BUTTONS were ever policy-gated - the listing
+     * query itself showed every Super Admin account to anyone with
+     * users.view (which Admin has). This locks in the server-side filter.
+     */
+    public function test_an_admin_cannot_see_super_admin_accounts_in_the_user_list(): void
+    {
+        $admin = $this->admin();
+        $superAdmin = User::factory()->create(['name' => 'Hidden Super Admin']);
+        $superAdmin->assignRole('Super Admin');
+
+        $this->actingAs($admin)
+            ->get(route('admin.users.index'))
+            ->assertOk()
+            ->assertDontSee('Hidden Super Admin');
+    }
+
+    public function test_a_super_admin_can_see_super_admin_accounts_in_the_user_list(): void
+    {
+        $superAdmin = $this->superAdmin();
+        $otherSuperAdmin = User::factory()->create(['name' => 'Visible Super Admin']);
+        $otherSuperAdmin->assignRole('Super Admin');
+
+        $this->actingAs($superAdmin)
+            ->get(route('admin.users.index'))
+            ->assertOk()
+            ->assertSee('Visible Super Admin');
+    }
+
     public function test_super_admin_can_assign_the_super_admin_role(): void
     {
         $superAdmin = $this->superAdmin();

@@ -46,6 +46,34 @@ class ActivityLogTest extends TestCase
             ->assertOk();
     }
 
+    /**
+     * Same protection as the Users/Roles list filters - an Admin shouldn't
+     * see what a Super Admin did (causer) any more than they should see the
+     * Super Admin account itself in the user list.
+     */
+    public function test_an_admin_cannot_see_activity_caused_by_a_super_admin(): void
+    {
+        $superAdmin = $this->superAdmin();
+        $admin = $this->admin();
+
+        $this->actingAs($superAdmin)->post(route('admin.pages.store'), [
+            'title' => 'Super Admin Only Page',
+            'slug' => 'super-admin-only-page',
+            'status' => 'draft',
+            'template' => 'default',
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('admin.activity.index'))
+            ->assertOk()
+            ->assertDontSee('Super Admin Only Page');
+
+        $this->actingAs($superAdmin)
+            ->get(route('admin.activity.index'))
+            ->assertOk()
+            ->assertSee('Super Admin Only Page');
+    }
+
     public function test_creating_a_page_is_recorded_with_the_acting_user_as_causer(): void
     {
         $superAdmin = $this->superAdmin();

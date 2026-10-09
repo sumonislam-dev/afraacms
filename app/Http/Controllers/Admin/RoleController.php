@@ -24,7 +24,13 @@ class RoleController extends Controller
      */
     public function index(): View
     {
+        $viewer = auth()->user();
+
         $roles = Role::withCount(['users', 'permissions'])
+            // Same protection as the Users list - the Super Admin role's
+            // existence/permission-count/user-count was visible to anyone
+            // with roles.view even though editing it was already blocked.
+            ->when(! $viewer->hasRole('Super Admin'), fn ($query) => $query->where('name', '!=', 'Super Admin'))
             ->when(request('search'), fn ($query, $search) => $query->where('name', 'like', "%{$search}%"))
             ->orderBy('name')
             ->paginate(15)

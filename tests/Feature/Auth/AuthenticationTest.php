@@ -51,4 +51,34 @@ class AuthenticationTest extends TestCase
         $this->assertGuest();
         $response->assertRedirect('/');
     }
+
+    public function test_an_inactive_user_cannot_authenticate(): void
+    {
+        $user = User::factory()->create(['is_active' => false]);
+
+        $this->post('/login', [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
+
+        $this->assertGuest();
+    }
+
+    /**
+     * EnsureUserIsActive (bootstrap/app.php's web middleware group) is what
+     * makes deactivation take effect immediately instead of only on the
+     * user's NEXT login - without it, an already-logged-in user keeps
+     * working until their session naturally expires.
+     */
+    public function test_a_user_deactivated_mid_session_is_logged_out_on_their_next_request(): void
+    {
+        $user = User::factory()->create(['is_active' => true]);
+
+        $this->actingAs($user)->get(route('profile.edit'))->assertOk();
+
+        $user->update(['is_active' => false]);
+
+        $this->actingAs($user)->get(route('profile.edit'))->assertRedirect(route('login'));
+        $this->assertGuest();
+    }
 }

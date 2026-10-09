@@ -23,7 +23,16 @@ class UserController extends Controller
      */
     public function index(): View
     {
+        $viewer = auth()->user();
+
         $users = User::with('roles')
+            // Super Admin accounts are invisible to anyone but a Super
+            // Admin - the edit/delete buttons were already policy-gated,
+            // but the listing itself wasn't, so a lower role could still
+            // see who holds the top-level accounts.
+            ->when(! $viewer->hasRole('Super Admin'), fn ($query) => $query->whereDoesntHave(
+                'roles', fn ($roles) => $roles->where('name', 'Super Admin')
+            ))
             ->when(request('search'), fn ($query, $search) => $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")->orWhere('email', 'like', "%{$search}%");
             }))
