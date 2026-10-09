@@ -37,6 +37,10 @@ if [ ! -f public/build/manifest.json ]; then
     echo "public/build is missing. Build locally and upload it (docs/deployment.md)." >&2
     exit 1
 fi
+# An upload from Windows can arrive owner-only (700/600), which hides the
+# CSS/JS from the web server - make it world-readable every time.
+find public/build -type d -exec chmod 755 {} +
+find public/build -type f -exec chmod 644 {} +
 
 "$PHP" artisan migrate --force
 
