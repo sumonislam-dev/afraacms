@@ -33,12 +33,21 @@ class UserPolicy
     /**
      * Determine whether the user can update the model.
      *
+     * Nobody edits their own account through the admin Users screen -
+     * same self-protection as delete() below, since without it a user
+     * could deactivate (or otherwise tamper with) themselves here. Personal
+     * profile edits (name/email/password) go through /profile instead.
+     *
      * Only a Super Admin may edit another Super Admin's account, so a
      * lower-privileged user with users.edit can't demote, deactivate, or
      * otherwise tamper with a Super Admin's account.
      */
     public function update(User $user, User $model): bool
     {
+        if ($user->id === $model->id) {
+            return false;
+        }
+
         if ($model->hasRole('Super Admin') && ! $user->hasRole('Super Admin')) {
             return false;
         }

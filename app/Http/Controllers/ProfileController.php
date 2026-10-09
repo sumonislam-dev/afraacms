@@ -48,6 +48,15 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
+        // This self-service flow bypasses UserPolicy entirely (it's not an
+        // admin-panel action), so the "can't delete the last active Super
+        // Admin" protection has to be re-checked here directly - otherwise
+        // the sole Super Admin could lock everyone out via their own
+        // profile page.
+        if ($user->isLastActiveSuperAdmin()) {
+            return Redirect::route('profile.edit')->with('error', __('You are the only active Super Admin - promote someone else to Super Admin before deleting your account.'));
+        }
+
         Auth::logout();
 
         $user->delete();

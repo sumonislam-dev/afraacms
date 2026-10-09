@@ -57,6 +57,31 @@ class RoleManagementTest extends TestCase
         $this->assertTrue($role->fresh()->hasPermissionTo('pages.delete'));
     }
 
+    /**
+     * Only the edit/delete BUTTONS were ever policy-gated - the listing
+     * query itself showed the "Super Admin" role to anyone with roles.view
+     * (which Admin has). This locks in the server-side filter.
+     */
+    public function test_an_admin_cannot_see_the_super_admin_role_in_the_role_list(): void
+    {
+        $admin = $this->admin();
+
+        $this->actingAs($admin)
+            ->get(route('admin.roles.index'))
+            ->assertOk()
+            ->assertDontSee('Super Admin');
+    }
+
+    public function test_a_super_admin_can_see_the_super_admin_role_in_the_role_list(): void
+    {
+        $superAdmin = $this->superAdmin();
+
+        $this->actingAs($superAdmin)
+            ->get(route('admin.roles.index'))
+            ->assertOk()
+            ->assertSee('Super Admin');
+    }
+
     public function test_the_super_admin_role_cannot_be_deleted(): void
     {
         $superAdmin = $this->superAdmin();
